@@ -14,13 +14,13 @@ const isUnauthenPath = () => {
 
 const publicLoader = () => {
   if (getAuthentication() && isUnauthenPath()) {
-    return redirect("/dashboard");
+    return redirect("/");
   }
   return null;
 };
 
 const protectedLoader = () => {
-  if (!getAuthentication()) {
+  if (getCurrentPath() !== '/') {
     return redirect("/login");
   }
   return null;
@@ -38,7 +38,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <MainLayout />,
+    element: <PublicLayout />,
     errorElement: <NotFound />,
     loader: protectedLoader,
     children: [

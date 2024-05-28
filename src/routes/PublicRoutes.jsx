@@ -1,4 +1,4 @@
-import { Login, SignUp, SignUpEmployee } from '@pages/authentication'
+import { Login, SignUp, VerifyAccount } from '@pages/authentication'
 import { About, Home, Contact } from '@/pages/guest'
 import { Navigate } from 'react-router-dom';
 
@@ -16,8 +16,8 @@ const PublicRoutes = [
         element: <SignUp />,
     },
     {
-        path: "/signup-employee",
-        element: <SignUpEmployee />,
+        path: "/verify-account",
+        element: <VerifyAccount />,
     },
     {
         path: '/About',

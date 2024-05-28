@@ -1,5 +1,5 @@
 import { Panel } from "rsuite"
-import { CChart } from '@coreui/react-chartjs';
+// import { CChart } from '@coreui/react-chartjs';
 
 const Dashboard = () => {
     const colors = ["green", "red", "blue", "yellow", "violet"];

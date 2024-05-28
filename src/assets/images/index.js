@@ -1,4 +1,4 @@
-export { default as logo_image} from './logo-web.webp'
+export { default as logo_image} from './logo-web.png'
 export { default as vertical_bg } from './vertical-bg.webp'
 export { default as not_found_image } from './not-found.webp'
 export { default as connection_bg } from './connection_bg.webp'

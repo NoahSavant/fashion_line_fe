@@ -17,7 +17,7 @@ const NotFound = () => {
                 margin: '30px auto 30px',
                 fontSize: '19px',
                 textAlign: 'center'
-            }}><b>Connection helper</b> can not find out this page </p>
+            }}><b>FashionLine</b> can not find out this page </p>
             <section style={{
                 textAlign: 'center',
                 maxWidth: '490px',

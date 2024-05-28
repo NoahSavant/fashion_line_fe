@@ -151,6 +151,4 @@ const BaseBody = ({ children }) => {
     );
 };
 
-
-
 export default BaseBody
