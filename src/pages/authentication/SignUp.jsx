@@ -17,6 +17,12 @@ import {InputPassword} from '@/components/inputs';
 import { decodeToken } from '@/helpers/dataHelpers';
 
 const SignUp = () => {
+    const [userInfo, setUserInfo] = useState({
+        "username": "",
+        "email": "",
+        "password": "",
+        "password_confirmation": ""
+    });
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -45,21 +51,11 @@ const SignUp = () => {
     }
 
     const onSignUp = async () => {
-        if(! email ) {
-            return;
-        }
-
         await handleSignUp(
             authenticationEndpoints.signup,
             {
                 'method': 'POST',
-                'data': {
-                    'name': name,
-                    'gmail_token': email,
-                    'password': password,
-                    'password_confirmation': confirmPassword,
-                    'enterprise': enterprise,
-                },
+                'data': userInfo,
             }
         );
     }
@@ -107,64 +103,42 @@ const SignUp = () => {
     }, []);
 
     return (
-        <div className="show-fake-browser login-page max-h-screen">
-            <div className='grid md:grid-cols-7 col-span-4'>
-                <div className='col-span-3 md:block hidden'>
-                    <img src="https://res.cloudinary.com/dsrtzowwc/image/upload/v1701227993/register_p61juw.webp" alt="" />
-                </div>
-
-                <div className='col-span-4 flex items-center'>
-                    <Container>
-                        <FlexboxGrid justify="center">
-                            <FlexboxGrid.Item colspan={12}>
-                                <Panel header={<h3>Sign up</h3>} bordered>
-                                    {!email && <Form.Group className='flex flex-col pb-5'>
-                                        <Form.ControlLabel>Select email to continute</Form.ControlLabel>
-                                        <input type="submit" onClick={selectEmail} className='bg-blue-500 rs-btn rs-btn-primary' value="Select email to continue" />
-
-                                    </Form.Group>}
-                                    
-                                    {email && 
-                                        <Form fluid onSubmit={onSignUp}>
-                                            <Form.Group>
-                                                <Form.ControlLabel>Email address</Form.ControlLabel>
-                                                <Form.Control name="email" type="text" readOnly value={getEmail()}/>
-                                            </Form.Group>
-                                            <Form.Group>
-                                                <Form.ControlLabel>Name</Form.ControlLabel>
-                                                <Form.Control name="name" type="text" autoComplete="off" value={name} placeholder="Name" onChange={setName} />
-                                            </Form.Group>
-                                            <Form.Group>
-                                                <Form.ControlLabel>Enterprise</Form.ControlLabel>
-                                                <Form.Control name="name" type="text" autoComplete="off" value={enterprise} placeholder="Enterprise" onChange={setEnterprise} />
-                                            </Form.Group>
-                                            <Form.Group>
-                                                <Form.ControlLabel>Password</Form.ControlLabel>
-                                                <InputPassword value={password} onChange={setPassword} placeholder='Password' />
-                                            </Form.Group>
-                                            <Form.Group>
-                                                <Form.ControlLabel>Confirm Password</Form.ControlLabel>
-                                                <InputPassword value={confirmPassword} onChange={setConfirmPassword} placeholder='Confirm password' />
-                                            </Form.Group>
-                                            {error && (<Message type="error" className='mb-5' showIcon header>{error.data.message}</Message>)}
-                                            <Form.Group>
-                                                <ButtonToolbar>
-                                                    {!loading && <Button appearance="primary" type='submit' className='bg-blue-500'>Sign up</Button>}
-                                                    {loading && <Loader content="Loading..." />}
-                                                </ButtonToolbar>
-                                            </Form.Group>
-                                        </Form>
-                                    }
-                                    
-                                    
-                                </Panel>
-                            </FlexboxGrid.Item>
-                        </FlexboxGrid>
-                    </Container>
-
-                </div>
+        <div className="show-fake-browser login-page md:px-12 md:py-11 py-5 bg-[url('https://res.cloudinary.com/dvcdmxgyk/image/upload/v1716543657/files/ldb72xhz5vdftwwijpz1.jpg')] bg-no-repeat bg-cover bg-center">
+            <div className='flex items-center'>
+                <Container>
+                    <FlexboxGrid justify="center">
+                        <FlexboxGrid.Item className='md:w-[500px] w-[320px]'>
+                            <Panel className='bg-white' header={<h3 className="font-semibold text-lg text-blue-600">Sign up</h3>} bordered shaded>
+                                <Form fluid onSubmit={onSignUp}>
+                                    <Form.Group>
+                                        <Form.ControlLabel>Email address</Form.ControlLabel>
+                                        <Form.Control name="email" type="email" value={userInfo.email} placeholder="Email address" onChange={(value) => setUserInfo({ ...userInfo, email: value })} />
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Form.ControlLabel>Username</Form.ControlLabel>
+                                        <Form.Control name="username" type="text" autoComplete="off" value={userInfo.username} placeholder="Username" onChange={(value) => setUserInfo({ ...userInfo, username: value })} />
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Form.ControlLabel>Password</Form.ControlLabel>
+                                        <InputPassword value={userInfo.password} onChange={(value) => setUserInfo({ ...userInfo, password: value })} placeholder='Password' />
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Form.ControlLabel>Confirm Password</Form.ControlLabel>
+                                        <InputPassword value={userInfo.password_confirmation} onChange={(value) => setUserInfo({ ...userInfo, password_confirmation: value })} placeholder='Confirm password' />
+                                    </Form.Group>
+                                    {error && (<Message type="error" className='mb-3' showIcon header>{error.data.message}</Message>)}
+                                    <Form.Group>
+                                        <ButtonToolbar className="flex justify-end">
+                                            {!loading && <Button appearance="primary" type='submit' className='bg-blue-500'>Sign up</Button>}
+                                            {loading && <Loader content="Loading..." />}
+                                        </ButtonToolbar>
+                                    </Form.Group>
+                                </Form>
+                            </Panel>
+                        </FlexboxGrid.Item>
+                    </FlexboxGrid>
+                </Container>
             </div>
-
         </div>
     );
 

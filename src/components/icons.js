@@ -41,6 +41,8 @@ import TreemapIcon from '@rsuite/icons/Treemap';
 import CalendarIcon from '@rsuite/icons/Calendar';
 import ModelIcon from '@rsuite/icons/Model';
 import EmailIcon from '@rsuite/icons/Email';
+import CharacterAuthorizeIcon from '@rsuite/icons/CharacterAuthorize';
+import MenuIcon from '@rsuite/icons/Menu';
 
 export {
     CogIcon,
@@ -89,5 +91,7 @@ export {
     TreemapIcon,
     CalendarIcon,
     ModelIcon,
-    EmailIcon
+    EmailIcon,
+    CharacterAuthorizeIcon,
+    MenuIcon
 };
