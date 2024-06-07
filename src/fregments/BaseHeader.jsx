@@ -17,7 +17,9 @@ import {
     InfoRoundIcon,
     BsPersonFillCheck,
     CharacterAuthorizeIcon,
-    MenuIcon
+    MenuIcon,
+    GiShop,
+    FaBookBookmark
 } from '@/components/icons.js';
 
 const CustomNavbar = ({ onSelect, ...props }) => {
@@ -72,9 +74,7 @@ const CustomNavbar = ({ onSelect, ...props }) => {
 
         return (
             <Popover ref={ref} className={className} style={{ left, top }} full>
-                <Nav onSelect={handleSelect} className="flex flex-col">
-                    {/* <Nav.Item className="h-auto p-2.5" icon={<MemberIcon />} eventKey={3}>Profile</Nav.Item>
-                    <Nav.Item className="h-auto p-2.5" icon={<UserChangeIcon />} eventKey={4}>Sign out</Nav.Item> */}
+                <Nav onSelect={handleSelect} className="flex flex-col text-base">
                     <Nav.Item eventKey="/login" active={activeKey('/login')} onClick={() => navigate('/login')} icon={<CgLogIn />}>Login</Nav.Item>
                     <Nav.Item eventKey="/signup" active={activeKey('/signup')} onClick={() => navigate('/signup')} icon={<IoMdPersonAdd />}>Sign Up</Nav.Item>
                     <Nav.Item eventKey="/verify-account" active={activeKey('/verify-account')} onClick={() => navigate('/verify-account')} icon={<BsPersonFillCheck />}>Verify Account</Nav.Item>
@@ -82,6 +82,25 @@ const CustomNavbar = ({ onSelect, ...props }) => {
             </Popover>
         );
     };
+
+    const MainTabs = ({vertical = false}) => {
+        const className = vertical ? 'flex flex-col text-lg header-tab' : 'h-[70px] text-lg header-tab';
+        return (
+            <Nav className={className} onSelect={(vertical) => {
+                if(vertical) {
+                    closeSidebar();
+                }
+            }}>
+                <Nav.Item eventKey="/" active={activeKey('/')} icon={<IoIosHome />} onClick={() => navigate('/')}>
+                    Home
+                </Nav.Item>
+                <Nav.Item eventKey="/shop" active={activeKey('/shop')} onClick={() => navigate('/shop')} icon={<GiShop />}>Shop</Nav.Item>
+                <Nav.Item eventKey="/blog" active={activeKey('/blog')} onClick={() => navigate('/blog')} icon={<FaBookBookmark />}>Blog</Nav.Item>
+                <Nav.Item eventKey="/about" active={activeKey('/about')} onClick={() => navigate('/about')} icon={<InfoRoundIcon />}>About</Nav.Item>
+                <Nav.Item eventKey="/contact" active={activeKey('/contact')} onClick={() => navigate('/contact')} icon={<IoMdContacts />}>Contact</Nav.Item>
+            </Nav>
+        );
+    }
 
     return (
         <div className='relative'>
@@ -107,17 +126,13 @@ const CustomNavbar = ({ onSelect, ...props }) => {
                     <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 48 48" width="30" height="30"><path fill="white" d="M24,4C13.5,4,5,12.1,5,22c0,5.2,2.3,9.8,6,13.1V44l7.8-4.7c1.6,0.4,3.4,0.7,5.2,0.7c10.5,0,19-8.1,19-18C43,12.1,34.5,4,24,4z"/><path fill="#2c4fa3" d="M12 28L22 17 27 22 36 17 26 28 21 23z"/></svg>
                 </a>
             </div>
-            <Navbar {...props} className='md:block hidden'>
-                <Navbar.Brand href="/" className=''>
-                    <img src={logo_image} alt="" className='object-cover w-24 h-10 pb-3' />
-                </Navbar.Brand>
-                <Nav onSelect={onSelect} >
-                    <Nav.Item eventKey="/" active={activeKey('/')} icon={<IoIosHome />} onClick={() => navigate('/')}>
-                        Home
-                    </Nav.Item>
-                    <Nav.Item eventKey="/about" active={activeKey('/about')} onClick={() => navigate('/about')} icon={<InfoRoundIcon />}>About</Nav.Item>
-                    <Nav.Item eventKey="/contact" active={activeKey('/contact')} onClick={() => navigate('/contact')} icon={<IoMdContacts />}>Contact</Nav.Item>
-                </Nav>
+            <div className='md:flex hidden items-center justify-between px-5'>
+                <div className='flex gap-4'>
+                    <div className='h-[70px] flex justify-center items-center'>
+                        <img src={logo_image} alt="" className='object-contain w-[160px] h-[60px] cursor-pointer' onClick={() => navigate('/')} />
+                    </div>
+                    <MainTabs />
+                </div>
                 {auth && (
                     <>
                         <Nav pullRight>
@@ -127,20 +142,20 @@ const CustomNavbar = ({ onSelect, ...props }) => {
                 )}
                 {!auth && (
                     <>
-                        <Nav pullRight>
+                        <Nav pullRight className='h-[70px] text-lg header-tab'>
                             <Nav.Item eventKey="/login" active={activeKey('/login')} onClick={() => navigate('/login')} icon={<CgLogIn />}>Login</Nav.Item>
                             <Nav.Item eventKey="/signup" active={activeKey('/signup')} onClick={() => navigate('/signup')} icon={<IoMdPersonAdd />}>Sign Up</Nav.Item>
                             <Nav.Item eventKey="/verify-account" active={activeKey('/verify-account')} onClick={() => navigate('/verify-account')} icon={<BsPersonFillCheck />}>Verify Account</Nav.Item>
                         </Nav>
                     </>
                 )}
-            </Navbar>
+            </div>
             <div className='md:hidden flex justify-between items-center'>
                 <div className='px-2 sidebar-open' onClick={openSidebar}><MenuIcon style={{ fontSize: '2em' }} /></div>
-                <img src={logo_image} alt="" className='object-cover w-24 h-10' />
+                <img src={logo_image} alt="" className='object-cover w-[120px] h-[45px] cursor-pointer' onClick={() => navigate('/')}/>
                 {auth && (
                     <>
-                        <div className='pb-2'>
+                        <div className='p-2'>
                             <UserHeader />
                         </div>
                     </>
@@ -155,13 +170,13 @@ const CustomNavbar = ({ onSelect, ...props }) => {
                     </>
                 )}
             </div>
-            <div className={`fixed top-0 left-0 bg-black bg-opacity-50 ${isOpen ? 'opacity-100 z-30' : 'opacity-0 -z-50'} w-full h-full justify-end transition-opacity duration-300 flex md:hidden`} onClick={handleOutsideClick}>
-                <div id="sidebarContent" className="h-full bg-white shadow-md transform translate-x-full transition-transform duration-300">
+            <div className={`fixed top-0 left-0 bg-black bg-opacity-50 z-30 ${isOpen ? 'translate-x-0' : '-translate-x-full'} transform transition-transform w-full h-full justify-start duration-300 flex md:hidden`} onClick={handleOutsideClick}>
+                <div id="sidebarContent" className="h-full bg-white shadow-md transform translate-x-0 transition-transform duration-300 min-w-52">
                     <div className="justify-end items-start gap-10 main-menu flex flex-col px-3">
                         <div className="sidebar py-4 w-full">
-                            <div id="sidebar-menu" className="vertical-menu flex flex-col items-start justify-start font-Outfit text-base font-bold">
-                                <div className="w-full flex justify-end">
-                                    <div className="sidebar-close flex justify-end md:pr-[20px]">
+                            <div id="sidebar-menu" className="vertical-menu flex flex-col items-start justify-start font-Outfit text-base font-bold gap-4">
+                                <div className="w-full flex justify-start">
+                                    <div className="sidebar-close flex justify-start md:pl-[20px]" onClick={() => closeSidebar()}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                             <g clipPath="url(#clip0_7_425)">
                                                 <path d="M13.4139 11.9999L23.7069 1.70692C23.8891 1.51832 23.9899 1.26571 23.9876 1.00352C23.9853 0.741321 23.8801 0.490508 23.6947 0.3051C23.5093 0.119692 23.2585 0.0145233 22.9963 0.0122448C22.7341 0.00996641 22.4815 0.110761 22.2929 0.292919L11.9999 10.5859L1.70691 0.292919C1.51831 0.110761 1.2657 0.00996641 1.00351 0.0122448C0.741311 0.0145233 0.490498 0.119692 0.30509 0.3051C0.119682 0.490508 0.0145129 0.741321 0.0122345 1.00352C0.00995606 1.26571 0.11075 1.51832 0.292909 1.70692L10.5859 11.9999L0.292909 22.2929C0.105437 22.4804 0.00012207 22.7348 0.00012207 22.9999C0.00012207 23.2651 0.105437 23.5194 0.292909 23.7069C0.480436 23.8944 0.734744 23.9997 0.999909 23.9997C1.26507 23.9997 1.51938 23.8944 1.70691 23.7069L11.9999 13.4139L22.2929 23.7069C22.4804 23.8944 22.7347 23.9997 22.9999 23.9997C23.2651 23.9997 23.5194 23.8944 23.7069 23.7069C23.8944 23.5194 23.9997 23.2651 23.9997 22.9999C23.9997 22.7348 23.8944 22.4804 23.7069 22.2929L13.4139 11.9999Z" fill="#374957" />
@@ -175,30 +190,8 @@ const CustomNavbar = ({ onSelect, ...props }) => {
                                     </div>
                                 </div>
                                 <div>
-                                    <Navbar {...props} className='md:flex hidden flex-col'>
-                                        <Nav onSelect={onSelect} >
-                                            <Nav.Item eventKey="/" active={activeKey('/')} icon={<IoIosHome />} onClick={() => navigate('/')}>
-                                                Home
-                                            </Nav.Item>
-                                            <Nav.Item eventKey="/about" active={activeKey('/about')} onClick={() => navigate('/about')} icon={<InfoRoundIcon />}>About</Nav.Item>
-                                            <Nav.Item eventKey="/contact" active={activeKey('/contact')} onClick={() => navigate('/contact')} icon={<IoMdContacts />}>Contact</Nav.Item>
-                                        </Nav>
-                                        {auth && (
-                                            <>
-                                                <Nav pullRight>
-                                                    <UserHeader />
-                                                </Nav>
-                                            </>
-                                        )}
-                                        {!auth && (
-                                            <>
-                                                <Nav pullRight>
-                                                    <Nav.Item eventKey="/login" active={activeKey('/login')} onClick={() => navigate('/login')} icon={<CgLogIn />}>Login</Nav.Item>
-                                                    <Nav.Item eventKey="/signup" active={activeKey('/signup')} onClick={() => navigate('/signup')} icon={<IoMdPersonAdd />}>Sign Up</Nav.Item>
-                                                    <Nav.Item eventKey="/verify-account" active={activeKey('/verify-account')} onClick={() => navigate('/verify-account')} icon={<BsPersonFillCheck />}>Verify Account</Nav.Item>
-                                                </Nav>
-                                            </>
-                                        )}
+                                    <Navbar {...props}>
+                                        <MainTabs vertical={true} />
                                     </Navbar>
                                 </div>
                             </div>

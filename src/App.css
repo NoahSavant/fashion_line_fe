@@ -36,3 +36,27 @@
     scrollbar-width: none;
     /* Firefox */
 }
+
+.header-tab > .rs-nav-item {
+    height: 100%;
+    border-radius: 0px;
+}
+
+.custom-carousel {
+    /* height: calc(100vh - 70px); */
+    height: auto;
+}
+
+.custom-carousel .carousel-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: calc(100vh - 70px);
+    background-color: white;
+    color: white;
+    text-align: center;
+}
+
+.custom-carousel img {
+    object-fit: cover;
+}

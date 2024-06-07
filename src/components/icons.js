@@ -43,6 +43,12 @@ import ModelIcon from '@rsuite/icons/Model';
 import EmailIcon from '@rsuite/icons/Email';
 import CharacterAuthorizeIcon from '@rsuite/icons/CharacterAuthorize';
 import MenuIcon from '@rsuite/icons/Menu';
+import { FiShoppingCart } from "react-icons/fi";
+import { GiShop } from "react-icons/gi";
+import { FaBookBookmark } from "react-icons/fa6";
+import InfoOutlineIcon from '@rsuite/icons/InfoOutline';
+import SortDownIcon from '@rsuite/icons/SortDown';
+import { FaArrowLeftLong } from "react-icons/fa6";
 
 export {
     CogIcon,
@@ -93,5 +99,11 @@ export {
     ModelIcon,
     EmailIcon,
     CharacterAuthorizeIcon,
-    MenuIcon
+    MenuIcon,
+    FiShoppingCart,
+    GiShop,
+    FaBookBookmark,
+    InfoOutlineIcon,
+    SortDownIcon,
+    FaArrowLeftLong
 };
