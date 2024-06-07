@@ -67,7 +67,7 @@ const Login = () => {
                                     </Form.Group>
                                     <Form.Group className='flex justify-between'>
                                         <Checkbox value={remember} onChange={() => setRemember(!remember)}> Remember</Checkbox>
-                                        <Button appearance="link">Forgot password?</Button>
+                                        <Button appearance="link" onClick={() => navigate('/verify-account?tab=resetPassword')}>Forgot password?</Button>
                                     </Form.Group>
                                     {error && (<Message type="error" className='mb-3' showIcon header>{error.data.message}</Message>)}
                                     <Form.Group>

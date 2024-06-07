@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import {
     Container,
     Form,
@@ -8,14 +9,22 @@ import {
     FlexboxGrid,
     Message, 
     Nav,
-    Loader
+    Loader,
+    Whisper,
+    Tooltip,
 } from 'rsuite';
+
+import {
+    InfoOutlineIcon,
+    FaArrowLeftLong
+} from '@/components/icons.js';
 
 import { authenticationEndpoints } from "@/apis";
 import { useApi } from "@/hooks";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { InputPassword } from '@/components/inputs';
-import { active_account_img } from '@/assets/images';
+import FormGroup from 'rsuite/esm/FormGroup';
+
 
 const Navbar = ({ active, onSelect, ...props }) => {
     return (
@@ -30,11 +39,13 @@ const Navbar = ({ active, onSelect, ...props }) => {
 const VerifyAccount = () => {
     const activeAccount = 'activeAccount';
     const resetPassword = 'resetPassword';
+    const tabs = ['activeAccount', 'sendVerify','resetPassword'];
     const [active, setActive] = React.useState(activeAccount);
     const [email, setEmail] = useState('');
     const [verifyCode, setVerifyCode] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const navigate = useNavigate();
     const { data: activeAccountData, loading: activeAccountLoading, error: activeAccountError, callApi: handleActiveAccount } = useApi();
@@ -46,6 +57,12 @@ const VerifyAccount = () => {
             navigate('/login');
         }
     }, [activeAccountData]);
+
+    useEffect(() => {
+        if (searchParams.has('tab') && tabs.includes(searchParams.get('tab'))) {
+            setActive(searchParams.get('tab'));
+        }
+    }, []);
 
     const onAcctiveAccount = async () => {
         await handleActiveAccount(
@@ -119,7 +136,16 @@ const VerifyAccount = () => {
                                                     {resetPasswordError && (<Message type="error" className='mb-3' showIcon header>{resetPasswordError.data.message}</Message>)}
                                                     {resetPasswordData && (<Message type="success" className='mb-3' showIcon header>{resetPasswordData.message}</Message>)}
                                                     <Form.Group>
-                                                        <ButtonToolbar className="flex justify-end">
+                                                        <ButtonToolbar className="flex justify-between">
+                                                            <Whisper
+                                                                trigger="click"
+                                                                placement="rightStart"
+                                                                speaker={
+                                                                    <Tooltip>Send verify code to your email from the left tab</Tooltip>
+                                                                }
+                                                            >
+                                                                <InfoOutlineIcon className="hover:text-sapphire cursor-pointer" style={{ fontSize: '1.5em' }} />
+                                                            </Whisper>
                                                             {!resetPasswordLoading && <Button appearance="primary" type='submit' className='bg-blue-500'>Reset Password</Button>}
                                                             {resetPasswordLoading && <Loader content="Loading..." />}
                                                         </ButtonToolbar>
@@ -140,7 +166,16 @@ const VerifyAccount = () => {
                                             {sendVerifyError && (<Message type="error" className='mb-3' showIcon header>{sendVerifyError.data.message}</Message>)}
                                             {sendVerifyData && (<Message type="success" className='mb-3' showIcon header>{sendVerifyData.message}</Message>)}
                                             <Form.Group>
-                                                <ButtonToolbar className="flex justify-end">
+                                                <ButtonToolbar className="flex justify-between">
+                                                    <Whisper
+                                                        trigger="click"
+                                                        placement="rightStart"
+                                                        speaker={
+                                                            <Tooltip>Send verify code to your email for active account or reset password</Tooltip>
+                                                        }
+                                                    >
+                                                        <InfoOutlineIcon className="hover:text-sapphire cursor-pointer" style={{ fontSize: '1.5em' }} />
+                                                    </Whisper>
                                                     {!sendVerifyLoading && <Button appearance="primary" type='submit' className='bg-blue-500'>Send verify code</Button>}
                                                     {sendVerifyLoading && <Loader content="Loading..." />}
                                                 </ButtonToolbar>
