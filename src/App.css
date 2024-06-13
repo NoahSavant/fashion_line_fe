@@ -60,3 +60,29 @@
 .custom-carousel img {
     object-fit: cover;
 }
+
+.p-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.p-btn > * {
+    position: relative;
+    z-index: 10;
+}
+
+.p-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    background-color: rgba(0, 0, 0, 0.15);
+    transition: width 0.4s ease-in-out;
+    z-index: 0;
+}
+
+.p-btn:hover::before {
+    width: 100%;
+}

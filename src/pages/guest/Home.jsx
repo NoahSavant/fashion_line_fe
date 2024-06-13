@@ -20,9 +20,10 @@ const Home = () => {
     }, []);
 
     return (
-        <div>
-            <Carousel className="custom-carousel" autoplayInterval={5000} shape="bar">
-                <div className="carousel-item w-full h-full">
+        <div className="flex flex-col">
+            {/* Carousel */}
+            <Carousel className="custom-carousel relative" autoplayInterval={5000} shape="bar">
+                {/* <div className="carousel-item w-full h-full">
                     <div className="flex justify-between px-[40px] py-[30px] items-center w-full h-full">
                         <div className="flex items-center">
                             <div className="py-5 flex-col justify-start items-start gap-8 flex">
@@ -36,8 +37,6 @@ const Home = () => {
                                 </div>
                             </div>
                         </div>
-
-                        <img className="object-cover rounded-xl w-1/2" src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717734844/files/xl72fv0fhyh6xz1bbedr.jpg" />
 
                         <div className="h-full lg:flex hidden items-center md:relative absolute bottom-0 right-0 justify-end">
                             <div className="flex-col justify-center items-end gap-8 flex h-full">
@@ -84,13 +83,85 @@ const Home = () => {
                         </div>
                         
                     </div>
+                </div> */}
+                <div className="carousel-item relative">
+                    <div className="cursor-pointer absolute top-[calc(50% - 24px)] left-[calc(50% - 76px)] px-6 py-3 bg-sapphire rounded-3xl justify-center items-center gap-2.5 flex p-btn">
+                        <div className="text-white text-base font-medium font-outfit capitalize leading-normal">Shopping now</div>
+                    </div>
+                    <img src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717733581/files/oqctc4z6v4fcple9k0pz.webp" />
                 </div>
-                <img className="carousel-item" src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717733325/files/lg8lb7qnqfwywxbjvjft.webp"/>
-                <img className="carousel-item" src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717670382/files/yvxxta9ab9emazandibu.webp"/>
-                <img className="carousel-item" src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717670440/files/rdcl3iy70vhzeryeh4dk.webp"/>
-                <img className="carousel-item" src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717733536/files/mkr413cgkxs34pymizxf.webp"/>
-                <img className="carousel-item" src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717670507/files/oqctc4z6v4fcple9k0pz.webp"/>
+                <div className="carousel-item relative">
+                    <div className="cursor-pointer absolute top-[calc(50% - 24px)] left-[calc(50% - 76px)] px-6 py-3 bg-sapphire rounded-3xl justify-center items-center gap-2.5 flex p-btn">
+                        <div className="text-white text-base font-medium font-outfit capitalize leading-normal">Shopping now</div>
+                    </div>
+                    <img src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717733325/files/lg8lb7qnqfwywxbjvjft.webp" />
+                </div>
+                <div className="carousel-item relative">
+                    <div className="cursor-pointer absolute top-[calc(50% - 24px)] left-[calc(50% - 76px)] px-6 py-3 bg-sapphire rounded-3xl justify-center items-center gap-2.5 flex p-btn">
+                        <div className="text-white text-base font-medium font-outfit capitalize leading-normal">Shopping now</div>
+                    </div>
+                    <img src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717670382/files/yvxxta9ab9emazandibu.webp" />
+                </div>
+                <div className="carousel-item relative">
+                    <div className="cursor-pointer absolute top-[calc(50% - 24px)] left-[calc(50% - 76px)] px-6 py-3 bg-sapphire rounded-3xl justify-center items-center gap-2.5 flex p-btn">
+                        <div className="text-white text-base font-medium font-outfit capitalize leading-normal">Shopping now</div>
+                    </div>
+                    <img src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717670440/files/rdcl3iy70vhzeryeh4dk.webp" />
+                </div>
+                <div className="carousel-item relative">
+                    <div className="cursor-pointer absolute top-[calc(50% - 24px)] left-[calc(50% - 76px)] px-6 py-3 bg-sapphire rounded-3xl justify-center items-center gap-2.5 flex p-btn">
+                        <div className="text-white text-base font-medium font-outfit capitalize leading-normal">Shopping now</div>
+                    </div>
+                    <img src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717733536/files/mkr413cgkxs34pymizxf.webp" />
+                </div>
             </Carousel>
+
+            <div className="lg:px-[100px] md:px-[60px] px-5 lg:py-[60px] md:py-[30px] py-5 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
+                <div className="flex flex-col w-full justify-center items-center group cursor-pointer">
+                    <img className="h-[600px] object-cover rounded-b-3xl" src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717734844/files/xl72fv0fhyh6xz1bbedr.jpg" />
+                    <div className="w-full text-base font-medium text-center bg-white group-hover:bg-sapphire text-sapphire group-hover:text-white px-4 py-2 border-2 border-sapphire rounded-t-3xl">
+                        collection 1
+                    </div>
+                </div>
+                <div className="flex flex-col w-full justify-center items-center group cursor-pointer">
+                    <img className="h-[600px] object-cover rounded-b-3xl" src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717734844/files/xl72fv0fhyh6xz1bbedr.jpg" />
+                    <div className="w-full text-base font-medium text-center bg-white group-hover:bg-sapphire text-sapphire group-hover:text-white px-4 py-2 border-2 border-sapphire rounded-t-3xl">
+                        collection 1
+                    </div>
+                </div>
+                <div className="flex flex-col w-full justify-center items-center group cursor-pointer">
+                    <img className="h-[600px] object-cover rounded-b-3xl" src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717734844/files/xl72fv0fhyh6xz1bbedr.jpg" />
+                    <div className="w-full text-base font-medium text-center bg-white group-hover:bg-sapphire text-sapphire group-hover:text-white px-4 py-2 border-2 border-sapphire rounded-t-3xl">
+                        collection 1
+                    </div>
+                </div>
+                <div className="flex flex-col w-full justify-center items-center group cursor-pointer">
+                    <img className="h-[600px] object-cover rounded-b-3xl" src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717734844/files/xl72fv0fhyh6xz1bbedr.jpg" />
+                    <div className="w-full text-base font-medium text-center bg-white group-hover:bg-sapphire text-sapphire group-hover:text-white px-4 py-2 border-2 border-sapphire rounded-t-3xl">
+                        collection 1
+                    </div>
+                </div>
+            </div>
+
+            {/* Collection */}
+            {/* <div className="lg:px-[100px] md:px-[60px] px-5 lg:py-[60px] md:py-[30px] py-5 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
+                <div className="flex flex-col w-full h-[100px]">
+                    <div className="">
+                        <img src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717734844/files/xl72fv0fhyh6xz1bbedr.jpg" />
+                    </div>
+                    <div className="text-base text-center bg-white hover:bg-sapphire text-sapphire hover:text-white">
+                        collection 1
+                    </div>
+                </div>
+                <div className="flex flex-col w-full h-[100px]">
+                    <div className="">
+                        <img src="https://res.cloudinary.com/dvcdmxgyk/image/upload/v1717734844/files/xl72fv0fhyh6xz1bbedr.jpg" />
+                    </div>
+                    <div className="text-base text-center bg-white hover:bg-sapphire text-sapphire hover:text-white">
+                        collection 1
+                    </div>
+                </div>
+            </div> */}
         </div>
     )
 
