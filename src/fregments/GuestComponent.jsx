@@ -6,17 +6,13 @@ import BaseFooter from './BaseFooter'
 const GuestComponent = ({ children }) => {
     return (
         <div className="show-container">
-            <Container>
+            <div className='flex flex-col gap-0 w-full'>
                 <Header>
                     <BaseHeader></BaseHeader>
                 </Header>
-                <Content>
-                    { children }
-                </Content>
-                <Footer>
-                    <BaseFooter/>
-                </Footer>
-            </Container>
+                {children}
+                <BaseFooter />
+            </div>
         </div>
     );
     
