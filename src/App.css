@@ -86,3 +86,38 @@
 .p-btn:hover::before {
     width: 100%;
 }
+
+:has(> .animation-iv) {
+    overflow: hidden;
+}
+
+.animation-iv.fade-in {
+    opacity: 0%;
+    transition: opacity 0.6s ease-in-out;
+}
+
+.animation-iv.fade-in.in-view {
+    opacity: 100%;
+}
+
+.animation-iv.fade-in-left {
+    opacity: 0%;
+    transform: translateX(-100%);
+    transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+}
+
+.animation-iv.fade-in-left.in-view {
+    opacity: 100%;
+    transform: translateX(0%);
+}
+
+.animation-iv.fade-in-right {
+    opacity: 0%;
+    transform: translateX(100%);
+    transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+}
+
+.animation-iv.fade-in-right.in-view {
+    opacity: 100%;
+    transform: translateX(0%);
+}
