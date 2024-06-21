@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "@/apis/axiosConfig";
 import { toast } from 'react-toastify';
 
@@ -8,6 +8,53 @@ const useApi = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    function getTranslateValues(el) {
+      var style = window.getComputedStyle(el);
+      var transform = style.transform || style.webkitTransform; // Get the transform property
+
+      if (!transform || transform === 'none') {
+        return { translateX: 0, translateY: 0 };
+      }
+
+      var matrix = transform.match(/\((.*?)\)/); // Extracts the matrix value inside parentheses
+      if (matrix) {
+        var matrixValues = matrix[1].split(','); // Split matrix values into an array
+        if (matrixValues.length >= 6) {
+          var translateX = parseFloat(matrixValues[4]);
+          var translateY = parseFloat(matrixValues[5]);
+          return { translateX: translateX, translateY: translateY };
+        }
+      }
+
+      return { translateX: 0, translateY: 0 };
+    }
+
+    function isElementInViewport(el) {
+      var rect = el.getBoundingClientRect();
+      var { translateX, translateY } = getTranslateValues(el);
+      var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
+      var elementCenterY = rect.top + rect.height / 2 + translateY;
+
+      return elementCenterY >= 0 && elementCenterY <= viewportHeight;
+    }
+
+    function checkInview() {
+      document.querySelectorAll('.animation-iv').forEach(function (element) {
+        if (isElementInViewport(element)) {
+          element.classList.add('in-view');
+        } else {
+          if (element.classList.contains('anmt-repeat')) {
+            element.classList.remove('in-view');
+          }
+        }
+      });
+    }
+
+    checkInview();
+  }, [loading]);
+  
   const callApi = async (endpoint, options) => {
     try {
       setLoading(true);

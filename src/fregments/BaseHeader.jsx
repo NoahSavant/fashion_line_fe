@@ -162,7 +162,7 @@ const CustomNavbar = ({ onSelect, ...props }) => {
                             <img src={logo_image} alt="" className='object-contain w-[200px] h-[75px] cursor-pointer' onClick={() => navigate('/')} />
                         </div>
                         <Input className='max-w-[700px] shadow-full' placeholder='Find your content...'/>
-                        <div className="cursor-pointer px-3 py-2 bg-sapphire rounded-md justify-center items-center flex p-btn gap-2">
+                        <div className="cursor-pointer px-3 py-2 bg-sapphire rounded-md justify-center items-center flex p-btn gap-2 shadow-full">
                             <SearchIcon className="text-white"/>
                             <div className="text-white text-sm font-normal capitalize leading-normal">Search</div>
                         </div>
@@ -170,8 +170,8 @@ const CustomNavbar = ({ onSelect, ...props }) => {
                 </div>
                 
             </div>
-            <div class="marquee-container bg-sapphire font-medium h-[40px] flex justify-center items-center">
-                <div class="marquee text-white flex gap-40 justify-center items-center">
+            <div className="marquee-container bg-sapphire font-medium h-[40px] flex justify-center items-center">
+                <div className="marquee text-white flex gap-40 justify-center items-center">
                     <div className='flex gap-2 justify-center items-center'>
                         <svg
                             fill="#000000"

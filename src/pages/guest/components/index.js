@@ -1,1 +1,6 @@
 export { default as PButton } from './PButton'
+export { default as SingleProduct } from './SingleProduct'
+export { default as Collection } from './Collection'
+export { default as Categories } from './Categories'
+export { default as Filter } from './Filter'
+export { default as Loading } from './Loading'

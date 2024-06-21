@@ -1,6 +1,6 @@
 import { createBrowserRouter, redirect } from "react-router-dom";
 
-import { MainLayout, PublicLayout } from "@/layouts";
+import { ManagementLayout, PublicLayout } from "@/layouts";
 import ProtectedRoutes from './ProtectedRoutes'
 import PublicRoutes from './PublicRoutes'
 import { getCurrentPath } from "@/helpers/pathHelper";
@@ -37,8 +37,8 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/",
-    element: <PublicLayout />,
+    path: "/management",
+    element: <ManagementLayout />,
     errorElement: <NotFound />,
     loader: protectedLoader,
     children: [

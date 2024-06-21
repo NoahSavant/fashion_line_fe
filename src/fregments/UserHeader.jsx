@@ -5,7 +5,6 @@ import { NoticeIcon, ArrowDownIcon, MemberIcon, UserChangeIcon, SentToUserIcon, 
 import { signOut } from '@/helpers/authenHelpers';
 import { getAuthentication } from "@/helpers/authenHelpers";
 import { UserRole } from "@/constants";
-import { InviteEmployee } from "@/components/selects";
 import { useState } from "react";
 
 const UserHeader = () => {
