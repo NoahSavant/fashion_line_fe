@@ -18,7 +18,6 @@ import {
 import { logo_image } from '@/assets/images'
 import { getCurrentPath } from '@/helpers/pathHelper';
 import UserHeader from './UserHeader';
-import QuickAccess from './QuickAccess';
 import { getAuthentication } from "@/helpers/authenHelpers";
 import { UserRole } from "@/constants";
 

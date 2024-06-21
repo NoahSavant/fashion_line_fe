@@ -55,6 +55,8 @@ export default {
       boxShadow: {
         'custom': '0px 4px 19.6px 0px rgba(0, 0, 0, 0.10)',
         'full': '0 3px 10px rgb(0,0,0,0.2)',
+        'right-only': '10px 0 10px -2px rgba(0, 0, 0, 0.2)',
+        'left-only': '-10px 0 10px -2px rgba(0, 0, 0, 0.2)'
       },
     },
   },

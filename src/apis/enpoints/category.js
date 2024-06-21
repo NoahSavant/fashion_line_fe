@@ -1,6 +1,6 @@
-const baseEndpoint = '/connections'
+const baseEndpoint = '/categories'
 
-const connectionEndpoints = {
+const categoryEndpoints = {
     get: baseEndpoint,
     delete: baseEndpoint,
     merge: baseEndpoint + '/merge',
@@ -11,9 +11,6 @@ const connectionEndpoints = {
     show: baseEndpoint + '/',
     edit: baseEndpoint + '/',
     getContacts: baseEndpoint + '/',
-    addUserConnections: baseEndpoint + '/add-user-connections',
-    deleteUserConnections: baseEndpoint + '/delete-user-connections',
-    getUserConnections: baseEndpoint + '/user-connections/useable'
 };
 
-export default connectionEndpoints;
+export default categoryEndpoints;

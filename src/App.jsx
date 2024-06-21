@@ -56,6 +56,62 @@ const App = () => {
       });
     }
 
+    document.querySelectorAll('.container-scroll').forEach(function (container) {
+      container.querySelectorAll('.right-scroll').forEach(function (rightScroll) {
+        rightScroll.addEventListener('click', function () {
+          var listScroll = container.querySelector('.list-scroll');
+          var scrollAmount = listScroll.clientWidth;
+
+          var targetScrollLeft = listScroll.scrollLeft + scrollAmount + 20;
+
+          if (targetScrollLeft > listScroll.scrollWidth - listScroll.clientWidth) {
+            targetScrollLeft = 0;
+          }
+
+          listScroll.scrollTo({
+            left: targetScrollLeft,
+            behavior: 'smooth'
+          });
+        });
+      });
+
+      container.querySelectorAll('.left-scroll').forEach(function (leftScroll) {
+        leftScroll.addEventListener('click', function () {
+          var listScroll = container.querySelector('.list-scroll');
+          var scrollAmount = listScroll.clientWidth; // Amount to scroll (use clientWidth for visible width)
+
+          var targetScrollLeft = listScroll.scrollLeft - scrollAmount -20;
+
+          if (targetScrollLeft < 0) {
+            targetScrollLeft = listScroll.scrollWidth - listScroll.clientWidth;
+          }
+
+          listScroll.scrollTo({
+            left: targetScrollLeft,
+            behavior: 'smooth'
+          });
+        });
+      });
+
+      if (container.classList.contains('auto-scroll')) {
+        setInterval(function () {
+          var listScroll = container.querySelector('.list-scroll');
+          var scrollAmount = listScroll.clientWidth;
+
+          var targetScrollLeft = listScroll.scrollLeft + scrollAmount + 20;
+
+          if (targetScrollLeft > listScroll.scrollWidth - listScroll.clientWidth) {
+            targetScrollLeft = 0;
+          }
+
+          listScroll.scrollTo({
+            left: targetScrollLeft,
+            behavior: 'smooth'
+          });
+        }, 5000);
+      }
+    });
+
     checkInview();
 
     window.addEventListener('scroll', checkInview);

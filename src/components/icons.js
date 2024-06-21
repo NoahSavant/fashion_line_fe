@@ -49,6 +49,9 @@ import { FaBookBookmark } from "react-icons/fa6";
 import InfoOutlineIcon from '@rsuite/icons/InfoOutline';
 import SortDownIcon from '@rsuite/icons/SortDown';
 import { FaArrowLeftLong } from "react-icons/fa6";
+import VisibleIcon from '@rsuite/icons/Visible';
+import { FaStar } from "react-icons/fa6";
+import FunnelIcon from '@rsuite/icons/Funnel';
 
 export {
     CogIcon,
@@ -105,5 +108,8 @@ export {
     FaBookBookmark,
     InfoOutlineIcon,
     SortDownIcon,
-    FaArrowLeftLong
+    FaArrowLeftLong,
+    VisibleIcon,
+    FaStar,
+    FunnelIcon
 };
