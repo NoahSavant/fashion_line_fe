@@ -23,10 +23,10 @@ const Shop = () => {
     })
 
     return (
-        <div className="custom-padding flex gap-10">
-            <div className={`${isOpen ? 'lg:w-80 w-0' : 'w-0'} relative group h-[100vh] transform transition-all duration-500 ease-in-out`}>
+        <div className="md:px-7 px-5 md:py-7 py-5 flex gap-10">
+            <div className={`lg:w-80 w-0 relative group h-[calc(100vh-150px)] transform transition-all duration-500 ease-in-out`}>
                 <div
-                    className={`${isOpen ? 'group-hover:block lg:-right-5 right-[-340px]' : 'rotate-180 -right-6'} shadow-left-only cursor-pointer right-scroll absolute top-[calc(50%-32px)] bg-white rounded-full z-10 transform transition-all duration-500 ease-in-out`}
+                    className={`${isOpen ? 'lg:-right-5 right-[-340px]' : 'rotate-180 -right-6'} lg:hidden shadow-left-only cursor-pointer right-scroll absolute top-[calc(50%-32px)] bg-white rounded-full z-10 transform transition-all duration-500 ease-in-out`}
                     onClick={handleSidebar}
                 >
                     <svg
@@ -53,7 +53,7 @@ const Shop = () => {
                         </g>
                     </svg>
                 </div>
-                <div className={`${isOpen ? '' : '-translate-x-full opacity-0'} absolute left-0 top-0 w-80 h-max-[100vh] overflow-auto hidden-scroll-bar shadow-full rounded-xl h-full transform transition-all duration-500 ease-in-out`}>
+                <div className={`${isOpen ? '' : 'lg:translate-x-0 lg:opacity-100 -translate-x-full opacity-0'} absolute left-0 top-0 w-80 h-max-[calc(100vh-150px)] overflow-auto hidden-scroll-bar shadow-full rounded-xl h-full transform transition-all duration-500 ease-in-out`}>
                     <Filter filter={filterProduct} setFilter={setFilterProduct}/>
                 </div>
             </div>

@@ -25,6 +25,7 @@ export default {
         manatee2: '#858D9D'
       },
       backgroundColor: {
+        solitude: '#f7f8fa',
         sapphire: '#2c4fa3',
         boston_blue: '#328ba9',
         catskill_white: '#F0F5F7',

@@ -47,15 +47,20 @@ const UserHeader = () => {
                             size="md"
                             circle
                             src={user?.image_url}
+                            color="blue"
+                            bordered
                         />
                         <div className='md:flex hidden flex-col justify-center text-lg'>
                             <p className='font-semibold text-sapphire'>{user?.username}</p>
                         </div>
                     </div>
                 </Whisper>
-                <Badge content={999} maxCount={5} >
-                    <IconButton appearance="primary" onClick={() => navigate('/cart')} icon={<FiShoppingCart style={{ fontSize: '10em' }} />} circle className="bg-sapphire h-10 w-10" />
-                </Badge>
+                {user?.role != UserRole.Admin &&
+                    <Badge Badge content={999} maxCount={5} >
+                        <IconButton appearance="primary" onClick={() => navigate('/cart')} icon={<FiShoppingCart style={{ fontSize: '10em' }} />} circle className="bg-sapphire h-10 w-10" />
+                    </Badge>
+                }
+                
             </div>
         </div>
     );
