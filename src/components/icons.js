@@ -52,6 +52,8 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import VisibleIcon from '@rsuite/icons/Visible';
 import { FaStar } from "react-icons/fa6";
 import FunnelIcon from '@rsuite/icons/Funnel';
+import { GiClothes } from "react-icons/gi";
+import { BsBoxArrowUpRight } from "react-icons/bs";
 
 export {
     CogIcon,
@@ -111,5 +113,7 @@ export {
     FaArrowLeftLong,
     VisibleIcon,
     FaStar,
-    FunnelIcon
+    FunnelIcon,
+    GiClothes,
+    BsBoxArrowUpRight
 };

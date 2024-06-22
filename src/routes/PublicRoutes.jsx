@@ -1,6 +1,5 @@
 import { Login, SignUp, VerifyAccount } from '@pages/authentication'
 import { About, Home, Contact, Shop, Blog } from '@/pages/guest'
-import { Navigate } from 'react-router-dom';
 
 const PublicRoutes = [
     {

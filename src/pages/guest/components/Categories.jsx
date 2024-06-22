@@ -9,7 +9,11 @@ const Categories = () => {
     const { data: categories, callApi: handleGetCategories, loading: categoriesLoading } = useApi();
 
     useEffect(() => {
-        handleGetCategories(categoryEndpoints.get, {});
+        handleGetCategories(categoryEndpoints.get, {
+            params: {
+                all: true
+            } 
+        });
     }, []);
 
     return (

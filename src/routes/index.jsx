@@ -20,9 +20,9 @@ const publicLoader = () => {
 };
 
 const protectedLoader = () => {
-  if (getCurrentPath() !== '/') {
-    return redirect("/login");
-  }
+  // if (!getAuthentication()) {
+  //   return redirect("/login");
+  // }
   return null;
 };
 
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/management",
+    path: "/m",
     element: <ManagementLayout />,
     errorElement: <NotFound />,
     loader: protectedLoader,
