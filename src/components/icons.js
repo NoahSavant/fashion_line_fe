@@ -54,6 +54,8 @@ import { FaStar } from "react-icons/fa6";
 import FunnelIcon from '@rsuite/icons/Funnel';
 import { GiClothes } from "react-icons/gi";
 import { BsBoxArrowUpRight } from "react-icons/bs";
+import CameraRetroIcon from '@rsuite/icons/legacy/CameraRetro';
+import { HiMiniXCircle } from "react-icons/hi2";
 
 export {
     CogIcon,
@@ -115,5 +117,7 @@ export {
     FaStar,
     FunnelIcon,
     GiClothes,
-    BsBoxArrowUpRight
+    BsBoxArrowUpRight,
+    CameraRetroIcon,
+    HiMiniXCircle
 };
