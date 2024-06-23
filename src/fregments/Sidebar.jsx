@@ -18,7 +18,7 @@ const Sidebar = () => {
     const navigate = useNavigate();
 
     return (
-        <div className={`${expanded ? 'w-60' : 'w-14'} transform transition-all duration-200 ease-in-out h-full min-h-[100vh]`}>
+        <div className={`${expanded ? 'w-60' : 'w-14'} lg:shadow-none shadow-md transform transition-all duration-200 ease-in-out h-full min-h-[100vh]`}>
             <div className={`${expanded ? 'h-[60px]' : 'h-[50px] flex-col'}  flex items-center justify-center`}>
                 <img src={icon} alt="" className={`${expanded ? 'hidden' : ''} object-contain w-[20px] h-[20px] cursor-pointer`} onClick={() => navigate('/m')} />
                 <img src={logo_image} alt="" className={`${expanded ? '' : 'hidden'} object-contain w-[160px] h-[60px] cursor-pointer`} onClick={() => navigate('/m')} />

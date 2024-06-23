@@ -22,8 +22,8 @@ const MSingleProduct = ({id}) => {
         tags: [],
         category: null,
         status: ProductStatus.OPEN,
-        first_image: '',
-        second_image: '',
+        first_image: null,
+        second_image: null,
         note: '',
     })
     
@@ -41,7 +41,7 @@ const MSingleProduct = ({id}) => {
         setCheckedKeys([]);
     }, [fetchProduct]);
 
-    console.log(product);
+    // console.log(product);
 
     return (
         <div className='p-5 flex flex-col gap-4'>
@@ -103,7 +103,7 @@ const MSingleProduct = ({id}) => {
                         </div>
                         <div className='flex flex-col gap-1.5'>
                             <label>File</label>
-                            <UploadFile onFileUpload={(value) => setProduct({...product, first_image: value})}/>
+                            <UploadFile className='w-[135px] h-[135px]' values={[product.first_image]} number={1} setValues={(value) => setProduct({ ...product, first_image: value[0] })} />
                         </div>
                     </div>
                 </div>
