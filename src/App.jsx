@@ -7,7 +7,10 @@ import "react-toastify/dist/ReactToastify.css";
 import 'suneditor/dist/css/suneditor.min.css';
 import 'rsuite/Button/styles/index.less';
 import 'rsuite/ButtonToolbar/styles/index.less';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
+import { CartContextProvider } from '@/contexts/CartContext';
+import { PopupConfirmContextProvider } from '@/contexts/PopupConfirmContext';
+
 
 const App = () => {
   useEffect(() => {
@@ -123,14 +126,20 @@ const App = () => {
     };
 
   }, []);
-
+  
   return (
     <>
-      <RouterProvider router={ router} />
-      <ToastContainer 
-        autoClose={2000}
-        pauseOnFocusLoss={false}
-      />
+      <PopupConfirmContextProvider>
+        <CartContextProvider>
+          <RouterProvider router={router} />
+          <ToastContainer
+            autoClose={5000}
+            pauseOnFocusLoss={false}
+            closeOnClick
+            pauseOnHover
+          />
+        </CartContextProvider>
+      </PopupConfirmContextProvider> 
     </>
   );
 }

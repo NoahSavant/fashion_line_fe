@@ -43,7 +43,6 @@
 }
 
 .custom-carousel {
-    /* height: calc(100vh - 70px); */
     height: auto;
 }
 
@@ -51,7 +50,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    max-height: calc(100vh - 70px);
+    max-height: calc(100vh - 100px);
     background-color: white;
     color: white;
     text-align: center;
@@ -170,11 +169,9 @@ a:hover {
 }
 
 .spin-loader {
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #3498db;
+    border: solid #f3f3f3;
+    border-top: solid #3498db;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
     animation: spin 1s linear infinite;
 }
 
@@ -192,56 +189,16 @@ a:hover {
     min-width: 80px;
  }
 
- /* src/App.css */
- .dropzone {
-     border: 2px dashed #0087f7;
-     border-radius: 5px;
-     background: #f0f0f0;
-     padding: 20px;
-     text-align: center;
-     cursor: pointer;
+ .active-nav > a {
+    color: #1675e0 !important;
  }
 
- .crop-container {
-     position: relative;
-     width: 100%;
-     height: 400px;
-     background: #333;
- }
+ @media (max-width: 767px) {
+    .pagination>.rs-divider.rs-divider-vertical {
+        display: none;
+    }
 
- .file-preview {
-     display: flex;
-     flex-wrap: wrap;
-     margin-top: 20px;
- }
-
- .file-item {
-     margin: 10px;
- }
-
- .file-preview-image {
-     width: 100px;
-     height: 100px;
-     object-fit: cover;
- }
-
- .file-icon {
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-     justify-content: center;
-     width: 100px;
-     height: 100px;
-     border: 1px solid #ddd;
-     border-radius: 5px;
- }
-
- .file-icon i {
-     font-size: 50px;
-     color: #aaa;
- }
-
- .file-icon p {
-     margin-top: 10px;
-     font-size: 14px;
+    .pagination>.rs-pagination-group-grow {
+        display: none;
+    }
  }

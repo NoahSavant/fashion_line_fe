@@ -56,6 +56,9 @@ import { GiClothes } from "react-icons/gi";
 import { BsBoxArrowUpRight } from "react-icons/bs";
 import CameraRetroIcon from '@rsuite/icons/legacy/CameraRetro';
 import { HiMiniXCircle } from "react-icons/hi2";
+import { GrResources } from "react-icons/gr";
+import { RiPagesLine } from "react-icons/ri";
+import { RiDashboardFill } from "react-icons/ri";
 
 export {
     CogIcon,
@@ -119,5 +122,8 @@ export {
     GiClothes,
     BsBoxArrowUpRight,
     CameraRetroIcon,
-    HiMiniXCircle
+    HiMiniXCircle,
+    GrResources,
+    RiPagesLine,
+    RiDashboardFill
 };

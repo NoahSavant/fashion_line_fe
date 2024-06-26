@@ -54,7 +54,12 @@ const useApi = () => {
 
     checkInview();
   }, [loading]);
-  
+
+  const errorMessageMap = (errorMessages) => {
+    const messages = Object.values(errorMessages).flatMap(errors => errors);
+    return messages.map((message, index) => <div key={index}>{message}</div>);
+  };
+
   const callApi = async (endpoint, options) => {
     try {
       setLoading(true);
@@ -62,15 +67,19 @@ const useApi = () => {
       setLoading(false);
       setData(response);
 
-      if(response.message) {
-        toast.success(response.message);
+      if (response.successMessage) {
+        toast.success(response.successMessage);
       }
     } catch (error) {
       setLoading(false);
       setError(error.response);
 
-      if(error.response?.data?.message) {
-        toast.error(error.response.data.message);
+      if (error.response?.data?.errors) {
+        toast.error(<div>
+          {errorMessageMap(error.response.data.errors)}
+        </div>);
+      } if (error.response?.data?.errorMessage) {
+        toast.error(error.response.data.errorMessage);
       }
     }
   };
