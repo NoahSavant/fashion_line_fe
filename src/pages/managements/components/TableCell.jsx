@@ -32,6 +32,23 @@ export const NameCell = ({ rowData, dataKey, dataKeyNote, ...props }) => {
     );
 }
 
+export const ColorCell = ({ rowData, dataKey, attributes = [], ...props }) => {
+    let value = rowData[dataKey];
+
+    attributes.forEach(element => {
+        value = value[element]
+    });
+
+    return (
+        <Cell {...props}>
+            <div className='flex flex-col justify-center w-full h-full'>
+                <div className={`w-7 h-5 rounded-md shadow-full`} style={{ backgroundColor: value }}></div>
+            </div>
+        </Cell>
+
+    );
+}
+
 export const BaseCell = ({ rowData, dataKey, attributes=[], ...props }) => {
     let value = rowData[dataKey];
 

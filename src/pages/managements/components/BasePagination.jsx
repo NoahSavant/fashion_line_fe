@@ -1,7 +1,7 @@
 import {Pagination} from "rsuite";
 import { PaginationDefault } from "@/constants";
 import { useEffect, useState } from "react";
-const BasePagination = ({ pagination, handlePagination }) => {
+const BasePagination = ({ pagination, handlePagination, className='' }) => {
     const { currentPage, totalRow, perPage,  lastPage} = pagination ?? {};
 
     const handleLimit = (newLimit) => {
@@ -13,12 +13,10 @@ const BasePagination = ({ pagination, handlePagination }) => {
     }
 
     return (
-        <div style={{ padding: 20 }}>
+        <div className="p-2">
             <Pagination
                 prev
                 next
-                first
-                last
                 ellipsis
                 boundaryLinks
                 maxButtons={3}
@@ -30,6 +28,7 @@ const BasePagination = ({ pagination, handlePagination }) => {
                 activePage={currentPage}
                 onChangePage={handlePage}
                 onChangeLimit={handleLimit}
+                className={`${className} pagination`}
             />
         </div>
     );

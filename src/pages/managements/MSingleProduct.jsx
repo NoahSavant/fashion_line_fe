@@ -101,10 +101,17 @@ const MSingleProduct = ({id}) => {
                                 onChange={(value) => setProduct({ ...product, status: value })}
                             />
                         </div>
-                        <div className='flex flex-col gap-1.5'>
-                            <label>File</label>
-                            <UploadFile className='w-[135px] h-[135px]' values={[product.first_image]} number={1} setValues={(value) => setProduct({ ...product, first_image: value[0] })} />
+                        <div className='grid grid-cols-2 gap-2'>
+                            <div className='flex flex-col gap-1.5'>
+                                <label>First Image</label>
+                                <UploadFile className='w-full h-[135px]' values={[]} number={1} setValues={(value) => setProduct({ ...product, first_image: value[0] })} />
+                            </div>
+                            <div className='flex flex-col gap-1.5'>
+                                <label>Second Image</label>
+                                <UploadFile className='w-full h-[135px]' values={[]} number={1} setValues={(value) => setProduct({ ...product, second_image: value[0] })} />
+                            </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>

@@ -2,8 +2,7 @@ import React from 'react';
 import { useApi } from '@/hooks';
 import { useState, useEffect } from 'react';
 import { categoryEndpoints } from '@/apis'
-import Loading from './Loading';
-
+import { Loading } from '@/components';
 
 const Categories = () => {
     const { data: categories, callApi: handleGetCategories, loading: categoriesLoading } = useApi();
