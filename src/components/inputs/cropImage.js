@@ -1,32 +1,36 @@
-// src/cropImage.js
-export const getCroppedImg = (imageSrc, pixelCrop) => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-
+export const getCroppedImg = async (imageSrc, pixelCrop) => {
     const image = new Image();
     image.src = imageSrc;
 
-    return new Promise((resolve) => {
-        image.onload = () => {
-            canvas.width = pixelCrop.width;
-            canvas.height = pixelCrop.height;
+    await new Promise((resolve) => {
+        image.onload = resolve;
+    });
 
-            ctx.drawImage(
-                image,
-                pixelCrop.x,
-                pixelCrop.y,
-                pixelCrop.width,
-                pixelCrop.height,
-                0,
-                0,
-                pixelCrop.width,
-                pixelCrop.height
-            );
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
 
-            canvas.toBlob((blob) => {
-                const croppedImageUrl = URL.createObjectURL(blob);
-                resolve(croppedImageUrl);
-            }, 'image/jpeg');
-        };
+    canvas.width = pixelCrop.width;
+    canvas.height = pixelCrop.height;
+
+    ctx.drawImage(
+        image,
+        pixelCrop.x,
+        pixelCrop.y,
+        pixelCrop.width,
+        pixelCrop.height,
+        0,
+        0,
+        pixelCrop.width,
+        pixelCrop.height
+    );
+
+    return new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+            if (blob) {
+                resolve(blob);
+            } else {
+                reject(new Error('Canvas is empty'));
+            }
+        }, 'image/jpeg');
     });
 };

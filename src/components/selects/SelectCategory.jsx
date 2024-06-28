@@ -46,7 +46,7 @@ const SelectCategory = ({ single=false, select=true, value, setValue, readOnly=f
                 single ? (
                         <RadioGroup name="radio-group-controlled" value={value} onChange={setValue} className={`grid grid-cols-2 ${className}`} loading={categoryLoading}>
                         {data.map((item) => (
-                            <Radio key={item.id} value={item.name}>
+                            <Radio key={item.id} value={item.id}>
                                 {item.name}
                             </Radio>
                         ))}
@@ -54,13 +54,13 @@ const SelectCategory = ({ single=false, select=true, value, setValue, readOnly=f
                 ) : (
                     <CheckboxGroup
                         name="checkbox-group"
-                        value={filter.collections}
-                        onChange={(value) => setFilter({ ...filter, collections: value })}
+                        value={value}
+                        onChange={setValue}
                         className={`grid grid-cols-2 ${className}`}
                         loading={categoryLoading}
                     >
                         {data.map((item) => (
-                            <Checkbox key={item.id} value={item.name}>
+                            <Checkbox key={item.id} value={item.id}>
                                 {item.name}
                             </Checkbox>
                         ))}

@@ -14,7 +14,7 @@ import React from 'react';
 
 import { getDataTimeFormat } from '@/helpers/dateTimeHelpers';
 import { getConstantTitle } from '@/helpers/constantHelpers';
-import { TrashIcon, EditIcon } from '@/components/icons';
+import { TrashIcon, EditIcon, CameraRetroIcon } from '@/components/icons';
 import { useState } from 'react';
 import { data } from 'browserslist';
 
@@ -49,6 +49,26 @@ export const ColorCell = ({ rowData, dataKey, attributes = [], ...props }) => {
     );
 }
 
+export const ImageCell = ({ rowData, dataKey, attributes = [], className='', ...props }) => {
+    let value = rowData[dataKey];
+
+    attributes.forEach(element => {
+        value = value[element]
+    });
+
+    return (
+        <Cell {...props}>
+            <div className='flex justify-center w-full h-full items-center'>
+                {value ? <img src={value} alt="" className={`rounded-md shadow-full object-cover ${className}`} /> : 
+                    <CameraRetroIcon style={{ fontSize: 40 }} />
+                }
+                
+            </div>
+        </Cell>
+
+    );
+}
+
 export const BaseCell = ({ rowData, dataKey, attributes=[], ...props }) => {
     let value = rowData[dataKey];
 
@@ -60,6 +80,27 @@ export const BaseCell = ({ rowData, dataKey, attributes=[], ...props }) => {
         <Cell {...props}>
             <div className='flex flex-col justify-center w-full h-full'>
                 <p>{value}</p>
+            </div>
+        </Cell>
+
+    );
+}
+
+export const DiscountValueCell = ({ rowData, dataKey, attributes = [], condition, ...props }) => {
+    const toThousands = (value) => {
+        return value ? `${value}`.replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&.') : value;
+    }
+
+    let value = rowData[dataKey];
+    let currentCondition = typeof condition === 'string' ? rowData[condition] : condition;
+    attributes.forEach(element => {
+        value = value[element]
+    });
+
+    return (
+        <Cell {...props}>
+            <div className='flex flex-col justify-center w-full h-full items-center'>
+                <p>{currentCondition ? value + '%' : toThousands(value) + 'đ̲'}</p>
             </div>
         </Cell>
 
@@ -109,7 +150,7 @@ export const UsersCell = ({ rowData, dataKey, ...props }) => {
 export const ConstantCell = ({ rowData, dataKey, constant, colors, ...props }) => {
     return (
         <Cell {...props}>
-            <div className='flex flex-col justify-center w-full h-full'>
+            <div className='flex flex-col justify-center w-full h-full items-center'>
                 <TagGroup>
                     <Tag color={colors[rowData[dataKey] ?? 0]} key={rowData['id']} size="md">{getConstantTitle(constant, rowData[dataKey])}</Tag>
                 </TagGroup>

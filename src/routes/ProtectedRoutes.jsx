@@ -1,4 +1,4 @@
-import { MProduct, Dashboard, MSingleProduct, MTag } from '@/pages/managements'
+import { MProduct, Dashboard, MSingleProduct, MTag, MCategory, MDiscount } from '@/pages/managements'
 
 const ProtectedRoutes = [
     {
@@ -16,6 +16,14 @@ const ProtectedRoutes = [
     {
         path: "resource/tag",
         element: <MTag />,
+    },
+    {
+        path: "resource/category",
+        element: <MCategory />,
+    },
+    {
+        path: "resource/discount",
+        element: <MDiscount />,
     }
 ]
 

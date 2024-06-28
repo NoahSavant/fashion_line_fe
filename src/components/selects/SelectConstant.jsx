@@ -1,24 +1,20 @@
 import { CheckPicker, SelectPicker, CheckboxGroup, Checkbox, RadioGroup, Radio } from "rsuite";
 import React from 'react';
-import { useState, useEffect } from "react";
-import { useApi } from '@/hooks'
-import tagEndpoints from "@/apis/enpoints/tag";
+import { getConstantData } from '@/helpers/constantHelpers';
 
-const SelectTag = ({ single=false, select=true, value, setValue, readOnly=false, className='' }) => {
-    const { data: tagData, loading: tagLoading, callApi: handleGetTag } = useApi();
+const SelectConstant = ({ single = false, select = true, value, setValue, readOnly = false, className = '', constant }) => {
+    const data = getConstantData(constant)?.map(item => ({
+        label: item.label,
+        value: item.value,
+        id: item.value,
+        name: item.label
+    })) ?? [];
 
-    useEffect(() => {
-        handleGetTag(tagEndpoints.get, {
-            params: {
-                all: true
-            }
-        });
-    }, []);
-
-    const data = select ? tagData?.map(item => ({
-        label: item.name,
-        value: item.id,
-    })) ?? [] : tagData ?? [];
+    const handleChange = (val) => {
+        if (!readOnly) {
+            setValue(val);
+        }
+    };
 
     return (
         <>
@@ -28,23 +24,26 @@ const SelectTag = ({ single=false, select=true, value, setValue, readOnly=false,
                         className={`w-full h-full ${className}`}
                         data={data}
                         value={value}
-                        onChange={setValue}
-                        loading={tagLoading}
+                        onChange={handleChange}
                         readOnly={readOnly}
                     />
                 ) : (
                     <CheckPicker
                         className={`w-full h-full ${className}`}
                         data={data}
-                        value={value}
-                        onChange={setValue}
-                        loading={tagLoading}
+                        value={Array.isArray(value) ? value : []}
+                        onChange={handleChange}
                         readOnly={readOnly}
                     />
                 )
             ) : (
                 single ? (
-                        <RadioGroup name="radio-group-controlled" value={value} onChange={setValue} className={`grid grid-cols-2 ${className}`} loading={tagLoading}>
+                    <RadioGroup
+                        name="radio-group-controlled"
+                        value={value}
+                        onChange={handleChange}
+                        className={`grid grid-cols-2 ${className}`}
+                    >
                         {data.map((item) => (
                             <Radio key={item.id} value={item.id}>
                                 {item.name}
@@ -54,10 +53,9 @@ const SelectTag = ({ single=false, select=true, value, setValue, readOnly=false,
                 ) : (
                     <CheckboxGroup
                         name="checkbox-group"
-                        value={value}
-                        onChange={setValue}
+                        value={Array.isArray(value) ? value : []}
+                        onChange={handleChange}
                         className={`grid grid-cols-2 ${className}`}
-                        loading={tagLoading}
                     >
                         {data.map((item) => (
                             <Checkbox key={item.id} value={item.id}>
@@ -69,5 +67,6 @@ const SelectTag = ({ single=false, select=true, value, setValue, readOnly=false,
             )}
         </>
     );
-}
-export default SelectTag
+};
+
+export default SelectConstant;
