@@ -4,15 +4,19 @@ import React, { useState } from 'react';
 import {
     BaseCell,
     ActionCell,
-    ColorCell,
+    ImageCell,
     CheckCell,
+    ConstantCell,
+    DateTimeCell,
+    DiscountValueCell
 } from './TableCell';
 import { SearchIcon } from '@/components/icons';
 import Toolbar from './Toolbar';
+import { DiscountStatus, DiscountCondition, DiscountSubject } from '@/constants';
 
 const { Column, HeaderCell } = Table;
 
-const TableTag = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys, onEdit, onDelete, onMultyDelete }) => {
+const TableDiscount = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys, onEdit, onDelete, onMultyDelete }) => {
     const [sortColumn, setSortColumn] = useState();
     const [sortType, setSortType] = useState();
     const [loading, setLoading] = useState(false);
@@ -63,12 +67,12 @@ const TableTag = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys,
 
     return (
         <div className='flex flex-col gap-2 w-full'>
-            <div className='flex justify-between items-center'>
-                <div className='flex gap-2 items-center'>
-                    <div className='text-lg font-semibold px-2'>Tags</div>
+            <div className='flex justify-between md:items-center items-start'>
+                <div className='flex gap-2 items-center md:flex-row flex-col'>
+                    <div className='text-lg font-semibold px-2'>Discounts</div>
                     <Toolbar checkedKeys={checkedKeys} deleteClick={onMultyDelete} />
                 </div>
-                <InputGroup className='ml-5 max-w-[300px]'>
+                <InputGroup className='ml-4 max-w-[300px]'>
                     <Input value={search} onChange={setSearch} />
                     <InputGroup.Addon className='hover:bg-blue-500 hover:text-white hover:cursor-pointer' onClick={handleSearch}>
                         <SearchIcon />
@@ -100,14 +104,34 @@ const TableTag = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys,
                     </HeaderCell>
                     <CheckCell dataKey="id" checkedKeys={checkedKeys} onChange={handleCheck} />
                 </Column>
-                <Column width={350} fullText sortable>
+                <Column width={420} fullText sortable>
                     <HeaderCell>Name</HeaderCell>
                     <BaseCell dataKey='name' />
                 </Column>
 
-                <Column width={90}>
-                    <HeaderCell>Color</HeaderCell>
-                    <ColorCell dataKey="color" />
+                <Column width={150}>
+                    <HeaderCell className='text-center'>Image</HeaderCell>
+                    <ImageCell dataKey="image_url" className='h-[36px] w-[48px]' />
+                </Column>
+                <Column width={120}>
+                    <HeaderCell className='text-center'>Status</HeaderCell>
+                    <ConstantCell dataKey="status" constant={DiscountStatus} colors={['green', 'red']} />
+                </Column>
+                <Column width={120}>
+                    <HeaderCell className='text-center'>Condition</HeaderCell>
+                    <ConstantCell dataKey="condition" constant={DiscountCondition} colors={['gray', 'yellow']} />
+                </Column>
+                <Column width={120}>
+                    <HeaderCell className='text-center'>Subject</HeaderCell>
+                    <ConstantCell dataKey="subject" constant={DiscountSubject} colors={['gray', 'blue']} />
+                </Column>
+                <Column width={180}>
+                    <HeaderCell className='text-center'>Value</HeaderCell>
+                    <DiscountValueCell dataKey="value" condition='condition' />
+                </Column>
+                <Column width={150}>
+                    <HeaderCell className='text-center'>Ended at</HeaderCell>
+                    <DateTimeCell dataKey="ended_at" />
                 </Column>
                 <Column width={90}>
                     <HeaderCell className='text-center'>Action</HeaderCell>
@@ -117,4 +141,4 @@ const TableTag = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys,
         </div>
     );
 }
-export default TableTag
+export default TableDiscount

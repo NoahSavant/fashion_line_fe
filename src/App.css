@@ -168,6 +168,11 @@ a:hover {
     position: relative;
 }
 
+:has(> .confirm-modal-index) {
+    z-index: 99999;
+}
+
+
 .spin-loader {
     border: solid #f3f3f3;
     border-top: solid #3498db;

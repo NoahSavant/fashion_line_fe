@@ -1,4 +1,4 @@
-const baseEndpoint = '/categories'
+const baseEndpoint = '/discounts'
 
 const categoryEndpoints = {
     get: baseEndpoint,

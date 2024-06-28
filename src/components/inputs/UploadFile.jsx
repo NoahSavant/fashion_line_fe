@@ -41,18 +41,17 @@ const UploadFile = ({ cropDimensions = null, values, setValues, number = null, c
 
     const handleCrop = async () => {
         try {
-            const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
-            const updatedFiles = files.map(file => {
-                if (file === currentFile) {
-                    return new File([croppedImage], file.name, { type: file.type });
-                }
-                return file;
-            });
+            const croppedImageBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
+
+            const croppedImageFile = new File([croppedImageBlob], currentFile.name, { type: currentFile.type });
+
+            const updatedFiles = files.map(file => (file === currentFile ? croppedImageFile : file));
+
             setFiles(updatedFiles);
-            setShowModal(false);
             setValues(updatedFiles);
+            setShowModal(false);
         } catch (e) {
-            console.error(e);
+            console.error('Error cropping image:', e);
         }
     };
 
@@ -103,7 +102,7 @@ const UploadFile = ({ cropDimensions = null, values, setValues, number = null, c
                         <Modal.Title>Crop Image</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <div className="crop-container">
+                        <div className="relative w-full h-96">
                             <Cropper
                                 image={imageSrc}
                                 crop={crop}

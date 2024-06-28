@@ -27,7 +27,7 @@ const PopupConfirm = ({ handleConfirm, handleCancel, message, open, setValue, da
 
     return (
         <>
-            <Modal open={open} onClose={handleCancel}>
+            <Modal open={open} onClose={handleCancel} backdropClassName="z-[9999]" className='confirm-modal-index'>
                 <Modal.Header>
                     <Modal.Title className='flex flex-row items-center gap-2'><AiOutlineQuestionCircle />{message()}</Modal.Title>
                 </Modal.Header>
