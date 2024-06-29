@@ -135,7 +135,7 @@ const MCategory = () => {
                         </div>
                         <div className='flex flex-col gap-1.5 w-full'>
                             <label>Image</label>
-                            <UploadFile cropDimensions={[60, 45]} className='w-full h-[135px]' values={editData?.image_url} number={1} setValues={(value) => { console.log(value[0] instanceof File); setEditData({ ...editData, image: value[0] });}} />
+                            <UploadFile cropDimensions={[60, 45]} className='w-full h-[135px]' values={editData?.image_url} number={1} setValues={(value) => setEditData({ ...editData, image: value[0] })} />
                         </div>
                     </div>
                 </Modal.Body>

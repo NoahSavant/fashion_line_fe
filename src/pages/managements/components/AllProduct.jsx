@@ -5,14 +5,14 @@ import { InputNumber, Input, RadioGroup, Radio, CheckboxGroup, Checkbox } from "
 import {
     FunnelIcon
 } from '@/components/icons.js';
-import { TableProduct, Toolbar, BasePagination } from './components';
+import { TableProduct, Toolbar, BasePagination } from './';
 import { productEndpoints, tagEndpoints } from '@/apis'
 import { useConfirmation, useApi } from '@/hooks';
 import { PopupConfirmContext } from '@/contexts/PopupConfirmContext';
 import { getIds } from '@/helpers/dataHelpers';
 
 
-const MProduct = () => {
+const AllProduct = ({onSelect}) => {
     const navigate = useNavigate();
     const { openConfirmation } = useContext(PopupConfirmContext);
 
@@ -54,39 +54,14 @@ const MProduct = () => {
         setCheckedKeys([]);
     }, [fetchProduct, deleteData]);
 
-    useEffect(() => {
-        setFetchProduct(true);
-    }, [deleteData]);
-
-    const confirmDeleteProducts = (rowData = null) => {
-        const ids = rowData ? [[rowData.id]] : [getIds(checkedKeys)];
-        const message = rowData ? 'Are you sure to delete this product?' : 'Are you sure to delete ' + checkedKeys.length + ' product(s)?';
-        openConfirmation(deleteProducts, ids, message);
-    };
-
-    const deleteProducts = async (ids) => {
-        handleDeleteProducts(
-            productEndpoints.delete,
-            {
-                method: 'DELETE',
-                data: { ids }
-            }
-        );
-    };
-
-    const onEdit = (rowData) => {
-        window.open('/m/single-product?id=' + rowData.id, '_blank')
-    }
-
     return (
         <div className='p-5 flex flex-col'>
-            <Toolbar addClick={() => navigate('/m/single-product')} deleteClick={() => confirmDeleteProducts(null)} checkedKeys={checkedKeys}/>
             <div className='bg-white rounded-md p-1 shadow-md'>
-                <TableProduct items={productData?.items} dataLoading={(productLoading || deleteProductLoading)} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteProducts} onEdit={onEdit} />
+                <TableProduct items={productData?.items} dataLoading={(productLoading || deleteProductLoading)} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onSelect={onSelect} height={250} />
                 <BasePagination pagination={productData?.pagination} handlePagination={handlePagination} />
             </div>
         </div>
     );
 };
 
-export default MProduct;
+export default AllProduct;

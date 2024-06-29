@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Cropper from 'react-easy-crop';
 import Dropzone from 'react-dropzone';
 import { Modal, Button } from 'rsuite';
@@ -10,7 +10,7 @@ import {
 } from '@/components/icons.js';
 
 const UploadFile = ({ cropDimensions = null, values, setValues, number = null, className = '' }) => {
-    const [files, setFiles] = useState(Array.isArray(values) ? values : [values] );
+    const [files, setFiles] = useState([]);
     const [imageSrc, setImageSrc] = useState(null);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
@@ -21,6 +21,17 @@ const UploadFile = ({ cropDimensions = null, values, setValues, number = null, c
     const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
         setCroppedAreaPixels(croppedAreaPixels);
     }, []);
+
+    useEffect(() => {
+        if(files.length > 0) return;
+        setFiles(() => {if (values === null || values === undefined) {
+            return files; 
+        } else if (Array.isArray(values)) {
+            return values.filter(value => value !== null);
+        } else {
+            return [values];
+        }});
+    }, [values]);
 
     const onDrop = useCallback((acceptedFiles) => {
         const newFiles = [...files, ...acceptedFiles];

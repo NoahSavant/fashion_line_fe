@@ -1,11 +1,10 @@
-const baseEndpoint = '/products'
+const baseEndpoint = '/collections'
 
-const productEndpoints = {
+const collectionEndpoints = {
     get: baseEndpoint,
-    getSingle: baseEndpoint + '/',
     delete: baseEndpoint,
     merge: baseEndpoint + '/merge',
-    update: baseEndpoint,
+    update: baseEndpoint + '/',
     addTags: baseEndpoint + '/addTags',
     deleteTags: baseEndpoint + '/deleteTags',
     create: baseEndpoint,
@@ -14,4 +13,4 @@ const productEndpoints = {
     getContacts: baseEndpoint + '/',
 };
 
-export default productEndpoints;
+export default collectionEndpoints;

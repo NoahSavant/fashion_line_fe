@@ -9,7 +9,7 @@ const Toolbar = ({ checkedKeys, addClick=null, deleteClick=null, changeStatusCli
             <ButtonToolbar className='p-2'>
                 {addClick && 
                     <Button color="green" className='bg-green-600 p-btn' appearance="primary" startIcon={<PlusIcon />} onClick={addClick}>
-                        New
+                        Add
                     </Button>
                 }
                 {deleteClick &&

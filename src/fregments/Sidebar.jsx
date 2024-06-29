@@ -9,7 +9,8 @@ import {
     IoMdContacts,
     FaBookBookmark,
     RiPagesLine,
-    RiDashboardFill
+    RiDashboardFill,
+    HiCollection
 } from '@/components/icons.js';
 import { logo_image, icon } from '@/assets/images'
 import { getCurrentPath } from '@/helpers/pathHelper';
@@ -52,6 +53,9 @@ const Sidebar = () => {
                         </Nav.Item>
                         <Nav.Item active={activeKey('/m/product')} icon={<GiClothes className="rs-icon" />} onClick={() => navigate('/m/product')}>
                             Product
+                        </Nav.Item>
+                        <Nav.Item active={activeKey('/m/collection')} icon={<HiCollection className="rs-icon" />} onClick={() => navigate('/m/collection')}>
+                            Collection
                         </Nav.Item>
                         <Nav.Item active={activeKey('/m/blog')} icon={<FaBookBookmark className="rs-icon" />} onClick={() => navigate('/m/blog')}>
                             Blog

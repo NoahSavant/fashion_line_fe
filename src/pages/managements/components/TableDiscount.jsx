@@ -111,7 +111,7 @@ const TableDiscount = ({ items, dataLoading, handleSort, checkedKeys, setChecked
 
                 <Column width={150}>
                     <HeaderCell className='text-center'>Image</HeaderCell>
-                    <ImageCell dataKey="image_url" className='h-[36px] w-[48px]' />
+                    <ImageCell dataKey={["image_url"]} className='h-[36px] w-[48px]' />
                 </Column>
                 <Column width={120}>
                     <HeaderCell className='text-center'>Status</HeaderCell>

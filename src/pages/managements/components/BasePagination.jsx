@@ -13,7 +13,7 @@ const BasePagination = ({ pagination, handlePagination, className='' }) => {
     }
 
     return (
-        <div className="p-2">
+        <div className="p-2" >
             <Pagination
                 prev
                 next
@@ -28,7 +28,7 @@ const BasePagination = ({ pagination, handlePagination, className='' }) => {
                 activePage={currentPage}
                 onChangePage={handlePage}
                 onChangeLimit={handleLimit}
-                className={`${className} pagination`}
+                className={`${className} pagination flex md:flex-row flex-col md:gap-0 gap-3 `}
             />
         </div>
     );

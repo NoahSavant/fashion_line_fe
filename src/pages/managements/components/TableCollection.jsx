@@ -1,6 +1,5 @@
-import { Table, Checkbox, Input, InputGroup } from 'rsuite';
 import React, { useState } from 'react';
-
+import { Table, Checkbox, Input, InputGroup } from 'rsuite';
 import {
     BaseCell,
     ActionCell,
@@ -12,7 +11,7 @@ import Toolbar from './Toolbar';
 
 const { Column, HeaderCell } = Table;
 
-const TableCategory = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys, onEdit, onDelete, onMultyDelete }) => {
+const TableCollection = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys, onEdit, onDelete, onMultyDelete }) => {
     const [sortColumn, setSortColumn] = useState();
     const [sortType, setSortType] = useState();
     const [loading, setLoading] = useState(false);
@@ -54,7 +53,7 @@ const TableCategory = ({ items, dataLoading, handleSort, checkedKeys, setChecked
     };
 
     const rowClick = (rowData) => {
-        if (checkedKeys.length == 1 && checkedKeys.includes(rowData)) {
+        if (checkedKeys.length === 1 && checkedKeys.includes(rowData)) {
             setCheckedKeys([]);
             return;
         }
@@ -65,11 +64,11 @@ const TableCategory = ({ items, dataLoading, handleSort, checkedKeys, setChecked
         <div className='flex flex-col gap-2 w-full'>
             <div className='flex justify-between md:items-center items-start'>
                 <div className='flex gap-2 items-center md:flex-row flex-col'>
-                    <div className='text-lg font-semibold px-2'>Categories</div>
+                    <div className='text-lg font-semibold px-2'>Collections</div>
                     <Toolbar checkedKeys={checkedKeys} deleteClick={onMultyDelete} />
                 </div>
                 <InputGroup className='ml-4 max-w-[300px]'>
-                    <Input value={search} onChange={setSearch} />
+                    <Input value={search} onChange={(value) => setSearch(value)} />
                     <InputGroup.Addon className='hover:bg-blue-500 hover:text-white hover:cursor-pointer' onClick={handleSearch}>
                         <SearchIcon />
                     </InputGroup.Addon>
@@ -116,5 +115,6 @@ const TableCategory = ({ items, dataLoading, handleSort, checkedKeys, setChecked
             </Table>
         </div>
     );
-}
-export default TableCategory
+};
+
+export default TableCollection;

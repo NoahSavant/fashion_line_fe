@@ -59,6 +59,8 @@ import { HiMiniXCircle } from "react-icons/hi2";
 import { GrResources } from "react-icons/gr";
 import { RiPagesLine } from "react-icons/ri";
 import { RiDashboardFill } from "react-icons/ri";
+import { HiCollection } from "react-icons/hi";
+import { TbHandClick } from "react-icons/tb";
 
 export {
     CogIcon,
@@ -125,5 +127,7 @@ export {
     HiMiniXCircle,
     GrResources,
     RiPagesLine,
-    RiDashboardFill
+    RiDashboardFill,
+    HiCollection,
+    TbHandClick
 };
