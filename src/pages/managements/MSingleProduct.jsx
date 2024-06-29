@@ -1,18 +1,22 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { getConstantData } from '@/helpers/constantHelpers';
 import PaginationDefault from '@/constants/PaginationDefault';
-import { Input, Modal, Button, DatePicker, SelectPicker, InputNumber } from "rsuite";
-import { TableProduct, Toolbar, BasePagination, TableVariant } from './components';
-import { productEndpoints, tagEndpoints } from '@/apis'
-import { useConfirmation, useApi } from '@/hooks';
+import { Input, Modal, Button, InputNumber } from "rsuite";
+import { BasePagination, TableVariant } from './components';
+import { productEndpoints, variantEndpoints } from '@/apis'
+import { useApi } from '@/hooks';
 import { ProductStatus } from '@/constants';
 import { SelectTag, SelectCategory, SingleSelect, SelectConstant } from '@/components/selects'
 import { UploadFile } from '@/components/inputs'
 import { PopupConfirmContext } from '@/contexts/PopupConfirmContext';
 import { Loading } from '@/components';
+import { useSearchParams } from "react-router-dom";
+import { getIds } from '@/helpers/dataHelpers';
 
 
-const MSingleProduct = ({id}) => {
+const MSingleProduct = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [id, setId] = useState(null);
     const [product, setProduct] = useState({
         name: '',
         description: '',
@@ -23,11 +27,8 @@ const MSingleProduct = ({id}) => {
         first_image: null,
         second_image: null,
         note: '',
-    })
-
-    const [temp, setTemp] = useState({
         original_price: 0,
-        price: 0
+        price: 0,
     })
 
     const { openConfirmation } = useContext(PopupConfirmContext);
@@ -46,7 +47,7 @@ const MSingleProduct = ({id}) => {
             ...pagination,
             ...data
         });
-        setFetchDiscount(true);
+        setFetchVariants(true);
     };
 
     const sampleVariant = {
@@ -60,43 +61,80 @@ const MSingleProduct = ({id}) => {
         image: null
     }
 
+    useEffect(() => {
+        if (searchParams.has('id')) {
+            setId(searchParams.get('id'));
+            setFetchVariants(true);
+        }
+    }, []);
+
     const [variants, setVariants] = useState([])
     const [editData, setEditData] = useState(null);
     const [createData, setCreateData] = useState(null);
 
     const [fetchProduct, setFetchProduct] = useState(true);
+    const [fetchVariants, setFetchVariants] = useState(false);
+
     const { data: productData, callApi: handleGetProduct, loading: productLoading } = useApi();
     const { data: createProductData, callApi: handleCreateProduct, loading: createProductLoading } = useApi();
     const { data: editProductData, callApi: handleEditProduct, loading: editProductLoading } = useApi();
     const { data: variantsData, callApi: handleGetVariants, loading: variantsLoading } = useApi();
     const { data: addVariantData, callApi: handleAddVariant, loading: addVariantLoading } = useApi();
     const { data: editVariantData, callApi: handleEditVariant, loading: editVariantLoading } = useApi();
+    const { data: deleteVariantsData, callApi: handleDeleteVariants, loading: deleteVariantsLoading } = useApi();
 
     useEffect(() => {
         if (!fetchProduct || id == null) return;
-        handleGetProduct(productEndpoints.getSingle, {
-            params: {
-                id
-            }
-        })
+        handleGetProduct(productEndpoints.getSingle + id, {})
         setFetchProduct(false);
+    }, [fetchProduct, id]);
+
+    useEffect(() => {
+        if (!productData) return;
+        setProduct({ ...productData, tags: getIds(productData.tags)});
+    }, [productData]);
+
+    useEffect(() => {
+        if (!editProductData) return;
+        setFetchProduct(false);
+    }, [editProductData]);
+
+    useEffect(() => {
+        if (!fetchVariants) return;
+        handleGetVariants(variantEndpoints.get + '/' + id, {
+            params: {
+                ...pagination,
+            }
+        });
+        setFetchVariants(false);
         setCheckedKeys([]);
-    }, [fetchProduct]);
+    }, [fetchVariants]);
+
+    useEffect(() => {
+        setFetchVariants(true);
+        setEditData(null);
+        setCreateData(null);
+    }, [editVariantData, addVariantData, deleteVariantsData]);
 
     const confirmDeleteVariants = (rowData = null) => {
-        const discountIds = rowData ? [[rowData.id]] : [getIds(checkedKeys)];
-        const message = rowData ? 'Are you sure to delete this discount?' : 'Are you sure to delete ' + checkedKeys.length + ' discount(s)?';
-        openConfirmation(deleteVariants, discountIds, message);
+        const variantIds = rowData ? [[rowData.id]] : [getIds(checkedKeys)];
+        const message = rowData ? 'Are you sure to delete this variant?' : 'Are you sure to delete ' + checkedKeys.length + ' variant(s)?';
+        openConfirmation(deleteVariants, variantIds, message);
     };
 
     const deleteVariants = async (ids) => {
-        await handleDeleteVariants(
-            discountEndpoints.delete,
-            {
-                method: 'DELETE',
-                data: { ids }
-            }
-        );
+        if (!id) {
+            const filteredVariants = variants.filter(variant => !ids.includes(variant.id));
+            setVariants(filteredVariants);
+        } else {
+            handleDeleteVariants(
+                variantEndpoints.delete,
+                {
+                    method: 'DELETE',
+                    data: { ids }
+                }
+            );
+        }
     };
 
     const toThousands = (value) => {
@@ -118,8 +156,25 @@ const MSingleProduct = ({id}) => {
                 setVariants([ ...variants, createData ]);
                 setCreateData(null);
             }
+        } else {
+            const formData = new FormData();
+            formData.append('size', createData.size);
+            formData.append('color', createData.color);
+            formData.append('status', createData.status);
+            formData.append('original_price', createData.original_price);
+            formData.append('price', createData.price);
+            formData.append('stock', createData.stock);
+            if (createData.image) {
+                formData.append('image', createData.image);
+            }
+            handleAddVariant(variantEndpoints.create + '/' + id, {
+                method: "POST",
+                data: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
         }
-        
     }
 
     const confirmEditVariants = () => {
@@ -133,7 +188,10 @@ const MSingleProduct = ({id}) => {
         formData.append('short_description', product.short_description);
         formData.append('category_id', product.category_id);
         formData.append('status', product.status);
-        formData.append('note', product.max_price);
+        formData.append('note', product.note);
+        product.tags.forEach((tag, index) => {
+            formData.append(`tags[${index}]`, tag);
+        });
 
         variants.forEach((variant, index) => {
             formData.append(`variants[${index}][size]`, variant.size);
@@ -163,6 +221,37 @@ const MSingleProduct = ({id}) => {
         });
     };
 
+    const editProduct = () => {
+        const formData = new FormData();
+        formData.append('name', product.name);
+        formData.append('description', product.description);
+        formData.append('short_description', product.short_description);
+        formData.append('category_id', product.category_id);
+        formData.append('status', product.status);
+        formData.append('note', product.note);
+        if(product.tags.length == 0) {
+            formData.append('tags', null);
+
+        }
+        product.tags.forEach((tag, index) => {
+            formData.append(`tags[${index}]`, tag);
+        });
+
+        if (product.first_image) {
+            formData.append('first_image', product.first_image);
+        }
+        if (product.second_image) {
+            formData.append('second_image', product.second_image);
+        }
+
+        handleCreateProduct(productEndpoints.update + '/' + id + '?_method=PUT', {
+            method: "POST",
+            data: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+    };
 
     const editVariants = async () => {
         if(!id) {
@@ -173,19 +262,16 @@ const MSingleProduct = ({id}) => {
             setEditData(null);
         }
         const formData = new FormData();
-        formData.append('name', editData.name);
-        formData.append('type', editData.type);
-        formData.append('subject', editData.subject);
-        formData.append('condition', editData.condition);
-        formData.append('value', editData.value);
-        formData.append('max_price', editData.max_price);
+        formData.append('size', editData.size);
+        formData.append('color', editData.color);
         formData.append('status', editData.status);
-        formData.append('started_at', editData.started_at);
-        formData.append('ended_at', editData.ended_at);
+        formData.append('original_price', editData.original_price);
+        formData.append('price', editData.price);
+        formData.append('stock', editData.stock);
         if (editData.image) {
             formData.append('image', editData.image);
         }
-        handleEditDiscount(discountEndpoints.update + editData?.id + '?_method=PUT', {
+        handleEditVariant(variantEndpoints.update + '/' + editData?.id + '?_method=PUT', {
             method: "POST",
             data: formData,
             headers: {
@@ -196,6 +282,7 @@ const MSingleProduct = ({id}) => {
 
     return (
         <div className='p-5 flex flex-col gap-4'>
+            {(productLoading || variantsLoading) && <Loading size={40} />}
             <div className='rounded-md shadow-md bg-white py-2'>
                 <div className='text-lg font-semibold px-2 text-sapphire'>{id ? 'Product Detail' : 'Create Product'}</div>
             </div>
@@ -255,37 +342,34 @@ const MSingleProduct = ({id}) => {
                         <div className='grid grid-cols-2 gap-2'>
                             <div className='flex flex-col gap-1.5 w-full'>
                                 <label>Original Price</label>
-                                <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={temp?.original_price}
-                                    onChange={(value) => setTemp({ ...temp, original_price: value })} />
+                                <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={product?.original_price}
+                                    onChange={(value) => setProduct({ ...product, original_price: value })} />
                             </div>
                             <div className='flex flex-col gap-1.5 w-full'>
                                 <label>Price</label>
-                                <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={temp?.price}
-                                    onChange={(value) => setTemp({ ...temp, price: value })} />
+                                <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={product?.price}
+                                    onChange={(value) => setProduct({ ...product, price: value })} />
                             </div>
                         </div>
                         <div className='grid grid-cols-2 gap-2'>
                             <div className='flex flex-col gap-1.5'>
                                 <label>First Image</label>
-                                <UploadFile className='w-full h-[135px]' values={[]} number={1} setValues={(value) => setProduct({ ...product, first_image: value[0] })} />
+                                <UploadFile className='w-full h-[135px]' values={product?.first_image_url ?? []} number={1} setValues={(value) => setProduct({ ...product, first_image: value[0] })} />
                             </div>
                             <div className='flex flex-col gap-1.5'>
                                 <label>Second Image</label>
-                                <UploadFile className='w-full h-[135px]' values={[]} number={1} setValues={(value) => setProduct({ ...product, second_image: value[0] })} />
+                                <UploadFile className='w-full h-[135px]' values={product?.second_image_url ?? []} number={1} setValues={(value) => setProduct({ ...product, second_image: value[0] })} />
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className='w-full flex justify-end'>
-                    <div className="cursor-pointer px-3 py-2 bg-sapphire rounded-md justify-center items-center flex p-btn gap-2 shadow-ful w-fit" onClick={createProduct}>
-                        {createProductLoading && <Loading size={20} />}
-                        <div className="text-white text-sm font-normal capitalize leading-normal">Create</div>
+                <div className='w-full flex justify-end px-4'>
+                    <div className="cursor-pointer px-3 py-2 bg-sapphire rounded-md justify-center items-center flex p-btn gap-2 shadow-ful w-fit" onClick={id ? editProduct : createProduct}>
+                        {(createProductLoading || editProductLoading) && <Loading size={20} />}
+                        <div className="text-white text-sm font-normal capitalize leading-normal">{id ? 'Update' : 'Create'}</div>
                     </div>
                 </div>
-                {/* <div className='md:h-[420px] md:p-4 p-2 rounded-md shadow-md bg-white'>
-                    <TableVariant items={variantData?.items} dataLoading={(variantLoading || deleteVariantsLoading)} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteVariants} onMultyDelete={() => confirmDeleteVariants(null)} onEdit={setEditData} />
-                    <BasePagination pagination={variantData?.pagination} handlePagination={handlePagination} className='flex md:flex-row flex-col md:gap-0 gap-3' />
-                </div> */}
+               
             </div>
             <div className='md:h-[420px] md:p-4 p-2 rounded-md shadow-md bg-white'>
                 <Modal size='sm' open={createData} onClose={() => setCreateData(null)} >
@@ -331,7 +415,7 @@ const MSingleProduct = ({id}) => {
                             </div>
                             <div className='flex flex-col gap-1.5 w-full'>
                                 <label>Image</label>
-                                <UploadFile className='w-[99%] h-[100px]' values={[]} number={1} setValues={(value) => setCreateData({ ...createData, image: value[0], image_url: URL.createObjectURL(value[0]) })} />
+                                <UploadFile className='w-[99%] h-[100px]' values={createData?.image} number={1} setValues={(value) => setCreateData({ ...createData, image: value[0], image_url: URL.createObjectURL(value[0]) })} />
                             </div>
                         </div>
                     </Modal.Body>
@@ -402,7 +486,8 @@ const MSingleProduct = ({id}) => {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-                <TableVariant items={variants} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteVariants} onMultyDelete={() => confirmDeleteVariants(null)} onEdit={setEditData} onCreate={() => setCreateData({ ...sampleVariant, id: new Date().toLocaleTimeString(), original_price: temp.original_price, price: temp.price})} />
+                <TableVariant items={id ? variantsData?.items : variants} dataLoading={(id && (variantsLoading || deleteVariantsLoading || addVariantLoading))} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteVariants} onMultyDelete={() => confirmDeleteVariants(null)} onEdit={setEditData} onCreate={() => setCreateData({ ...sampleVariant, id: new Date().toLocaleTimeString(), original_price: product.original_price, price: product.price})} />
+                <BasePagination pagination={variantsData?.pagination} handlePagination={handlePagination} />
             </div>
         </div>
     );

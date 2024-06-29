@@ -14,7 +14,7 @@ import React from 'react';
 
 import { getDataTimeFormat } from '@/helpers/dateTimeHelpers';
 import { getConstantTitle } from '@/helpers/constantHelpers';
-import { TrashIcon, EditIcon, CameraRetroIcon } from '@/components/icons';
+import { TrashIcon, EditIcon, CameraRetroIcon, TbHandClick } from '@/components/icons';
 import { useState } from 'react';
 import { data } from 'browserslist';
 
@@ -49,25 +49,30 @@ export const ColorCell = ({ rowData, dataKey, attributes = [], ...props }) => {
     );
 }
 
-export const ImageCell = ({ rowData, dataKey, attributes = [], className='', ...props }) => {
-    let value = rowData[dataKey];
-
-    attributes.forEach(element => {
-        value = value[element]
-    });
-
+export const ImageCell = ({ rowData, dataKey, className = '', ...props }) => {
     return (
         <Cell {...props}>
-            <div className='flex justify-center w-full h-full items-center'>
-                {value ? <img src={value} alt="" className={`rounded-md shadow-full object-cover ${className}`} /> : 
-                    <CameraRetroIcon style={{ fontSize: 40 }} />
-                }
-                
+            <div className='flex justify-center w-full h-full items-center space-x-2'>
+                {dataKey.map((key, index) => {
+                    const value = rowData[key];
+                    return (
+                        <div key={index} className='flex justify-center items-center'>
+                            {value ? (
+                                <img 
+                                    src={value} 
+                                    alt="" 
+                                    className={`rounded-md shadow-full object-cover ${className}`} 
+                                />
+                            ) : (
+                                <CameraRetroIcon style={{ fontSize: 40 }} />
+                            )}
+                        </div>
+                    );
+                })}
             </div>
         </Cell>
-
     );
-}
+};
 
 export const BaseCell = ({ rowData, dataKey, attributes=[], ...props }) => {
     let value = rowData[dataKey];
@@ -261,23 +266,27 @@ export const ImagesCell = ({ rowData, dataKeys, ...props }) => {
     );
 }
 
-export const ActionCell = ({ rowData, dataKey, onEdit=(value) => {}, onDelete=(value) => {}, elements={edit:true, delete:true},  ...props }) => {
+export const ActionCell = ({ rowData, dataKey, onEdit, onDelete, onSelect, ...props }) => {
     return (
         <Cell {...props}>
             <div className='flex flex-row justify-center w-full h-full'>
                 {
-                    elements.edit && 
+                    typeof onEdit === 'function' && 
                     <Button appearance="link" onClick={() => onEdit(rowData)} startIcon={<EditIcon />} className='hover:text-lg hover:text-blue-700'>
                     </Button>
                 }
                 {
-                    elements.delete &&
+                    typeof onDelete === 'function' &&
                     <Button appearance="link" onClick={() => onDelete(rowData)} startIcon={<TrashIcon />} className='hover:text-lg hover:text-red-600'>
+                    </Button>
+                }
+                {
+                    typeof onSelect === 'function' &&
+                    <Button appearance="link" onClick={() => onSelect(rowData)} startIcon={<TbHandClick className='rs-icon' />} className='hover:text-lg hover:text-red-600'>
                     </Button>
                 }
             </div>
         </Cell>
-
     );
 }
 

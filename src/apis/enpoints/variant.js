@@ -1,6 +1,6 @@
-const baseEndpoint = '/products'
+const baseEndpoint = '/variants'
 
-const productEndpoints = {
+const variantEndpoints = {
     get: baseEndpoint,
     getSingle: baseEndpoint + '/',
     delete: baseEndpoint,
@@ -14,4 +14,4 @@ const productEndpoints = {
     getContacts: baseEndpoint + '/',
 };
 
-export default productEndpoints;
+export default variantEndpoints;

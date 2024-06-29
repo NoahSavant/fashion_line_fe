@@ -71,12 +71,12 @@ const TableVariant = ({ items, dataLoading, handleSort, checkedKeys, setCheckedK
                     <div className='text-lg font-semibold px-2'>Variants</div>
                     <Toolbar checkedKeys={checkedKeys} deleteClick={onMultyDelete} addClick={onCreate} />
                 </div>
-                <InputGroup className='ml-4 max-w-[300px]'>
+                {/* <InputGroup className='ml-4 max-w-[300px]'>
                     <Input value={search} onChange={setSearch} />
                     <InputGroup.Addon className='hover:bg-blue-500 hover:text-white hover:cursor-pointer' onClick={handleSearch}>
                         <SearchIcon />
                     </InputGroup.Addon>
-                </InputGroup>
+                </InputGroup> */}
             </div>
             <Table
                 data={items}
@@ -107,7 +107,7 @@ const TableVariant = ({ items, dataLoading, handleSort, checkedKeys, setCheckedK
                     <HeaderCell>Size</HeaderCell>
                     <BaseCell dataKey='size' />
                 </Column>
-                <Column width={120}>
+                <Column width={120} sortable>
                     <HeaderCell>Color Name</HeaderCell>
                     <BaseCell dataKey='color' />
                 </Column>
@@ -115,21 +115,21 @@ const TableVariant = ({ items, dataLoading, handleSort, checkedKeys, setCheckedK
                     <HeaderCell className='text-center'>Status</HeaderCell>
                     <ConstantCell dataKey="status" constant={ProductStatus} colors={['green', 'red']} />
                 </Column>
-                <Column width={200}>
+                <Column width={200} sortable>
                     <HeaderCell className='text-center'>Original Price</HeaderCell>
                     <DiscountValueCell dataKey="original_price" condition={false} />
                 </Column>
-                <Column width={200}>
+                <Column width={200} sortable>
                     <HeaderCell className='text-center'>Price</HeaderCell>
                     <DiscountValueCell dataKey="price" condition={false} />
                 </Column>
-                <Column width={110}>
+                <Column width={110} sortable>
                     <HeaderCell>Stock</HeaderCell>
                     <BaseCell dataKey='stock' />
                 </Column>
                 <Column width={170}>
                     <HeaderCell className='text-center'>Image</HeaderCell>
-                    <ImageCell dataKey="image_url" className='h-[36px] w-[48px]' />
+                    <ImageCell dataKey={['image_url']} className='h-[36px] w-[48px]' />
                 </Column>
                 <Column width={90}>
                     <HeaderCell className='text-center'>Action</HeaderCell>

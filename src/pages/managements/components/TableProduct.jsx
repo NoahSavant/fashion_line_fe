@@ -1,21 +1,23 @@
 import { Table, Checkbox, Input, InputGroup } from 'rsuite';
 import React, { useState } from 'react';
 
-import { ConnectionStatus } from '@/constants';
+import { ProductStatus } from '@/constants';
 import {
     BaseCell,
     ConstantCell,
     NameCell,
     ActionCell,
-    UsersCell,
+    DiscountValueCell,
     CheckCell,
-    TagGroupCell
+    TagGroupCell,
+    ImageCell
 } from './TableCell';
 import { SearchIcon } from '@/components/icons';
+import Toolbar from './Toolbar';
 
 const { Column, HeaderCell } = Table;
 
-const TableProduct = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys, onEdit, onDelete }) => {
+const TableProduct = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys, onEdit, onDelete, onCreate, onMultyDelete, onSelect, height=400 }) => {
     const [sortColumn, setSortColumn] = useState();
     const [sortType, setSortType] = useState();
     const [loading, setLoading] = useState(false);
@@ -66,9 +68,12 @@ const TableProduct = ({ items, dataLoading, handleSort, checkedKeys, setCheckedK
 
     return (
         <div className='flex flex-col gap-2 w-full'>
-            <div className='flex justify-between items-center'>
-                <div className='text-lg font-semibold px-2'>Product</div>
-                <InputGroup className='w-1/3'>
+            <div className='flex justify-between md:items-center items-start'>
+                <div className='flex gap-2 items-center md:flex-row flex-col'>
+                    <div className='text-lg font-semibold px-2'>Products</div>
+                    <Toolbar checkedKeys={checkedKeys} deleteClick={onMultyDelete} addClick={onCreate}/>
+                </div>
+                <InputGroup className='ml-4 max-w-[300px]'>
                     <Input value={search} onChange={setSearch} />
                     <InputGroup.Addon className='hover:bg-blue-500 hover:text-white hover:cursor-pointer' onClick={handleSearch}>
                         <SearchIcon />
@@ -84,8 +89,9 @@ const TableProduct = ({ items, dataLoading, handleSort, checkedKeys, setCheckedK
                 sortType={sortType}
                 onSortColumn={handleSortColumn}
                 onRowClick={rowClick}
+                height={height}
             >
-                <Column width={40} align="center" fixed>
+                <Column width={40} align="center">
                     <HeaderCell style={{ padding: 0 }}>
                         <div style={{ lineHeight: '40px' }}>
                             <Checkbox
@@ -98,22 +104,25 @@ const TableProduct = ({ items, dataLoading, handleSort, checkedKeys, setCheckedK
                     </HeaderCell>
                     <CheckCell dataKey="id" checkedKeys={checkedKeys} onChange={handleCheck} />
                 </Column>
-                <Column width={270} fullText sortable fixed>
+                <Column width={270} fullText sortable>
                     <HeaderCell>Name</HeaderCell>
-                    <NameCell dataKey='name' dataKeyNote='note' />
+                    <BaseCell dataKey='name' />
                 </Column>
-
+                <Column width={170}>
+                    <HeaderCell className='text-center'>Images</HeaderCell>
+                    <ImageCell dataKey={['first_image_url', 'second_image_url']} className='h-[36px] w-[48px]' />
+                </Column>
                 <Column width={240}>
-                    <HeaderCell>Tags</HeaderCell>
+                    <HeaderCell className='text-center'>Tags</HeaderCell>
                     <TagGroupCell dataKey="tags" />
                 </Column>
                 <Column width={100} sortable>
-                    <HeaderCell>Status</HeaderCell>
-                    <ConstantCell dataKey="status" constant={ConnectionStatus} colors={['red', 'green', 'yellow']} />
+                    <HeaderCell className='text-center'>Status</HeaderCell>
+                    <ConstantCell dataKey="status" constant={ProductStatus} colors={['green', 'red']} />
                 </Column>
-                <Column width={220}>
-                    <HeaderCell>Price</HeaderCell>
-                    <BaseCell dataKey="price" />
+                <Column width={220} sortable>
+                    <HeaderCell className='text-center'>Price</HeaderCell>
+                    <DiscountValueCell dataKey="price" condition={false} />
                 </Column>
                 <Column width={220}>
                     <HeaderCell>Note</HeaderCell>
@@ -121,7 +130,7 @@ const TableProduct = ({ items, dataLoading, handleSort, checkedKeys, setCheckedK
                 </Column>
                 <Column width={90} fixed="right">
                     <HeaderCell>Action</HeaderCell>
-                    <ActionCell onEdit={onEdit} onDelete={onDelete} />
+                    <ActionCell onEdit={onEdit} onDelete={onDelete} onSelect={onSelect} />
                 </Column>
             </Table>
         </div>

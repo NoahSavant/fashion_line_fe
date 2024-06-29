@@ -242,7 +242,7 @@ const MDiscount = () => {
             <div className='flex gap-5 flex-col'>
                 <div className='md:h-[420px] md:p-4 p-2 rounded-md shadow-md bg-white'>
                     <TableDiscount items={discountData?.items} dataLoading={(discountLoading || deleteDiscountsLoading)} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteDiscounts} onMultyDelete={() => confirmDeleteDiscounts(null)} onEdit={setEditData} />
-                    <BasePagination pagination={discountData?.pagination} handlePagination={handlePagination} className='flex md:flex-row flex-col md:gap-0 gap-3' />
+                    <BasePagination pagination={discountData?.pagination} handlePagination={handlePagination} />
                 </div>
                 <div className='flex flex-col gap-2 p-4 rounded-md shadow-md bg-white w-full'>
                     <div className='text-lg font-semibold px-2'>Create Discount</div>
