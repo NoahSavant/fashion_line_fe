@@ -13,9 +13,6 @@ const isUnauthenPath = () => {
 };
 
 const publicLoader = () => {
-  if (getAuthentication() && isUnauthenPath()) {
-    return redirect("/");
-  }
   return null;
 };
 

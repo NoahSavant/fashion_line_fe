@@ -4,11 +4,12 @@ import {
     FunnelIcon
 } from '@/components/icons.js';
 import Collection from './Collection';
+import { SelectTag, SelectCategory, SingleSelect, SelectCollection } from '@/components/selects'
 
-const Filter = ({filter, setFilter}) => {
+const Filter = ({filter, setFilter, filterClick}) => {
     const [setting, setSetting] = useState({
         categoriesIsOpen: true,
-        brandsIsOpen: true,
+        tagsIsOpen: true,
         collectionsIsOpen: true,
         sortIsOpen: true
     });
@@ -19,14 +20,14 @@ const Filter = ({filter, setFilter}) => {
 
     return (
         <div className='p-3 bg-white flex flex-col gap-4'>
-            <div className="text-white cursor-pointer px-3 py-2 bg-sapphire rounded-md justify-center items-center flex p-btn gap-2 w-full">
+            <div className="text-white cursor-pointer px-3 py-2 bg-sapphire rounded-md justify-center items-center flex p-btn gap-2 w-full" onClick={filterClick}>
                 <FunnelIcon />
                 <div className="text-sm font-normal capitalize leading-normal">Filter now</div>
             </div>
             <Input className='max-w-[700px] shadow-full' placeholder='Search...' value={filter.search} onChange={(value) => setFilter({ ...filter, search: value})}/>
             <div className='flex gap-2'>
-                <InputNumber step={1000} postfix="đ̲" formatter={toThousands}  value={filter.minPrice} onChange={(value) => setFilter({...filter, minPrice: value})} />
-                <InputNumber step={1000} postfix="đ̲" formatter={toThousands}  value={filter.maxPrice} onChange={(value) => setFilter({ ...filter, maxPrice: value })} />
+                <InputNumber step={1000} postfix="đ̲" formatter={toThousands} value={filter.minPrice} onChange={(value) => setFilter({ ...filter, minPrice: value < filter.maxPrice ? value : filter.maxPrice })} />
+                <InputNumber step={1000} postfix="đ̲" formatter={toThousands}  value={filter.maxPrice} onChange={(value) => setFilter({ ...filter, maxPrice: value > filter.minPrice ? value : filter.minPrice })} />
             </div>
             <div className='flex flex-col gap-4'>
                 <div className='w-full flex gap-2 justify-center items-center'>
@@ -59,16 +60,11 @@ const Filter = ({filter, setFilter}) => {
                     <div className='px-2 bg-white font-medium text-base'>Categories</div>
                     <div className='w-full h-0.5 bg-slate-300'></div>
                 </div>
-                <RadioGroup name="radio-group-controlled" value={filter.category} onChange={(value) => setFilter({ ...filter, category: value })} className={`grid grid-cols-2 px-2 ${setting.categoriesIsOpen ? '': 'hidden'}`}>
-                    <Radio value="A">Radio A</Radio>
-                    <Radio value="B">Radio B</Radio>
-                    <Radio value="C">Radio C</Radio>
-                    <Radio value="D">Radio D</Radio>
-                </RadioGroup>
+                <SelectCategory value={filter.category} setValue={(value) => setFilter({ ...filter, category: value })} single={true} select={false} className={`grid grid-cols-2 px-2 ${setting.categoriesIsOpen ? '' : 'hidden'}`} />
             </div>
             <div className='flex flex-col gap-4'>
                 <div className='w-full flex gap-2 justify-center items-center'>
-                    <div className={`${setting.brandsIsOpen ? 'rotate-90' : '-rotate-90'} transform transition-all duration-500 ease-in-out`} onClick={() => setSetting({ ...setting, brandsIsOpen: !setting.brandsIsOpen })}>
+                    <div className={`${setting.tagsIsOpen ? 'rotate-90' : '-rotate-90'} transform transition-all duration-500 ease-in-out`} onClick={() => setSetting({ ...setting, tagsIsOpen: !setting.tagsIsOpen })}>
                         <svg
                             version="1.1"
                             id="Layer_1"
@@ -94,20 +90,12 @@ const Filter = ({filter, setFilter}) => {
                         </svg>
                     </div>
                     <div className='w-full h-0.5 bg-slate-300'></div>
-                    <div className='px-2 bg-white font-medium text-base'>Brands</div>
+                    <div className='px-2 bg-white font-medium text-base'>Tags</div>
                     <div className='w-full h-0.5 bg-slate-300'></div>
                 </div>
-                <CheckboxGroup
-                    name="checkbox-group"
-                    value={filter.brands}
-                    onChange={(value) => setFilter({ ...filter, brands: value })}
-                    className={`grid grid-cols-2 px-2 ${setting.brandsIsOpen ? '' : 'hidden'}`}
-                >
-                    <Checkbox value="A">Checkbox A</Checkbox>
-                    <Checkbox value="B">Checkbox B</Checkbox>
-                    <Checkbox value="C">Checkbox C</Checkbox>
-                    <Checkbox value="D">Checkbox D</Checkbox>
-                </CheckboxGroup>
+                <SelectTag value={filter.tags}
+                    setValue={(value) => setFilter({ ...filter, tags: value })} className={`grid grid-cols-2 px-2 ${setting.tagsIsOpen ? '' : 'hidden'}`} select={false}/>
+                
             </div>
             <div className='flex flex-col gap-4'>
                 <div className='w-full flex gap-2 justify-center items-center'>
@@ -140,17 +128,10 @@ const Filter = ({filter, setFilter}) => {
                     <div className='px-2 bg-white font-medium text-base'>Collections</div>
                     <div className='w-full h-0.5 bg-slate-300'></div>
                 </div>
-                <CheckboxGroup
-                    name="checkbox-group"
-                    value={filter.collections}
-                    onChange={(value) => setFilter({ ...filter, collections: value })}
-                    className={`grid grid-cols-2 px-2 ${setting.collectionsIsOpen ? '' : 'hidden'}`}
-                >
-                    <Checkbox value="A">Checkbox A</Checkbox>
-                    <Checkbox value="B">Checkbox B</Checkbox>
-                    <Checkbox value="C">Checkbox C</Checkbox>
-                    <Checkbox value="D">Checkbox D</Checkbox>
-                </CheckboxGroup>
+                <SelectCollection value={filter.collections}
+                    setValue={(value) => setFilter({ ...filter, collections: value })}
+                    className={`grid grid-cols-2 px-2 ${setting.collectionsIsOpen ? '' : 'hidden'}`} select={false}/>
+                
             </div>
             <div className='flex flex-col gap-4'>
                 <div className='w-full flex gap-2 justify-center items-center'>
@@ -184,8 +165,8 @@ const Filter = ({filter, setFilter}) => {
                     <div className='w-full h-0.5 bg-slate-300'></div>
                 </div>
                 <div className={`flex flex-col px-2 ${setting.sortIsOpen ? '' : 'hidden'}`}>
-                    <RadioGroup name="radio-group-controlled" value={filter.sortColumn} onChange={(value) => setFilter({ ...filter, sortColumn: value })} className={`grid grid-cols-2 px-2`}>
-                        <Radio value="created_at">Datetime</Radio>
+                    <RadioGroup name="radio-group-controlled" value={filter.column} setValue={(value) => setFilter({ ...filter, column: value })} className={`grid grid-cols-2 px-2`}>
+                        <Radio value="id">Datetime</Radio>
                         <Radio value="price">Price</Radio>
                         <Radio value="name">Name</Radio>
                         <Radio value="rate">Rate</Radio>
@@ -195,7 +176,7 @@ const Filter = ({filter, setFilter}) => {
                         <div className='px-2 bg-white font-medium text-base text-nowrap'>Sort Type</div>
                         <div className='w-full h-0.5 bg-slate-300'></div>
                     </div>
-                    <RadioGroup name="radio-group-controlled" value={filter.sortType} onChange={(value) => setFilter({ ...filter, sortType: value })} className={`grid grid-cols-2 px-2`}>
+                    <RadioGroup name="radio-group-controlled" value={filter.order} setValue={(value) => setFilter({ ...filter, order: value })} className={`grid grid-cols-2 px-2`}>
                         <Radio value="desc">Decrease</Radio>
                         <Radio value="asc">Increase</Radio>
                     </RadioGroup>

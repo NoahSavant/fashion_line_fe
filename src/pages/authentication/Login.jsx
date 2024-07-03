@@ -28,8 +28,8 @@ const Login = () => {
     useEffect(() => {
         if (data) {
             setAuthentication(data);
+            navigate('/dashboard');
         }
-        navigate('/dashboard');
     }, [data]);
 
     const onLogin = async () => {

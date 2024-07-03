@@ -1,5 +1,6 @@
 import { Login, SignUp, VerifyAccount } from '@pages/authentication'
-import { About, Home, Contact, Shop, Blog } from '@/pages/guest'
+import { About, Home, Contact, Shop, Blog, ProductDetail } from '@/pages/guest'
+import { NotFound } from "@/pages/errors";
 
 const PublicRoutes = [
     {
@@ -19,20 +20,28 @@ const PublicRoutes = [
         element: <VerifyAccount />,
     },
     {
-        path: '/About',
+        path: '/about',
         element: <About/>
     },
     {
-        path: '/Contact',
+        path: '/contact',
         element: <Contact />
     },
     {
-        path: '/Shop',
+        path: '/shop',
         element: <Shop />
     },
     {
-        path: '/Blog',
+        path: '/blog',
         element: <Blog />
+    },
+    {
+        path: '/product-detail',
+        element: <ProductDetail />
+    },
+    {
+        path: '/not-found',
+        element: <NotFound />
     }
 ]
 

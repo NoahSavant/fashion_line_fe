@@ -15,9 +15,8 @@ import {
 import { logo_image, icon } from '@/assets/images'
 import { getCurrentPath } from '@/helpers/pathHelper';
 
-const Sidebar = () => {
+const Sidebar = ({ expanded, setExpand }) => {
     const [openKeys, setOpenKeys] = useState(['resources', '4']);
-    const [expanded, setExpand] = useState(true);
     const navigate = useNavigate();
     const currentPath = getCurrentPath();
 

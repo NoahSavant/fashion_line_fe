@@ -7,7 +7,7 @@ import {
 } from '@/components/icons.js';
 import { TableProduct, Toolbar, BasePagination } from './components';
 import { productEndpoints, tagEndpoints } from '@/apis'
-import { useConfirmation, useApi } from '@/hooks';
+import { useApi } from '@/hooks';
 import { PopupConfirmContext } from '@/contexts/PopupConfirmContext';
 import { getIds } from '@/helpers/dataHelpers';
 
@@ -75,7 +75,7 @@ const MProduct = () => {
     };
 
     const onEdit = (rowData) => {
-        window.open('/m/single-product?id=' + rowData.id, '_blank')
+        navigate('/m/single-product?id=' + rowData.id);
     }
 
     return (

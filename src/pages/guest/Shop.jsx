@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { InputNumber, Input, RadioGroup, Radio, CheckboxGroup, Checkbox } from "rsuite";
-import {
-    FunnelIcon
-} from '@/components/icons.js';
-import { Filter } from './components';
+import { FunnelIcon } from '@/components/icons.js';
+import { Filter, SingleProduct } from './components';
+import { useSearchParams } from "react-router-dom";
+import { productEndpoints } from '@/apis';
+import { Loading } from '@/components';
+import PaginationDefault from '@/constants/PaginationDefault';
+import { useApi } from '@/hooks';
+import { BasePagination } from '../managements/components';
 
 const Shop = () => {
     const [isOpen, setIsOpen] = useState(true);
@@ -11,22 +15,76 @@ const Shop = () => {
         setIsOpen(prevState => !prevState);
     };
 
-    const [filterProduct, setFilterProduct] = useState({
-        search: '',
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const [pagination, setPagination] = useState({
+        page: PaginationDefault.PAGE,
+        limit: PaginationDefault.LIMIT,
+        order: PaginationDefault.ORDER,
+        column: PaginationDefault.COLUMN,
+        search: PaginationDefault.SEARCH,
         minPrice: 200000,
         maxPrice: 2000000,
         category: null,
-        brands: [],
+        tags: [],
         collections: [],
-        sortColumn: 'created_at',
-        sortType: 'desc'
-    })
+    });
+
+    const handlePagination = (data) => {
+        const updatedPagination = {
+            ...pagination,
+            ...data
+        };
+        setPagination(updatedPagination);
+        setFetchProduct(true);
+    };
+
+    const [fetchProduct, setFetchProduct] = useState(false);
+    const { data: productsData, callApi: handleGetProducts, loading: productsLoading } = useApi();
+
+    useEffect(() => {
+        if (!fetchProduct) return;
+        handleGetProducts(productEndpoints.get, {
+            params: {
+                ...pagination,
+            }
+        });
+        setFetchProduct(false);
+    }, [fetchProduct]);
+
+    useEffect(() => {
+        const category = searchParams.get('category') || null;
+        const tags = searchParams.getAll('tags[]').map(tag => parseInt(tag, 10)) || [];
+        const collections = searchParams.getAll('collections[]').map(collection => parseInt(collection, 10)) || [];
+        const search = searchParams.get('search') || PaginationDefault.SEARCH;
+        const column = searchParams.get('column') || PaginationDefault.COLUMN;
+        const order = searchParams.get('order') || PaginationDefault.ORDER;
+        const page = parseInt(searchParams.get('page'), 10) || 1;
+        const limit = parseInt(searchParams.get('limit'), 10) || PaginationDefault.LIMIT;
+        const minPrice = parseInt(searchParams.get('minPrice'), 10) || 200000;
+        const maxPrice = parseInt(searchParams.get('maxPrice'), 10) || 2000000;
+
+        setPagination({
+            page,
+            limit,
+            order,
+            column,
+            search,
+            category,
+            tags,
+            collections,
+            minPrice,
+            maxPrice,
+        });
+
+        setFetchProduct(true);
+    }, []);
 
     return (
-        <div className="md:px-7 px-5 md:py-7 py-5 flex gap-10">
-            <div className={`lg:w-80 w-0 relative group h-[calc(100vh-150px)] transform transition-all duration-500 ease-in-out`}>
+        <div className="md:px-7 px-5 md:py-7 py-5 flex">
+            <div className='relative w-0 h-[calc(100vh-150px)] z-10'>
                 <div
-                    className={`${isOpen ? 'lg:-right-5 right-[-340px]' : 'rotate-180 -right-6'} lg:hidden shadow-left-only cursor-pointer right-scroll absolute top-[calc(50%-32px)] bg-white rounded-full z-10 transform transition-all duration-500 ease-in-out`}
+                    className={`${isOpen ? 'lg:-right-5 right-[-310px]' : 'rotate-180 -right-6'} lg:hidden shadow-left-only cursor-pointer right-scroll absolute top-[calc(50%-32px)] bg-white rounded-full z-10 transform transition-all duration-500 ease-in-out`}
                     onClick={handleSidebar}
                 >
                     <svg
@@ -53,12 +111,31 @@ const Shop = () => {
                         </g>
                     </svg>
                 </div>
-                <div className={`${isOpen ? '' : 'lg:translate-x-0 lg:opacity-100 -translate-x-full opacity-0'} absolute left-0 top-0 w-80 h-max-[calc(100vh-150px)] overflow-auto hidden-scroll-bar shadow-full rounded-xl h-full transform transition-all duration-500 ease-in-out`}>
-                    <Filter filter={filterProduct} setFilter={setFilterProduct}/>
+                <div className={`${isOpen ? '' : 'lg:translate-x-0 lg:opacity-100 -translate-x-full opacity-0'} absolute left-0 top-0 w-72 h-max-[calc(100vh-150px)] overflow-auto hidden-scroll-bar shadow-full rounded-xl h-full transform transition-all duration-500 ease-in-out`}>
+                    <Filter filter={pagination} setFilter={setPagination} filterClick={() => setFetchProduct(true)} />
                 </div>
             </div>
-            <div className="">
-                haha
+            <div className={`w-full lg:ml-72 lg:pl-5 flex flex-col gap-10`}>
+                {productsLoading && <Loading size={40} />}
+                {(productsData?.items?.length > 0 || productsLoading)  ? (
+                    <>
+                        <div className='grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1'>
+                            {
+                                productsData?.items?.map((item, index) => (
+                                    <SingleProduct product={item} key={index} />
+                                ))
+                            }
+                        </div>
+                        <BasePagination pagination={productsData?.pagination} handlePagination={handlePagination} className='px-5' />
+                    </>
+                ) : (
+                    <div className='w-full h-[calc(100vh-150px)] flex justify-center items-center'>
+                        <div className="text-center text-xl text-sapphire font-semibold line-clamp-2">Not found</div>
+                    </div>
+                )
+                    
+                }
+                
             </div>
         </div>
     );

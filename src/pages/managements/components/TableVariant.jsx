@@ -11,7 +11,7 @@ import {
 } from './TableCell';
 import { SearchIcon } from '@/components/icons';
 import Toolbar from './Toolbar';
-import { ProductStatus } from '@/constants';
+import { ProductStatus, TrueFalseStatus } from '@/constants';
 
 const { Column, HeaderCell } = Table;
 
@@ -111,19 +111,23 @@ const TableVariant = ({ items, dataLoading, handleSort, checkedKeys, setCheckedK
                     <HeaderCell>Color Name</HeaderCell>
                     <BaseCell dataKey='color' />
                 </Column>
-                <Column width={140}>
+                <Column width={120}>
                     <HeaderCell className='text-center'>Status</HeaderCell>
                     <ConstantCell dataKey="status" constant={ProductStatus} colors={['green', 'red']} />
                 </Column>
-                <Column width={200} sortable>
+                <Column width={120}>
+                    <HeaderCell className='text-center'>Stock_limit</HeaderCell>
+                    <ConstantCell dataKey="stock_limit" constant={TrueFalseStatus} colors={['red', 'green']} />
+                </Column>
+                <Column width={170} sortable>
                     <HeaderCell className='text-center'>Original Price</HeaderCell>
                     <DiscountValueCell dataKey="original_price" condition={false} />
                 </Column>
-                <Column width={200} sortable>
+                <Column width={170} sortable>
                     <HeaderCell className='text-center'>Price</HeaderCell>
                     <DiscountValueCell dataKey="price" condition={false} />
                 </Column>
-                <Column width={110} sortable>
+                <Column width={90} sortable>
                     <HeaderCell>Stock</HeaderCell>
                     <BaseCell dataKey='stock' />
                 </Column>

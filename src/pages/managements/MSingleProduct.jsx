@@ -5,7 +5,7 @@ import { Input, Modal, Button, InputNumber } from "rsuite";
 import { BasePagination, TableVariant } from './components';
 import { productEndpoints, variantEndpoints } from '@/apis'
 import { useApi } from '@/hooks';
-import { ProductStatus } from '@/constants';
+import { ProductStatus, TrueFalseStatus } from '@/constants';
 import { SelectTag, SelectCategory, SingleSelect, SelectConstant } from '@/components/selects'
 import { UploadFile } from '@/components/inputs'
 import { PopupConfirmContext } from '@/contexts/PopupConfirmContext';
@@ -55,6 +55,7 @@ const MSingleProduct = () => {
         size: '',
         color: '',
         status: ProductStatus.OPEN,
+        stock_limit: TrueFalseStatus.TRUE,
         original_price: 0,
         price: 0,
         stock: 0,
@@ -331,13 +332,19 @@ const MSingleProduct = () => {
                             <label>Tags</label>
                             <SelectTag value={product.tags} setValue={(value) => setProduct({ ...product, tags: value })} />
                         </div>
-                        <div className='flex flex-col gap-1.5'>
-                            <label>Status</label>
-                            <SingleSelect
-                                data={getConstantData(ProductStatus)}
-                                value={product.status}
-                                onChange={(value) => setProduct({ ...product, status: value })}
-                            />
+                        <div className='grid grid-cols-2 gap-2'>
+                            <div className='flex flex-col gap-1.5'>
+                                <label>Status</label>
+                                <SingleSelect
+                                    data={getConstantData(ProductStatus)}
+                                    value={product.status}
+                                    onChange={(value) => setProduct({ ...product, status: value })}
+                                />
+                            </div>
+                            <div className='flex flex-col gap-1.5 w-full'>
+                                <label>Stock Limit</label>
+                                <SelectConstant single={true} value={createData?.stock_limit} setValue={(value) => setCreateData({ ...createData, stock_limit: value })} constant={TrueFalseStatus} />
+                            </div>
                         </div>
                         <div className='grid grid-cols-2 gap-2'>
                             <div className='flex flex-col gap-1.5 w-full'>
@@ -399,6 +406,10 @@ const MSingleProduct = () => {
                                 <SelectConstant single={true} value={createData?.status} setValue={(value) => setCreateData({ ...createData, status: value })} constant={ProductStatus} />
                             </div>
                             <div className='flex flex-col gap-1.5 w-full'>
+                                <label>Stock Limit</label>
+                                <SelectConstant single={true} value={createData?.stock_limit} setValue={(value) => setCreateData({ ...createData, stock_limit: value })} constant={TrueFalseStatus} />
+                            </div>
+                            <div className='flex flex-col gap-1.5 w-full'>
                                 <label>Stock</label>
                                 <InputNumber min={0} step={1} value={createData?.stock}
                                     onChange={(value) => setCreateData({ ...createData, stock: value })} />
@@ -456,6 +467,10 @@ const MSingleProduct = () => {
                                 <SelectConstant single={true} value={editData?.status} setValue={(value) => setEditData({ ...editData, status: value })} constant={ProductStatus} />
                             </div>
                             <div className='flex flex-col gap-1.5 w-full'>
+                                <label>Stock Limit</label>
+                                <SelectConstant single={true} value={editData?.stock_limit} setValue={(value) => setEditData({ ...editData, stock_limit: value })} constant={TrueFalseStatus} />
+                            </div>
+                            <div className='flex flex-col gap-1.5 w-full'>
                                 <label>Stock</label>
                                 <InputNumber min={0} step={1} value={editData?.stock}
                                     onChange={(value) => setEditData({ ...editData, stock: value })} />
@@ -477,7 +492,7 @@ const MSingleProduct = () => {
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={() => setCreateData(null)} appearance="subtle">
+                        <Button onClick={() => setEditData(null)} appearance="subtle">
                             Cancel
                         </Button>
                         <Button onClick={confirmEditVariants} appearance="primary">
