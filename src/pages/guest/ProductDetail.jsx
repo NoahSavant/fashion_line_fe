@@ -21,7 +21,7 @@ const ProductDetail = () => {
     useEffect(() => {
         if (id == null) return;
         handleGetProduct(productEndpoints.getSingle + id, {})
-        handleGetVariants(variantEndpoints.get + '/' + productData?.id, {
+        handleGetVariants(variantEndpoints.get + '/' + id, {
             params: {
                 all: true
             }
@@ -127,7 +127,24 @@ const ProductDetail = () => {
     }, [selectedVariant]);
 
     return (
-        <div className='custom-padding'>
+        <div className='custom-padding flex flex-col'>
+            <div className='bg-gray-100 p-2 mb-4 -mt-3 flex gap-2 items-center'>
+                <a href='/' className='text-base font-medium text-blue-500 cursor-pointer'>
+                    Home
+                </a>
+                <div>/</div>
+                <a href='/shop' className='text-base font-medium text-blue-500 cursor-pointer'>
+                    Shop
+                </a>
+                <div>/</div>
+                <a href={`/shop?category=${productData.category_id}`} className='text-base font-medium text-blue-500 cursor-pointer'>
+                    {productData?.category?.name}
+                </a>
+                <div>/</div>
+                <div className='text-base font-medium text-black'>
+                    {productData?.name}
+                </div>
+            </div>
             <div className="flex gap-5">
                 <div className="flex-1 flex flex-col gap-2">
                     <Carousel className="custom-slider" shape='bar' activeIndex={selectedVariant?.index} onSelect={(index) => setSelectedVariant(variants[index])}>
@@ -154,11 +171,11 @@ const ProductDetail = () => {
                     </div>
                 </div>
                 <div className="flex-1 flex flex-col justify-between">
-                    <div className='flex flex-col gap-2'>
-                        <h3 className="text-xl font-bold text-sapphire">{productData?.name}</h3>
+                    <div className='flex flex-col gap-2 text-lg'>
+                        <h3 className="text-2xl font-bold text-sapphire">{productData?.name}</h3>
                         <div>
                             <strong className="">Description:</strong>
-                            <div className="text-base text-black font-medium line-clamp-4">{productData?.description}</div>
+                            <div className="text-lg text-black font-medium line-clamp-4">{productData?.description}</div>
                         </div>
                         <div>
                             <strong className="">Tags:</strong>

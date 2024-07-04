@@ -12,7 +12,7 @@ import { PopupConfirmContext } from '@/contexts/PopupConfirmContext';
 import { getIds } from '@/helpers/dataHelpers';
 
 
-const AllProduct = ({onSelect}) => {
+const AllProduct = ({ onSelect, excludeCollectionId=null }) => {
     const navigate = useNavigate();
     const { openConfirmation } = useContext(PopupConfirmContext);
 
@@ -47,7 +47,8 @@ const AllProduct = ({onSelect}) => {
         handleGetProducts(productEndpoints.get, {
             params: {
                 ...pagination,
-                ...filter
+                ...filter,
+                ...(excludeCollectionId && { excludeCollectionId })
             }
         })
         setFetchProduct(false);

@@ -170,7 +170,7 @@ const MCategory = () => {
                         </div>
                         <div className='flex flex-col gap-1.5 w-full'>
                             <label>Image</label>
-                            <UploadFile cropDimensions={[60, 45]} className='w-full h-[135px]' values={[]} number={1} setValues={(value) => setCategory({ ...category, image: value[0] })} />
+                            <UploadFile className='w-full h-[135px]' values={[]} number={1} setValues={(value) => setCategory({ ...category, image: value[0] })} />
                         </div>
                         <div className="cursor-pointer px-3 py-2 bg-sapphire rounded-md justify-center items-center flex p-btn gap-2 shadow-ful w-fit" onClick={createCategory}>
                             {createCategoryLoading && <Loading size={20} />}

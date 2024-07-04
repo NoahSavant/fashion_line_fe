@@ -245,7 +245,7 @@ const MSingleProduct = () => {
             formData.append('second_image', product.second_image);
         }
 
-        handleCreateProduct(productEndpoints.update + '/' + id + '?_method=PUT', {
+        handleEditProduct(productEndpoints.update + '/' + id + '?_method=PUT', {
             method: "POST",
             data: formData,
             headers: {

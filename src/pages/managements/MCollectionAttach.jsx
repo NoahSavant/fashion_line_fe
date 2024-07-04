@@ -81,6 +81,7 @@ const MSingleCollection = () => {
         });
         setFetchProducts(false);
         setCheckedKeys([]);
+        setSelectedProducts([]);
     }, [fetchProducts]);
 
     useEffect(() => {
@@ -88,24 +89,8 @@ const MSingleCollection = () => {
         setAddProduct(false);
     }, [updateProductData]);
 
-    const confirmDeleteProducts = (rowData = null) => {
-        const discountIds = rowData ? [[rowData.id]] : [getIds(checkedKeys)];
-        const message = rowData ? 'Are you sure to delete this discount?' : 'Are you sure to delete ' + checkedKeys.length + ' discount(s)?';
-        openConfirmation(deleteProducts, discountIds, message);
-    };
-
     const confirmEditCollection = () => {
         openConfirmation(editCollection, [], 'Are you sure to update this collction ?');
-    };
-
-    const deleteProducts = async (ids) => {
-        handleDeleteProducts(
-            productEndpoints.delete,
-            {
-                method: 'DELETE',
-                data: { ids }
-            }
-        );
     };
 
     const confirmAddProduct = () => {
@@ -199,7 +184,7 @@ const MSingleCollection = () => {
                         <Modal.Title>Add Product</Modal.Title>
                     </Modal.Header>
                     <Modal.Body className='px-2 -mx-2'>
-                        <AllProduct onSelect={addSelectdProduct}/>
+                        <AllProduct onSelect={addSelectdProduct} excludeCollectionId={id} />
                         <div className="px-4">
                             <List hover>
                                 {selectedProducts.map((item) => (

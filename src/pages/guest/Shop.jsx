@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { InputNumber, Input, RadioGroup, Radio, CheckboxGroup, Checkbox } from "rsuite";
 import { FunnelIcon } from '@/components/icons.js';
 import { Filter, SingleProduct } from './components';
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { productEndpoints } from '@/apis';
 import { Loading } from '@/components';
 import PaginationDefault from '@/constants/PaginationDefault';
@@ -11,6 +11,9 @@ import { BasePagination } from '../managements/components';
 
 const Shop = () => {
     const [isOpen, setIsOpen] = useState(true);
+    const [categoryFetched, setCategoryFetched] = useState(null);
+
+    const navigate = useNavigate();
     const handleSidebar = () => {
         setIsOpen(prevState => !prevState);
     };
@@ -77,6 +80,7 @@ const Shop = () => {
             maxPrice,
         });
 
+        setCategoryFetched(category);
         setFetchProduct(true);
     }, []);
 
@@ -115,7 +119,32 @@ const Shop = () => {
                     <Filter filter={pagination} setFilter={setPagination} filterClick={() => setFetchProduct(true)} />
                 </div>
             </div>
-            <div className={`w-full lg:ml-72 lg:pl-5 flex flex-col gap-10`}>
+            <div className={`w-full lg:ml-72 lg:pl-5 flex flex-col gap-5`}>
+                <div className='bg-gray-100 p-2 flex gap-2 items-center'>
+                    <a href='/' className='text-base font-medium text-blue-500 cursor-pointer'>
+                        Home
+                    </a>
+                    <div>/</div>
+                    <a href='/shop' className='text-base font-medium text-blue-500 cursor-pointer'>
+                        Shop
+                    </a>
+                    {
+                        (categoryFetched && productsData?.items[0]) ? 
+                        <>
+                            <div>/</div>
+                            <a href={`/shop?category=${pagination.category}`} className='text-base font-medium text-blue-500 cursor-pointer'>
+                                {productsData?.items[0]?.category?.name}
+                            </a>
+                        </> : 
+
+                        <>
+                            <div>/</div>
+                            <a href='/shop' className='text-base font-medium text-blue-500 cursor-pointer'>
+                                All
+                            </a>
+                        </>
+                    }
+                </div>
                 {productsLoading && <Loading size={40} />}
                 {(productsData?.items?.length > 0 || productsLoading)  ? (
                     <>
@@ -126,7 +155,7 @@ const Shop = () => {
                                 ))
                             }
                         </div>
-                        <BasePagination pagination={productsData?.pagination} handlePagination={handlePagination} className='px-5' />
+                        <BasePagination pagination={productsData?.pagination} handlePagination={handlePagination} className='px-5 shadow-lg py-2 rounded-md' />
                     </>
                 ) : (
                     <div className='w-full h-[calc(100vh-150px)] flex justify-center items-center'>

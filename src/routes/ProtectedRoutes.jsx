@@ -1,4 +1,15 @@
-import { MProduct, Dashboard, MSingleProduct, MTag, MCategory, MDiscount, MCollection, MCollectionAttach } from '@/pages/managements'
+import { 
+    MProduct, 
+    Dashboard, 
+    MSingleProduct, 
+    MTag, 
+    MCategory, 
+    MDiscount, 
+    MCollection, 
+    MCollectionAttach, 
+    MBlog,
+    MSingleBlog 
+} from '@/pages/managements'
 
 const ProtectedRoutes = [
     {
@@ -32,6 +43,14 @@ const ProtectedRoutes = [
     {
         path: "collection-attach",
         element: <MCollectionAttach />,
+    },
+    {
+        path: "blog",
+        element: <MBlog />,
+    },
+    {
+        path: "single-blog",
+        element: <MSingleBlog />,
     }
 ]
 
