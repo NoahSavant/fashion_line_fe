@@ -69,6 +69,7 @@ const MDiscount = () => {
     const { data: editDiscountData, callApi: handleEditDiscount, loading: editDiscountLoading } = useApi();
 
     useEffect(() => {
+        if (deleteDiscountsData?.successMessage || editDiscountData?.successMessage)
         setFetchDiscount(true);
     }, [deleteDiscountsData, editDiscountData]);
 

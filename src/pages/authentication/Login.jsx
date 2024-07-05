@@ -17,6 +17,7 @@ import { useApi } from "@/hooks";
 import { useNavigate } from 'react-router-dom';
 import { setAuthentication } from '@/helpers/authenHelpers';
 import { InputPassword } from '@/components/inputs';
+import { UserRole } from '@/constants';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -28,7 +29,11 @@ const Login = () => {
     useEffect(() => {
         if (data) {
             setAuthentication(data);
-            navigate('/dashboard');
+            if(data.user.role == UserRole.CUSTOMER) {
+                navigate('/');
+            } else {
+                navigate('/m');
+            }
         }
     }, [data]);
 

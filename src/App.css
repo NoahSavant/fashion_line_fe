@@ -207,3 +207,7 @@ a:hover {
         display: none;
     }
  }
+
+ .hidden-idb>.rs-input-number-btn-group-vertical>button {
+    display: none;
+ }

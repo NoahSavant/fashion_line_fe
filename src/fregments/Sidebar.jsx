@@ -47,9 +47,10 @@ const Sidebar = ({ expanded, setExpand }) => {
                         <Nav.Item active={activeKey('/m', true)} icon={<RiDashboardFill className="rs-icon" />} onClick={() => navigate('/m')}>
                             Dashboard
                         </Nav.Item>
-                        <Nav.Item active={activeKey('/m/users')} icon={<GroupIcon />}>
-                            User Group
-                        </Nav.Item>
+                        <Nav.Menu eventKey="users" title="User" icon={<GroupIcon />} className={`${activeKey('/m/user') ? 'active-nav' : ''}`}>
+                            <Nav.Item active={activeKey('/m/user/staff')} onClick={() => navigate('/m/user/staff')}>Staff</Nav.Item>
+                            <Nav.Item active={activeKey('/m/user/customer')} onClick={() => navigate('/m/user/customer')}>Customer</Nav.Item>
+                        </Nav.Menu>
                         <Nav.Item active={activeKey('/m/product')} icon={<GiClothes className="rs-icon" />} onClick={() => navigate('/m/product')}>
                             Product
                         </Nav.Item>

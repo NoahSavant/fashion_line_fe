@@ -147,7 +147,7 @@ const CustomNavbar = ({ onSelect, ...props }) => {
             </div>
             <GlobalSearch handleOutsideSearchClick={handleOutsideSearchClick} isSearchOpen={isSearchOpen} closeSearch={closeSearch} />
             <GlobalDiscounts />
-            <div className='md:flex hidden items-center justify-between px-5'>
+            <div className='lg:flex hidden items-center justify-between px-5'>
                 <div className='flex gap-10'>
                     <div className='h-[60px] flex justify-center items-center'>
                         <img src={logo_image} alt="" className='object-contain w-[120px] h-[45px] cursor-pointer' onClick={() => navigate('/')} />
@@ -172,7 +172,7 @@ const CustomNavbar = ({ onSelect, ...props }) => {
                     </>
                 )}
             </div>
-            <div className='md:hidden flex justify-between items-center'>
+            <div className='lg:hidden flex justify-between items-center'>
                 <div className='px-2 sidebar-open' onClick={openSidebar}><MenuIcon style={{ fontSize: '2em' }} /></div>
                 <img src={logo_image} alt="" className='object-cover w-[80px] h-[30px] cursor-pointer' onClick={() => navigate('/')}/>
                 {auth && (
@@ -192,13 +192,13 @@ const CustomNavbar = ({ onSelect, ...props }) => {
                     </>
                 )}
             </div>
-            <div className={`fixed top-0 left-0 bg-black bg-opacity-50 z-30 ${isOpen ? 'translate-x-0' : '-translate-x-full'} transform transition-transform w-full h-full justify-start duration-300 flex md:hidden`} onClick={handleOutsideClick}>
+            <div className={`fixed top-0 left-0 bg-black bg-opacity-50 z-30 ${isOpen ? 'translate-x-0' : '-translate-x-full'} transform transition-transform w-full h-full justify-start duration-300 flex lg:hidden`} onClick={handleOutsideClick}>
                 <div id="sidebarContent" className="h-full bg-white shadow-md transform translate-x-0 transition-transform duration-300 min-w-52">
                     <div className="justify-end items-start gap-10 main-menu flex flex-col px-3">
                         <div className="sidebar py-4 w-full">
                             <div id="sidebar-menu" className="vertical-menu flex flex-col items-start justify-start  text-base font-bold gap-4">
                                 <div className="w-full flex justify-start">
-                                    <div className="sidebar-close flex justify-start md:pl-[20px]" onClick={() => closeSidebar()}>
+                                    <div className="sidebar-close flex justify-start lg:pl-[20px]" onClick={() => closeSidebar()}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                             <g clipPath="url(#clip0_7_425)">
                                                 <path d="M13.4139 11.9999L23.7069 1.70692C23.8891 1.51832 23.9899 1.26571 23.9876 1.00352C23.9853 0.741321 23.8801 0.490508 23.6947 0.3051C23.5093 0.119692 23.2585 0.0145233 22.9963 0.0122448C22.7341 0.00996641 22.4815 0.110761 22.2929 0.292919L11.9999 10.5859L1.70691 0.292919C1.51831 0.110761 1.2657 0.00996641 1.00351 0.0122448C0.741311 0.0145233 0.490498 0.119692 0.30509 0.3051C0.119682 0.490508 0.0145129 0.741321 0.0122345 1.00352C0.00995606 1.26571 0.11075 1.51832 0.292909 1.70692L10.5859 11.9999L0.292909 22.2929C0.105437 22.4804 0.00012207 22.7348 0.00012207 22.9999C0.00012207 23.2651 0.105437 23.5194 0.292909 23.7069C0.480436 23.8944 0.734744 23.9997 0.999909 23.9997C1.26507 23.9997 1.51938 23.8944 1.70691 23.7069L11.9999 13.4139L22.2929 23.7069C22.4804 23.8944 22.7347 23.9997 22.9999 23.9997C23.2651 23.9997 23.5194 23.8944 23.7069 23.7069C23.8944 23.5194 23.9997 23.2651 23.9997 22.9999C23.9997 22.7348 23.8944 22.4804 23.7069 22.2929L13.4139 11.9999Z" fill="#374957" />

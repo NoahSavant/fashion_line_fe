@@ -98,7 +98,7 @@ const UploadFile = ({ cropDimensions = null, values, setValues, number = null, c
                 {(!number || files.length < number) && (
                     <Dropzone onDrop={onDrop} accept="image/*,.pdf,.doc,.docx">
                         {({ getRootProps, getInputProps }) => (
-                            <div {...getRootProps()} className={`border-2 border-gray-300 border-dashed rounded-lg p-4 flex justify-center items-center ${className}`}>
+                            <div {...getRootProps()} className={`border-2 border-gray-300 border-dashed rounded-lg p-4 flex justify-center items-center cursor-pointer ${className}`}>
                                 <input {...getInputProps()} />
                                 <CameraRetroIcon style={{ fontSize: 40 }} />
                             </div>

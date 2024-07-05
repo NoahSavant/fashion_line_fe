@@ -216,7 +216,7 @@ export const UserCell = ({ rowData, dataKeys, images, ...props }) => {
         <Cell {...props}>
             <div className="flex flex-row items-center gap-3 w-full h-full">
                 <Avatar
-                    size="md"
+                    size="sm"
                     circle
                     src={image}
                 />

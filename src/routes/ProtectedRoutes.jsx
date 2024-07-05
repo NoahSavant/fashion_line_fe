@@ -8,7 +8,10 @@ import {
     MCollection, 
     MCollectionAttach, 
     MBlog,
-    MSingleBlog 
+    MSingleBlog,
+    MStaff,
+    MCustomer,
+    MSingleUser
 } from '@/pages/managements'
 
 const ProtectedRoutes = [
@@ -51,6 +54,18 @@ const ProtectedRoutes = [
     {
         path: "single-blog",
         element: <MSingleBlog />,
+    },
+    {
+        path: "user/staff",
+        element: <MStaff />,
+    },
+    {
+        path: "user/customer",
+        element: <MCustomer />,
+    },
+    {
+        path: "single-user",
+        element: <MSingleUser />,
     }
 ]
 
