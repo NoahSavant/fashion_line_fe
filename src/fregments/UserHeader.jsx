@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 import { Avatar, Whisper, Popover, Nav, IconButton, ButtonGroup, Badge } from "rsuite";
-import { NoticeIcon, ArrowDownIcon, MemberIcon, UserChangeIcon, SentToUserIcon, FiShoppingCart } from "@/components/icons";
+import { NoticeIcon, ArrowDownIcon, MemberIcon, UserChangeIcon, SentToUserIcon, FiShoppingCart, BsBoxArrowUpRight } from "@/components/icons";
 import { signOut } from '@/helpers/authenHelpers';
 import { getAuthentication } from "@/helpers/authenHelpers";
 import { UserRole } from "@/constants";
@@ -31,6 +31,11 @@ const UserHeader = () => {
                     <div className='flex md:hidden flex-col justify-center p-2'>
                         <p className='font-medium text-sapphire'>{user?.username}</p>
                     </div>
+                    {user?.role !== UserRole.CUSTOMER &&
+                        <Nav.Item className="h-auto p-2.5" icon={<BsBoxArrowUpRight className="rs-icon" />} onClick={() => {
+                            window.location.href = `/m`;
+                        }} eventKey={3}>Manage</Nav.Item>
+                    }
                     <Nav.Item className="h-auto p-2.5" icon={<MemberIcon />} onClick={() => navigate('/profile')} eventKey={3}>Profile</Nav.Item>
                     <Nav.Item className="h-auto p-2.5" icon={<UserChangeIcon />} onClick={handleSignOut} eventKey={4}>Sign out</Nav.Item>
                 </Nav>
