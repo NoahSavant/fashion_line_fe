@@ -7,36 +7,31 @@ import { Loading } from '@/components';
 import PaginationDefault from '@/constants/PaginationDefault';
 import { Rate, Input, Button, List, Avatar, Divider } from 'rsuite';
 import { FaStar } from 'react-icons/fa';
+import CommentType from '@/constants/CommentType';
 
-const Comments = ({ id, type}) => {
+const SingleComment = ({ comment, open }) => {
     const [limit, setLimit] = useState(5);
 
     useEffect(() => {
-        if(!id) return;
-        handleGetComments(commentEndpoints.get, {
+        if(!comment || !open) return;
+        handleGetComment(commentEndpoints.get, {
             params: {
-                id,
-                type,
+                id: comment.id,
+                type: CommentType,
                 limit,
                 page: 1,
                 order: PaginationDefault.ORDER,
                 cloumn: PaginationDefault.COLUMN
             }
         })
-    }, [id]);
+    }, [comment, open]);
 
-    const { data: blogData, callApi: handleGetBlog, loading: blogLoading } = useApi();
-    const { data: commentsData, callApi: handleGetComments, loading: commentsLoading } = useApi();
+    const { data: commentsData, callApi: handleGetComment, loading: commentsLoading } = useApi();
 
-    const [rating, setRating] = useState(5);
-    const [comment, setComment] = useState('');
-
-    const handleRatingChange = (value) => {
-        setRating(value);
-    };
+    const [content, setContent] = useState('');
 
     const handleCommentChange = (value) => {
-        setComment(value);
+        setContent(value);
     };
 
     const handleCommentSubmit = () => {
@@ -45,48 +40,44 @@ const Comments = ({ id, type}) => {
 
     return (
         <div className='custom-padding flex flex-col'>
-            {blogLoading && <Loading />}
             <div className='flex flex-col gap-5'>
-                <h3>Bình luận ngay</h3>
-                <Rate
-                    value={rating}
-                    onChange={handleRatingChange}
-                    color="yellow"
-                    allowHalf
-                />
-                <Input
-                    as="textarea"
-                    rows={3}
-                    placeholder="Bình luận..."
-                    value={comment}
-                    onChange={handleCommentChange}
-                />
-                <div className='w-full flex justify-end'>
-                    <div className="cursor-pointer px-3 py-2 bg-sapphire rounded-md justify-center items-center flex p-btn gap-2 shadow-full w-fit" onClick={handleCommentSubmit}>
-                        <div className="text-white text-sm font-normal capitalize leading-normal">Bình luận</div>
+                <div>{comment.content}</div>
+                {
+                    open && <div className='flex flex-col gap-4 pl-5'>
+                        {commentsLoading && <Loading />}
+                        <List>
+                            {commentsData?.items.map((item) => (
+                                <List.Item key={item.id}>
+                                    <List.Item.Meta
+                                        avatar={<Avatar src={item.user.image_url} />}
+                                        title={
+                                            <div>
+                                                {item.user.username}
+                                                <Rate readOnly value={item.rating} character={<FaStar />} />
+                                            </div>
+                                        }
+                                        description={item.comment}
+                                    />
+                                </List.Item>
+                            ))}
+                        </List>
+                        <Input
+                            as="textarea"
+                            rows={3}
+                            placeholder="Bình luận..."
+                            value={comment}
+                            onChange={handleCommentChange}
+                        />
+                        <div className='w-full flex justify-end'>
+                            <div className="cursor-pointer px-3 py-2 bg-sapphire rounded-md justify-center items-center flex p-btn gap-2 shadow-full w-fit" onClick={handleCommentSubmit}>
+                                <div className="text-white text-sm font-normal capitalize leading-normal">Phản hồi</div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <Divider />
-                <h3>Các bình luận</h3>
-                <List>
-                    {commentsData?.items.map((item) => (
-                        <List.Item key={item.id}>
-                            <List.Item.Meta
-                                avatar={<Avatar src={item.user.image_url} />}
-                                title={
-                                    <div>
-                                        {item.user.username}
-                                        <Rate readOnly value={item.rating} character={<FaStar />} />
-                                    </div>
-                                }
-                                description={item.comment}
-                            />
-                        </List.Item>
-                    ))}
-                </List>
+                }
             </div>
         </div>
     );
 };
 
-export default Comments;
+export default SingleComment;

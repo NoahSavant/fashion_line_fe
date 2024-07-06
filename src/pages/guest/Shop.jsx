@@ -148,7 +148,7 @@ const Shop = () => {
                 {productsLoading && <Loading size={40} />}
                 {(productsData?.items?.length > 0 || productsLoading)  ? (
                     <>
-                        <div className='grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1'>
+                        <div className='grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5'>
                             {
                                 productsData?.items?.map((item, index) => (
                                     <SingleProduct product={item} key={index} />

@@ -8,11 +8,14 @@ import PaginationDefault from '@/constants/PaginationDefault';
 import { Rate, Input, Button, List, Avatar, Divider } from 'rsuite';
 import { FaStar } from 'react-icons/fa';
 
-const Comments = ({ id, type}) => {
+const Comments = ({ id, type }) => {
     const [limit, setLimit] = useState(5);
+    const [fetchComments, setFetchComments] = useState(true);
+    const { data: createComment, callApi: handleCreateComment, loading: createCommentLoading } = useApi();
+    const { data: commentsData, callApi: handleGetComments, loading: commentsLoading } = useApi();
 
     useEffect(() => {
-        if(!id) return;
+        if(!id || !fetchComments) return;
         handleGetComments(commentEndpoints.get, {
             params: {
                 id,
@@ -23,10 +26,13 @@ const Comments = ({ id, type}) => {
                 cloumn: PaginationDefault.COLUMN
             }
         })
-    }, [id]);
+        setFetchComments(false);
+    }, [fetchComments, id]);
 
-    const { data: blogData, callApi: handleGetBlog, loading: blogLoading } = useApi();
-    const { data: commentsData, callApi: handleGetComments, loading: commentsLoading } = useApi();
+    useEffect(() => {
+        if(!createComment) return;
+        setFetchComments(true);
+    }, [createComment]);
 
     const [rating, setRating] = useState(5);
     const [comment, setComment] = useState('');
@@ -40,12 +46,20 @@ const Comments = ({ id, type}) => {
     };
 
     const handleCommentSubmit = () => {
-        
+        handleCreateComment(commentEndpoints.create, {
+            method: "POST",
+            params: {
+                commentmorph_id: id,
+                commentmorph_type: type,
+                content: comment,
+                rate: rating,
+            }
+        })
     };
 
     return (
         <div className='custom-padding flex flex-col'>
-            {blogLoading && <Loading />}
+            {commentsLoading && <Loading />}
             <div className='flex flex-col gap-5'>
                 <h3>Bình luận ngay</h3>
                 <Rate
