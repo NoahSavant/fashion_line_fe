@@ -1,23 +1,24 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { getConstantData } from '@/helpers/constantHelpers';
 import PaginationDefault from '@/constants/PaginationDefault';
-import { Input, Modal, Button, InputNumber } from "rsuite";
+import { Input, Modal, Button, InputNumber, TagInput, CheckPicker } from "rsuite";
 import { BasePagination, TableVariant } from './components';
 import { productEndpoints, variantEndpoints } from '@/apis'
 import { useApi } from '@/hooks';
 import { ProductStatus, TrueFalseStatus } from '@/constants';
-import { SelectTag, SelectCategory, SingleSelect, SelectConstant } from '@/components/selects'
+import { SelectTag, SelectCategory, SingleSelect, SelectConstant, MultiSelect } from '@/components/selects'
 import { UploadFile } from '@/components/inputs'
 import { PopupConfirmContext } from '@/contexts/PopupConfirmContext';
 import { Loading } from '@/components';
 import { useSearchParams } from "react-router-dom";
 import { getIds } from '@/helpers/dataHelpers';
+import { convertStringToArray, convertArrayToString } from '@/helpers/dataHelpers';
 
 
 const MSingleProduct = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [id, setId] = useState(null);
-    const [product, setProduct] = useState({
+    const baseProduct = {
         name: '',
         description: '',
         short_description: '',
@@ -29,7 +30,8 @@ const MSingleProduct = () => {
         note: '',
         original_price: 0,
         price: 0,
-    })
+    };
+    const [product, setProduct] = useState(baseProduct);
 
     const { openConfirmation } = useContext(PopupConfirmContext);
 
@@ -52,7 +54,7 @@ const MSingleProduct = () => {
 
     const sampleVariant = {
         id: -1,
-        size: '',
+        size: [],
         color: '',
         status: ProductStatus.OPEN,
         stock_limit: TrueFalseStatus.TRUE,
@@ -69,7 +71,8 @@ const MSingleProduct = () => {
         }
     }, []);
 
-    const [variants, setVariants] = useState([])
+    const [variants, setVariants] = useState([]);
+    const [sizes, setSizes] = useState([])
     const [editData, setEditData] = useState(null);
     const [createData, setCreateData] = useState(null);
 
@@ -89,6 +92,11 @@ const MSingleProduct = () => {
         handleGetProduct(productEndpoints.getSingle + id, {})
         setFetchProduct(false);
     }, [fetchProduct, id]);
+
+    useEffect(() => {
+        if (!createProductData) return;
+        setProduct(baseProduct);
+    }, [createProductData]);
 
     useEffect(() => {
         if (!productData) return;
@@ -117,6 +125,23 @@ const MSingleProduct = () => {
         setCreateData(null);
     }, [editVariantData, addVariantData, deleteVariantsData]);
 
+    useEffect(() => {
+        if (variants && Array.isArray(variants)) {
+            const uniqueSizes = [...new Set(variants.flatMap(variant => variant.size))];
+            setSizes(uniqueSizes);
+        }
+    }, [variants]);
+
+    useEffect(() => {
+        if (variantsData?.items && variantsData?.items.length > 0) {
+            const updatedVariants = variantsData?.items.map(variant => ({
+                ...variant,
+                size: convertStringToArray(variant.size),
+            }));
+            setVariants(updatedVariants);
+        }
+    }, [variantsData]);
+
     const confirmDeleteVariants = (rowData = null) => {
         const variantIds = rowData ? [[rowData.id]] : [getIds(checkedKeys)];
         const message = rowData ? 'Are you sure to delete this variant?' : 'Are you sure to delete ' + checkedKeys.length + ' variant(s)?';
@@ -143,7 +168,7 @@ const MSingleProduct = () => {
     }
 
     const validVariant = (variant) => {
-        if (variant.size == '' || variant.color == '' || variant.original_price == 0 || variant.price == 0 || variant.image == null) {
+        if (variant.size == [] || variant.color == '' || variant.original_price == 0 || variant.price == 0 || variant.image == null) {
             return false;
         }
         return true;
@@ -159,7 +184,7 @@ const MSingleProduct = () => {
             }
         } else {
             const formData = new FormData();
-            formData.append('size', createData.size);
+            formData.append('size', convertArrayToString(createData.size));
             formData.append('color', createData.color);
             formData.append('status', createData.status);
             formData.append('original_price', createData.original_price);
@@ -195,7 +220,7 @@ const MSingleProduct = () => {
         });
 
         variants.forEach((variant, index) => {
-            formData.append(`variants[${index}][size]`, variant.size);
+            formData.append(`variants[${index}][size]`, convertArrayToString(variant.size));
             formData.append(`variants[${index}][color]`, variant.color);
             formData.append(`variants[${index}][status]`, variant.status);
             formData.append(`variants[${index}][original_price]`, variant.original_price);
@@ -263,7 +288,7 @@ const MSingleProduct = () => {
             setEditData(null);
         }
         const formData = new FormData();
-        formData.append('size', editData.size);
+        formData.append('size', convertArrayToString(editData.size));
         formData.append('color', editData.color);
         formData.append('status', editData.status);
         formData.append('original_price', editData.original_price);
@@ -343,7 +368,7 @@ const MSingleProduct = () => {
                             </div>
                             <div className='flex flex-col gap-1.5 w-full'>
                                 <label>Stock Limit</label>
-                                <SelectConstant single={true} value={createData?.stock_limit} setValue={(value) => setCreateData({ ...createData, stock_limit: value })} constant={TrueFalseStatus} />
+                                <SelectConstant single={true} value={product?.stock_limit} setValue={(value) => setProduct({ ...product, stock_limit: value })} constant={TrueFalseStatus} />
                             </div>
                         </div>
                         <div className='grid grid-cols-2 gap-2'>
@@ -387,11 +412,22 @@ const MSingleProduct = () => {
                         <div className='flex flex-col gap-4 items-end'>
                             <div className='flex flex-col gap-1.5 w-full'>
                                 <label>Size</label>
-                                <Input
-                                    placeholder="Size"
-                                    value={createData?.size}
-                                    onChange={(value) => setCreateData({ ...createData, size: value })}
-                                />
+                                <div className='grid grid-cols-3 gap-4'>
+                                    <TagInput
+                                        placeholder="Sizes"
+                                        value={createData?.size}
+                                        onChange={(value) => setCreateData({ ...createData, size: value })}
+                                        className='col-span-2'
+                                    />
+                                    <CheckPicker
+                                        data={sizes.map(size => ({
+                                            label: size,
+                                            value: size
+                                        }))}
+                                        value={createData?.size}
+                                        onChange={(value) => setCreateData({ ...createData, size: Array.from(new Set([...createData.size, ...value])) })}
+                                    />
+                                </div>
                             </div>
                             <div className='flex flex-col gap-1.5 w-full'>
                                 <label>Color Name</label>
@@ -448,11 +484,22 @@ const MSingleProduct = () => {
                         <div className='flex flex-col gap-4 items-end'>
                             <div className='flex flex-col gap-1.5 w-full'>
                                 <label>Size</label>
-                                <Input
-                                    placeholder="Size"
-                                    value={editData?.size}
-                                    onChange={(value) => setEditData({ ...editData, size: value })}
-                                />
+                                <div className='grid grid-cols-3 gap-4'>
+                                    <TagInput
+                                        placeholder="Sizes"
+                                        value={editData?.size}
+                                        onChange={(value) => setEditData({ ...editData, size: value })}
+                                        className='col-span-2'
+                                    />
+                                    <CheckPicker
+                                        data={sizes.map(size => ({
+                                            label: size,
+                                            value: size
+                                        }))}
+                                        value={editData?.size}
+                                        onChange={(value) => setEditData({ ...editData, size: Array.from(new Set([...editData.size, ...value])) })}
+                                    />
+                                </div>
                             </div>
                             <div className='flex flex-col gap-1.5 w-full'>
                                 <label>Color Name</label>
@@ -501,7 +548,7 @@ const MSingleProduct = () => {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-                <TableVariant items={id ? variantsData?.items : variants} dataLoading={(id && (variantsLoading || deleteVariantsLoading || addVariantLoading))} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteVariants} onMultyDelete={() => confirmDeleteVariants(null)} onEdit={setEditData} onCreate={() => setCreateData({ ...sampleVariant, id: new Date().toLocaleTimeString(), original_price: product.original_price, price: product.price})} />
+                <TableVariant items={variants} dataLoading={(id && (variantsLoading || deleteVariantsLoading || addVariantLoading))} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteVariants} onMultyDelete={() => confirmDeleteVariants(null)} onEdit={setEditData} onCreate={() => setCreateData({ ...sampleVariant, id: new Date().toLocaleTimeString(), original_price: product.original_price, price: product.price})} />
                 <BasePagination pagination={variantsData?.pagination} handlePagination={handlePagination} />
             </div>
         </div>

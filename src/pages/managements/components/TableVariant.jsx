@@ -7,7 +7,8 @@ import {
     ImageCell,
     CheckCell,
     ConstantCell,
-    DiscountValueCell
+    DiscountValueCell,
+    TagGroupCell
 } from './TableCell';
 import { SearchIcon } from '@/components/icons';
 import Toolbar from './Toolbar';
@@ -103,9 +104,9 @@ const TableVariant = ({ items, dataLoading, handleSort, checkedKeys, setCheckedK
                     </HeaderCell>
                     <CheckCell dataKey="id" checkedKeys={checkedKeys} onChange={handleCheck} />
                 </Column>
-                <Column width={120} fullText sortable>
+                <Column width={250} fullText sortable>
                     <HeaderCell>Size</HeaderCell>
-                    <BaseCell dataKey='size' />
+                    <TagGroupCell dataKey='size' />
                 </Column>
                 <Column width={120} sortable>
                     <HeaderCell>Color Name</HeaderCell>

@@ -223,7 +223,7 @@ const MDiscount = () => {
                         </div>
                         <div className='flex flex-col gap-1.5 w-full'>
                             <label>Image</label>
-                            <UploadFile cropDimensions={[1, 1]} className='w-[80px] h-[px]' values={[editData?.image_url]} number={1} setValues={(value) => setEditData({ ...editData, image: value[0] })} />
+                            <UploadFile className='w-[80px] h-[px]' values={[editData?.image_url]} number={1} setValues={(value) => setEditData({ ...editData, image: value[0] })} />
                         </div>
                     </div>
                 </Modal.Body>
@@ -300,7 +300,7 @@ const MDiscount = () => {
                         </div>
                         <div className='flex flex-col gap-1.5 w-full'>
                             <label>Image</label>
-                            <UploadFile cropDimensions={[1, 1]} className='w-[80px] h-[px]' values={[]} number={1} setValues={(value) => setDiscount({ ...discount, image: value[0] })} />
+                            <UploadFile className='w-[80px] h-[px]' values={[]} number={1} setValues={(value) => setDiscount({ ...discount, image: value[0] })} />
                         </div>
                     </div>
                     <div className='w-full flex justify-end'>

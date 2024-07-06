@@ -38,7 +38,7 @@ const SingleBlog = ({ blog, className='' }) => {
                 <div className="text-base text-black font-medium line-clamp-3">{blog.short_description}</div>
                 <div className="flex justify-between items-center">
                     <div className="text-base text-gray-400">{formatDate(blog.updated_at)}</div>
-                    <div className="text-base text-sapphire hover:text-orange-500 cursor-pointer font-medium" onClick={() => navigate(`/blog-detail?id=${blog.id}`)}>Read more</div>
+                    <div className="text-base text-sapphire hover:text-orange-500 cursor-pointer font-medium" onClick={() => navigate(`/blog-detail?id=${blog.id}`)}>Xem chi tiết</div>
                 </div>
             </div>
         </div>

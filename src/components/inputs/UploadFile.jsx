@@ -9,7 +9,7 @@ import {
     HiMiniXCircle
 } from '@/components/icons.js';
 
-const UploadFile = ({ cropDimensions = null, values, setValues, number = null, className = '' }) => {
+const UploadFile = ({ cropDimensions = null, values, setValues, number = null, className = '', reset=false }) => {
     const [files, setFiles] = useState([]);
     const [imageSrc, setImageSrc] = useState(null);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -23,6 +23,10 @@ const UploadFile = ({ cropDimensions = null, values, setValues, number = null, c
     }, []);
 
     useEffect(() => {
+        if(reset && !values) {
+            console.log(123);
+            setFiles([]);
+        }
         if(files.length > 0) return;
         setFiles(() => {if (values === null || values === undefined) {
             return files; 

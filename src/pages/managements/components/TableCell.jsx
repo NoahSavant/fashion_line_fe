@@ -28,7 +28,6 @@ export const NameCell = ({ rowData, dataKey, dataKeyNote, ...props }) => {
                 <p className='text-xs text-gray-400'>{rowData[dataKeyNote]}</p>
             </div>
         </Cell>
-
     );
 }
 
@@ -305,29 +304,29 @@ export const CheckCell = ({ rowData, onChange, checkedKeys, dataKey, ...props })
 
 export const TagGroupCell = ({ rowData, dataKey, ...props }) => {
     const tags = rowData[dataKey];
-    if (!tags) {
+
+    if (!tags || !Array.isArray(tags) || tags.length === 0) {
         return (
             <Cell {...props}>
                 <div className='flex flex-col justify-center w-full h-full'>
-
+                    {/* Render something when there are no tags */}
                 </div>
             </Cell>
         );
     }
 
-
     return (
         <Cell {...props}>
             <div className='flex flex-col justify-center w-full h-full'>
                 <TagGroup>
-                    {
-                        tags.map((item) => (
-                            <Tag key={item.id} size="md">{item.name}</Tag>
-                        ))
-                    }
+                    {tags.map((item, index) => (
+                        <Tag key={item.id || index} size="md">
+                            {item.id ? item.name : item}
+                        </Tag>
+                    ))}
                 </TagGroup>
             </div>
         </Cell>
     );
-}
+};
 

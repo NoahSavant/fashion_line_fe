@@ -81,3 +81,13 @@ export const formatReadingTime = (minutes) => {
 
     return formattedTime.trim();
 };
+
+export const convertStringToArray = (data, symbol=',') => {
+    const array = data.split(`${symbol} `);
+    return array;
+}
+
+export const convertArrayToString = (data, symbol = ',') => {
+    const string = data.join(`${symbol} `);
+    return string;
+}

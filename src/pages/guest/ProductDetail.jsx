@@ -5,6 +5,7 @@ import { Carousel, InputNumber } from 'rsuite';
 import { useApi } from '@/hooks';
 import { variantEndpoints } from '@/apis';
 import { IoCartOutline } from '@/components/icons.js';
+import { convertStringToArray } from '@/helpers/dataHelpers';
 
 const ProductDetail = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -40,55 +41,67 @@ const ProductDetail = () => {
     const [number, setNumber] = useState(1)
 
     useEffect(() => {
-        if (variantsData && productData) {
-            const sizesMap = {};
-            const colorsMap = {};
-            const newVariants = [
+        if (productData) {
+            setVariants([...variants, 
                 {
                     index: 0,
-                    image_url: productData?.first_image_url
+                    image_url: productData?.first_image_url,
+                    size: []
                 },
                 {
                     index: 1,
-                    image_url: productData?.second_image_url
+                    image_url: productData?.second_image_url,
+                    size: []
                 }
-            ];
+            ]);
+        }
+    }, [productData]);
+
+    useEffect(() => {
+        if (variantsData) {
+            const sizesMap = {};
+            const colorsMap = {};
+            const newVariants = [];
 
             variantsData.forEach((variant, index) => {
-                newVariants.push({ ...variant, index: index + 2 });
+                const currentSizes = convertStringToArray(variant.size);
+                console.log(currentSizes);
+                newVariants.push({ ...variant, index: index + 2, size: currentSizes });
 
                 // Update sizes
-                if (!sizesMap[variant.size]) {
-                    sizesMap[variant.size] = { size: variant.size, colors: [] };
-                }
+                currentSizes.forEach((currentSize, index) => {
+                    if (!sizesMap[currentSize]) {
+                        sizesMap[currentSize] = { size: currentSize, colors: [] };
+                    }
 
-                if (!sizesMap[variant.size].colors.includes(variant.color)) {
-                    sizesMap[variant.size].colors.push(variant.color);
-                }
+                    if (!sizesMap[currentSize].colors.includes(variant.color)) {
+                        sizesMap[currentSize].colors.push(variant.color);
+                    }
+                })
 
                 // Update colors
                 if (!colorsMap[variant.color]) {
                     colorsMap[variant.color] = { color: variant.color, sizes: [] };
                 }
 
-                if (!colorsMap[variant.color].sizes.includes(variant.size)) {
-                    colorsMap[variant.color].sizes.push(variant.size);
+                if (colorsMap[variant.color]) {
+                    colorsMap[variant.color].sizes = Array.from(new Set([colorsMap[variant.color].sizes, ...currentSizes]));
                 }
-
             });
 
             setSizes(Object.values(sizesMap));
             setColors(Object.values(colorsMap));
-            setVariants(newVariants);
-            setSelectedVariant(newVariants[2]);
+            const currentVariants = [...variants, ...newVariants];
+            setVariants(currentVariants);
+            setSelectedVariant(currentVariants.find(variant => variant.index === 2));
         }
-    }, [variantsData, productData]);
+    }, [variantsData]);
 
     useEffect(() => {
         if (selectedSize) {
             if (selectedColor) {
                 if (selectedColor.sizes.includes(selectedSize.size)) {
-                    const temp = variants.find(variant => (variant.size === selectedSize.size && variant.color === selectedColor.color));
+                    const temp = variants.find(variant => (variant.size.includes(selectedSize.size) && variant.color === selectedColor.color));
                     if (temp) {
                         setSelectedVariant(temp);
                     }
@@ -103,7 +116,7 @@ const ProductDetail = () => {
         if (selectedColor) {
             if (selectedSize) {
                 if (selectedSize.colors.includes(selectedColor.color)) {
-                    const temp = variants.find(variant => (variant.size === selectedSize.size && variant.color === selectedColor.color));
+                    const temp = variants.find(variant => (variant.size.includes(selectedSize.size) && variant.color === selectedColor.color));
                     if (temp) {
                         setSelectedVariant(temp);
                     }
@@ -116,7 +129,8 @@ const ProductDetail = () => {
 
     useEffect(() => {
         if (selectedVariant) {
-            const matchingSize = sizes.find(size => size.size === selectedVariant.size) ?? null;
+            const matchingSize = sizes.find(size => selectedVariant.size.includes(size.size)) ?? null;
+            console.log(matchingSize);
             setSelectedSize(matchingSize);
 
             const matchingColor = colors.find(color => color.color === selectedVariant.color) ?? null;
@@ -137,7 +151,7 @@ const ProductDetail = () => {
                     Shop
                 </a>
                 <div>/</div>
-                <a href={`/shop?category=${productData.category_id}`} className='text-base font-medium text-blue-500 cursor-pointer'>
+                <a href={`/shop?category=${productData?.category_id}`} className='text-base font-medium text-blue-500 cursor-pointer'>
                     {productData?.category?.name}
                 </a>
                 <div>/</div>

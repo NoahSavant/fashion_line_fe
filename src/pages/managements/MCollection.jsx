@@ -55,7 +55,7 @@ const MCollection = () => {
 
     useEffect(() => {
         if (!createCollectionData) return;
-        setCollection({ ...collection, name: '' });
+        setCollection({ ...collection, name: '', image: null });
         setFetchCollection(true);
     }, [createCollectionData]);
 
@@ -118,7 +118,7 @@ const MCollection = () => {
                         </div>
                         <div className='flex flex-col gap-1.5 w-full'>
                             <label>Image</label>
-                            <UploadFile className='w-full h-[135px]' values={[]} number={1} setValues={(value) => setCollection({ ...collection, image: value[0] })} />
+                            <UploadFile reset={true} className='w-full h-[135px]' values={collection.image} number={1} setValues={(value) => setCollection({ ...collection, image: value[0] })} />
                         </div>
                         <div className="cursor-pointer px-3 py-2 bg-sapphire rounded-md justify-center items-center flex p-btn gap-2 shadow-ful w-fit" onClick={createCollection}>
                             {createCollectionLoading && <Loading size={20} />}

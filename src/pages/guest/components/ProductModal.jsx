@@ -4,6 +4,8 @@ import { useApi } from '@/hooks';
 import { variantEndpoints } from '@/apis';
 import { IoCartOutline } from '@/components/icons.js';
 import { useNavigate } from 'react-router-dom';
+import Loading from '@/components/Loading';
+import { convertStringToArray } from '../../../helpers/dataHelpers';
 
 const ProductModal = ({ show, onClose, product }) => {
     const { data: variantsData, callApi: handleGetVariants, loading: variantsLoading } = useApi();
@@ -33,35 +35,40 @@ const ProductModal = ({ show, onClose, product }) => {
             const newVariants = [
                 {
                     index: 0,
-                    image_url: product.first_image_url
+                    image_url: product.first_image_url,
+                    size: []
                 },
                 {
                     index: 1,
-                    image_url: product.second_image_url
+                    image_url: product.second_image_url,
+                    size: []
                 }
             ];
 
             variantsData.forEach((variant, index) => {
-                newVariants.push({ ...variant, index: index + 2 });
+                const currentSizes = convertStringToArray(variant.size);
+                console.log(currentSizes);
+                newVariants.push({ ...variant, index: index + 2, size: currentSizes});
 
                 // Update sizes
-                if (!sizesMap[variant.size]) {
-                    sizesMap[variant.size] = { size: variant.size, colors: [] };
-                }
+                currentSizes.forEach((currentSize, index) => {
+                    if (!sizesMap[currentSize]) {
+                        sizesMap[currentSize] = { size: currentSize, colors: [] };
+                    }
 
-                if (!sizesMap[variant.size].colors.includes(variant.color)) {
-                    sizesMap[variant.size].colors.push(variant.color);
-                }
+                    if (!sizesMap[currentSize].colors.includes(variant.color)) {
+                        sizesMap[currentSize].colors.push(variant.color);
+                    }
+                })
 
                 // Update colors
                 if (!colorsMap[variant.color]) {
                     colorsMap[variant.color] = { color: variant.color, sizes: [] };
                 }
 
-                if (!colorsMap[variant.color].sizes.includes(variant.size)) {
-                    colorsMap[variant.color].sizes.push(variant.size);
+                if (colorsMap[variant.color]) {
+                    colorsMap[variant.color].sizes = Array.from(new Set([colorsMap[variant.color].sizes, ...currentSizes]));
                 }
-
             });
 
             setSizes(Object.values(sizesMap));
@@ -75,7 +82,7 @@ const ProductModal = ({ show, onClose, product }) => {
         if (selectedSize) {
             if (selectedColor) {
                 if (selectedColor.sizes.includes(selectedSize.size)) {
-                    const temp = variants.find(variant => (variant.size === selectedSize.size && variant.color === selectedColor.color));
+                    const temp = variants.find(variant => (variant.size.includes(selectedSize.size) && variant.color === selectedColor.color));
                     if (temp) {
                         setSelectedVariant(temp);
                     }
@@ -90,7 +97,7 @@ const ProductModal = ({ show, onClose, product }) => {
         if (selectedColor) {
             if (selectedSize) {
                 if (selectedSize.colors.includes(selectedColor.color)) {
-                    const temp = variants.find(variant => (variant.size === selectedSize.size && variant.color === selectedColor.color));
+                    const temp = variants.find(variant => (variant.size.includes(selectedSize.size) && variant.color === selectedColor.color));
                     if (temp) {
                         setSelectedVariant(temp);
                     }
@@ -103,7 +110,8 @@ const ProductModal = ({ show, onClose, product }) => {
 
     useEffect(() => {
         if (selectedVariant) {
-            const matchingSize = sizes.find(size => size.size === selectedVariant.size) ?? null;
+            const matchingSize = sizes.find(size => selectedVariant.size.includes(size.size)) ?? null;
+            console.log(matchingSize);
             setSelectedSize(matchingSize);
 
             const matchingColor = colors.find(color => color.color === selectedVariant.color) ?? null;
@@ -119,6 +127,7 @@ const ProductModal = ({ show, onClose, product }) => {
                 
             </Modal.Header>
             <Modal.Body>
+                { variantsLoading && <Loading/>}
                 <div className="flex gap-5">
                     <div className="flex-1 flex flex-col gap-2">
                         <Carousel className="custom-slider" shape='bar' activeIndex={selectedVariant?.index} onSelect={(index) => setSelectedVariant(variants[index])}>

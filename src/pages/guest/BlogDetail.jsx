@@ -6,7 +6,8 @@ import { useApi } from '@/hooks';
 import { variantEndpoints } from '@/apis';
 import { IoCartOutline } from '@/components/icons.js';
 import { Loading } from '@/components';
-import { SingleBlog } from './components';
+import { Comments, SingleBlog } from './components';
+import CommentType from '@/constants/CommentType';
 
 const BlogDetail = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -85,6 +86,8 @@ const BlogDetail = () => {
                         </div>
                     </div>
                 </div>
+
+                <Comments id={id} type={CommentType.BLOG} />
 
                 <div className="flex flex-col gap-10">
                     {blogsLoading && <Loading size={40} />}
