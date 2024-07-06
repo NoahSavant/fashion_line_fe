@@ -108,11 +108,11 @@ const TableBlog = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys
                 </Column>
                 <Column width={190}>
                     <HeaderCell className='text-center'>Image</HeaderCell>
-                    <ImageCell dataKey='image_url' className='h-[36px] w-[48px]' />
+                    <ImageCell dataKey={['image_url']} className='h-[36px] w-[48px]' />
                 </Column>
                 <Column width={200}>
                     <HeaderCell>Staff</HeaderCell>
-                    <UserCell dataKeys={['user', 'name']} images={['user', 'image_url']} />
+                    <UserCell dataKeys={['user', 'username']} images={['user', 'image_url']} />
                 </Column>
                 <Column width={400}>
                     <HeaderCell>Short Description</HeaderCell>

@@ -6,6 +6,7 @@ import { userEndpoints } from '@/apis';
 import { useApi } from '@/hooks';
 import { PopupConfirmContext } from '@/contexts/PopupConfirmContext';
 import { getIds } from '@/helpers/dataHelpers';
+import { UserStatus, Gender, UserRole } from '@/constants';
 
 const MCustomer = () => {
     const navigate = useNavigate();

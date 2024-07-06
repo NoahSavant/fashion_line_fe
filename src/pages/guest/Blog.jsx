@@ -6,6 +6,7 @@ import { Loading } from '@/components';
 import PaginationDefault from '@/constants/PaginationDefault';
 import { BasePagination } from '../managements/components';
 import { BlogFilter } from './components';
+import SingleBlog from './components/SingleBlog';
 
 const Blog = () => {
     const [isOpen, setIsOpen] = useState(true);
@@ -98,7 +99,7 @@ const Blog = () => {
                         </g>
                     </svg>
                 </div>
-                <div className={`${isOpen ? '' : 'lg:translate-x-0 lg:opacity-100 -translate-x-full opacity-0'} absolute left-0 top-0 w-72 h-max-[calc(100vh-150px)] overflow-auto hidden-scroll-bar shadow-full rounded-xl h-full transform transition-all duration-500 ease-in-out`}>
+                <div className={`${isOpen ? '' : 'lg:translate-x-0 lg:opacity-100 -translate-x-full opacity-0'} bg-white absolute left-0 top-0 w-72 h-max-[calc(100vh-150px)] overflow-auto hidden-scroll-bar shadow-full rounded-xl h-full transform transition-all duration-500 ease-in-out`}>
                     <BlogFilter filter={pagination} setFilter={setPagination} filterClick={() => setFetchBlogs(true)} />
                 </div>
             </div>
@@ -117,12 +118,7 @@ const Blog = () => {
                     <>
                         <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5'>
                             {blogsData?.items?.map((blog, index) => (
-                                <div key={index} className='p-5 border rounded-md shadow-lg'>
-                                    <h2 className='text-xl font-semibold'>{blog?.title}</h2>
-                                    <p className='text-sm text-gray-500'>{blog?.date}</p>
-                                    <p className='text-base mt-2'>{blog?.excerpt}</p>
-                                    <a href={`/blog/${blog?.id}`} className='text-blue-500'>Read more</a>
-                                </div>
+                                <SingleBlog blog={blog} key={index}/>
                             ))}
                         </div>
                         <BasePagination pagination={blogsData?.pagination} handlePagination={handlePagination} className='px-5 shadow-lg py-2 rounded-md' />

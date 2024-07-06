@@ -14,6 +14,8 @@ const Filter = ({filter, setFilter, filterClick}) => {
         sortIsOpen: true
     });
 
+    console.log(filter);
+
     const toThousands = (value) => {
         return value ? `${value}`.replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&.') : value;
     }
@@ -165,7 +167,7 @@ const Filter = ({filter, setFilter, filterClick}) => {
                     <div className='w-full h-0.5 bg-slate-300'></div>
                 </div>
                 <div className={`flex flex-col px-2 ${setting.sortIsOpen ? '' : 'hidden'}`}>
-                    <RadioGroup name="radio-group-controlled" value={filter.column} setValue={(value) => setFilter({ ...filter, column: value })} className={`grid grid-cols-2 px-2`}>
+                    <RadioGroup name="radio-group-controlled" value={filter.column} onChange={(value) => setFilter({ ...filter, column: value })} className={`grid grid-cols-2 px-2`}>
                         <Radio value="id">Datetime</Radio>
                         <Radio value="price">Price</Radio>
                         <Radio value="name">Name</Radio>
@@ -176,7 +178,7 @@ const Filter = ({filter, setFilter, filterClick}) => {
                         <div className='px-2 bg-white font-medium text-base text-nowrap'>Sort Type</div>
                         <div className='w-full h-0.5 bg-slate-300'></div>
                     </div>
-                    <RadioGroup name="radio-group-controlled" value={filter.order} setValue={(value) => setFilter({ ...filter, order: value })} className={`grid grid-cols-2 px-2`}>
+                    <RadioGroup name="radio-group-controlled" value={filter.order} onChange={(value) => setFilter({ ...filter, order: value })} className={`grid grid-cols-2 px-2`}>
                         <Radio value="desc">Decrease</Radio>
                         <Radio value="asc">Increase</Radio>
                     </RadioGroup>

@@ -18,3 +18,12 @@ export const getDateTimeZone = (dateString) => {
     return timeZoneDate;
 }
 
+export const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    // const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = date.getMonth(); 
+    const day = date.getDate(); 
+    const year = date.getFullYear();
+
+    return `Tháng ${month + 1} ${day}, ${year}`;
+};

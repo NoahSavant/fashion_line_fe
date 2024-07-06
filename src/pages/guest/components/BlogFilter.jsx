@@ -92,7 +92,7 @@ const BlogFilter = ({ filter, setFilter, filterClick }) => {
                         onChange={(value) => setFilter({ ...filter, column: value })}
                         className='grid grid-cols-2 px-2'
                     >
-                        <Radio value="date">Date</Radio>
+                        <Radio value="id">Date</Radio>
                         <Radio value="title">Title</Radio>
                     </RadioGroup>
                     <div className='w-full flex gap-2 justify-center items-center'>
@@ -102,8 +102,8 @@ const BlogFilter = ({ filter, setFilter, filterClick }) => {
                     </div>
                     <RadioGroup
                         name="radio-group-controlled-sort-type"
-                        value={filter.type}
-                        onChange={(value) => setFilter({ ...filter, type: value })}
+                        value={filter.order}
+                        onChange={(value) => setFilter({ ...filter, order: value })}
                         className='grid grid-cols-2 px-2'
                     >
                         <Radio value="asc">Ascending</Radio>

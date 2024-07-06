@@ -54,6 +54,7 @@ const MSingleBlog = () => {
     useEffect(() => {
         if (!blogData) return;
         setBlog({ ...blogData, tags: getIds(blogData.tags) });
+        setContent(blogData.content);
     }, [blogData]);
 
     useEffect(() => {
@@ -85,10 +86,11 @@ const MSingleBlog = () => {
         });
     };
 
-    const editBlog = () => {
+    const editBlog = async () => {
         const formData = new FormData();
         formData.append('name', blog.name);
-        formData.append('content', blog.content);
+        const newContent = await saveContent();
+        formData.append('content', newContent);
         formData.append('short_description', blog.short_description);
         formData.append('status', blog.status);
         blog.tags.forEach((tag, index) => {
