@@ -8,6 +8,7 @@ import { IoCartOutline } from '@/components/icons.js';
 import { Loading } from '@/components';
 import { Comments, SingleBlog } from './components';
 import CommentType from '@/constants/CommentType';
+import CommentAndRate from './CommentAndRate';
 
 const BlogDetail = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -76,6 +77,8 @@ const BlogDetail = () => {
                 {/* {
                     id && <Comments id={id} type={CommentType.BLOG} />
                 } */}
+
+                <CommentAndRate />
 
                 <div className="flex flex-col gap-10">
                     {blogsLoading && <Loading size={40} />}

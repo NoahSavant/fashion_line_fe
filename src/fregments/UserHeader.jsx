@@ -61,7 +61,7 @@ const UserHeader = () => {
                     </div>
                 </Whisper>
                 {user?.role == UserRole.CUSTOMER &&
-                    <Badge Badge content={999} maxCount={5} >
+                    <Badge Badge content={3} maxCount={5} >
                         <IconButton appearance="primary" onClick={() => navigate('/cart')} icon={<FiShoppingCart style={{ fontSize: '10em' }} />} circle className="bg-sapphire h-10 w-10" />
                     </Badge>
                 }

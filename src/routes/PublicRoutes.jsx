@@ -1,5 +1,5 @@
 import { Login, SignUp, VerifyAccount } from '@pages/authentication'
-import { About, Home, Contact, Shop, Blog, ProductDetail, BlogDetail } from '@/pages/guest'
+import { About, Home, Contact, Shop, Blog, ProductDetail, BlogDetail, Cart } from '@/pages/guest'
 import { NotFound } from "@/pages/errors";
 
 const PublicRoutes = [
@@ -46,6 +46,10 @@ const PublicRoutes = [
     {
         path: '/not-found',
         element: <NotFound />
+    },
+    {
+        path: '/cart',
+        element: <Cart />
     }
 ]
 

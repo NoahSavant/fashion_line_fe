@@ -62,6 +62,7 @@ import { RiDashboardFill } from "react-icons/ri";
 import { HiCollection } from "react-icons/hi";
 import { TbHandClick } from "react-icons/tb";
 import { IoCartOutline } from "react-icons/io5";
+import { IoCloseOutline } from "react-icons/io5";
 
 export {
     CogIcon,
@@ -131,5 +132,6 @@ export {
     RiDashboardFill,
     HiCollection,
     TbHandClick,
-    IoCartOutline
+    IoCartOutline,
+    IoCloseOutline
 };
