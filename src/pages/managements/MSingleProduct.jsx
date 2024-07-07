@@ -345,40 +345,54 @@ const MSingleProduct = () => {
                             <label>Tags</label>
                             <SelectTag value={product.tags} setValue={(value) => setProduct({ ...product, tags: value })} />
                         </div>
-                        <div className='grid grid-cols-2 gap-2'>
-                            <div className='flex flex-col gap-1.5'>
-                                <label>Status</label>
-                                <SingleSelect
-                                    data={getConstantData(ProductStatus)}
-                                    value={product.status}
-                                    onChange={(value) => setProduct({ ...product, status: value })}
-                                />
-                            </div>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Stock Limit</label>
-                                <SelectConstant single={true} value={product?.stock_limit} setValue={(value) => setProduct({ ...product, stock_limit: value })} constant={TrueFalseStatus} />
-                            </div>
-                        </div>
-                        <div className='grid grid-cols-2 gap-2'>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Original Price</label>
-                                <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={product?.original_price}
-                                    onChange={(value) => setProduct({ ...product, original_price: value })} />
-                            </div>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Price</label>
-                                <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={product?.price}
-                                    onChange={(value) => setProduct({ ...product, price: value })} />
-                            </div>
-                        </div>
+                        {
+                            id ? <>
+                                <div className='grid grid-cols-2 gap-2'>
+                                    <div className='flex flex-col gap-1.5'>
+                                        <label>Status</label>
+                                        <SingleSelect
+                                            data={getConstantData(ProductStatus)}
+                                            value={product.status}
+                                            onChange={(value) => setProduct({ ...product, status: value })}
+                                        />
+                                    </div>
+                                    <div className='flex flex-col gap-1.5 w-full'>
+                                        <label>Stock Limit</label>
+                                        <SelectConstant single={true} value={product?.stock_limit} setValue={(value) => setProduct({ ...product, stock_limit: value })} constant={TrueFalseStatus} />
+                                    </div>
+                                </div>
+                                <div className='grid grid-cols-2 gap-2'>
+                                    <div className='flex flex-col gap-1.5 w-full'>
+                                        <label>Original Price</label>
+                                        <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={product?.original_price}
+                                            onChange={(value) => setProduct({ ...product, original_price: value })} />
+                                    </div>
+                                    <div className='flex flex-col gap-1.5 w-full'>
+                                        <label>Price</label>
+                                        <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={product?.price}
+                                            onChange={(value) => setProduct({ ...product, price: value })} />
+                                    </div>
+                                </div>
+                            </> : <>
+                                <div className='flex flex-col gap-1.5'>
+                                    <label>Status</label>
+                                    <SingleSelect
+                                        data={getConstantData(ProductStatus)}
+                                        value={product.status}
+                                        onChange={(value) => setProduct({ ...product, status: value })}
+                                    />
+                                </div>
+                            </>
+                        }
+                        
                         <div className='grid grid-cols-2 gap-2'>
                             <div className='flex flex-col gap-1.5'>
                                 <label>First Image</label>
-                                <UploadFile className='w-full h-[135px]' values={product?.first_image_url ?? []} number={1} setValues={(value) => setProduct({ ...product, first_image: value[0] })} />
+                                <UploadFile className={`w-full ${id ? 'h-[135px]' : 'h-[215px]'}`} values={product?.first_image_url ?? []} number={1} setValues={(value) => setProduct({ ...product, first_image: value[0] })} />
                             </div>
                             <div className='flex flex-col gap-1.5'>
                                 <label>Second Image</label>
-                                <UploadFile className='w-full h-[135px]' values={product?.second_image_url ?? []} number={1} setValues={(value) => setProduct({ ...product, second_image: value[0] })} />
+                                <UploadFile className={`w-full ${id ? 'h-[135px]' : 'h-[215px]'}`} values={product?.second_image_url ?? []} number={1} setValues={(value) => setProduct({ ...product, second_image: value[0] })} />
                             </div>
                         </div>
                     </div>
