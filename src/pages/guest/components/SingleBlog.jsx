@@ -22,14 +22,14 @@ const SingleBlog = ({ blog, className='' }) => {
                 <div className="text-xl text-sapphire font-semibold line-clamp-2">{blog.name}</div>
                 <div className="flex justify-between items-center">
                     <div className="text-base text-gray-400 flex justify-center items-center gap-1">
-                        <div>{calculateReadingTime(blog.content)}</div>
+                        <div className='whitespace-nowrap'>{calculateReadingTime(blog.content)}</div>
                     </div>
                     {
                         blog.average_rate && 
                         <>
                             <div className="w-full h-px bg-gray-400 mx-2"></div>
-                            <div className="text-base text-gray-400 flex justify-center items-center">
-                                <div>{blog.average_rate }</div>
+                            <div className="text-base text-gray-400 flex justify-center items-center gap-1">
+                                <div>{blog.average_rate}</div>
                                 <FaStar />
                             </div>
                         </>

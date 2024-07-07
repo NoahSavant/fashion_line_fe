@@ -18,7 +18,7 @@ const MProduct = () => {
 
     const [pagination, setPagination] = useState({
         page: PaginationDefault.PAGE,
-        limit: PaginationDefault.LIMIT,
+        limit: 1,
         order: PaginationDefault.ORDER,
         column: PaginationDefault.COLUMN,
         search: PaginationDefault.SEARCH
@@ -55,7 +55,9 @@ const MProduct = () => {
     }, [fetchProduct]);
 
     useEffect(() => {
-        setFetchProduct(true);
+        if(deleteData?.successMessage) {
+            setFetchProduct(true);
+        }
     }, [deleteData]);
 
     const confirmDeleteProducts = (rowData = null) => {

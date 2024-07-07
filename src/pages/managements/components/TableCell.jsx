@@ -60,7 +60,7 @@ export const ImageCell = ({ rowData, dataKey, className = '', ...props }) => {
                     } else {
                         value = rowData[key];
                     }
-                    
+
                     return (
                         <div key={index} className='flex justify-center items-center'>
                             {value ? (
@@ -316,7 +316,7 @@ export const TagGroupCell = ({ rowData, dataKey, ...props }) => {
         return (
             <Cell {...props}>
                 <div className='flex flex-col justify-center w-full h-full'>
-                    {/* Render something when there are no tags */}
+                    
                 </div>
             </Cell>
         );

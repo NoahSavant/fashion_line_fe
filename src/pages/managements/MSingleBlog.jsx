@@ -142,11 +142,11 @@ const MSingleBlog = () => {
                             </div>
                         </div>
                         <div className='flex flex-col gap-4'>
-                            <div className='grid grid-cols-2 gap-2'>
-                                <div className='flex flex-col gap-1.5'>
+                            <div className='grid grid-cols-1 gap-2'>
+                                {/* <div className='flex flex-col gap-1.5'>
                                     <label>Tags</label>
                                     <SelectTag value={blog.tags} setValue={(value) => setBlog({ ...blog, tags: value })} />
-                                </div>
+                                </div> */}
                                 <div className='flex flex-col gap-1.5'>
                                     <label>Status</label>
                                     <SingleSelect

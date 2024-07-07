@@ -61,20 +61,6 @@ const BlogDetail = () => {
 
                 <div className='md:px-5' dangerouslySetInnerHTML={{ __html: blogData?.content }} />
 
-                {
-                    blogData?.tags.length > 0 &&
-                    <div>
-                        <strong className="">Tags:</strong>
-                        <div className="flex flex-wrap items-center gap-2 py-2">
-                            {blogData?.tags.map((tag, index) => (
-                                <a href={`/blog?tags[]=${tag.id}`} key={index} className="px-2 py-1 min-w-[50px] rounded-md w-fit p-btn" style={{ backgroundColor: tag.color }}>
-                                    <div className="text-base text-white font-semibold text-center">{tag.name}</div>
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-                }
-                
                 <div className='flex justify-center items-center w-full'>
                     <div className='rounded-xl bg-boston_blue py-4 px-5 flex gap-10 lg:max-w-1/2 max-w-full text-white items-center'>
                         <div className='flex flex-col gap-2 justify-center items-center'>

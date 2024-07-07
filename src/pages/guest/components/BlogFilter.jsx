@@ -16,7 +16,7 @@ const BlogFilter = ({ filter, setFilter, filterClick }) => {
                 <div className="text-sm font-normal capitalize leading-normal">Filter now</div>
             </div>
             <Input className='max-w-[700px] shadow-full' placeholder='Search blog posts...' value={filter.search} onChange={(value) => setFilter({ ...filter, search: value })} />
-            <div className='flex flex-col gap-4'>
+            {/* <div className='flex flex-col gap-4'>
                 <div className='w-full flex gap-2 justify-center items-center'>
                     <div className={`${setting.tagsIsOpen ? 'rotate-90' : '-rotate-90'} transform transition-all duration-500 ease-in-out`} onClick={() => setSetting({ ...setting, tagsIsOpen: !setting.tagsIsOpen })}>
                         <svg
@@ -53,7 +53,7 @@ const BlogFilter = ({ filter, setFilter, filterClick }) => {
                     className={`grid grid-cols-2 px-2 ${setting.tagsIsOpen ? '' : 'hidden'}`}
                     select={false}
                 />
-            </div>
+            </div> */}
             <div className='flex flex-col gap-4'>
                 <div className='w-full flex gap-2 justify-center items-center'>
                     <div className={`${setting.sortIsOpen ? 'rotate-90' : '-rotate-90'} transform transition-all duration-500 ease-in-out`} onClick={() => setSetting({ ...setting, sortIsOpen: !setting.sortIsOpen })}>
