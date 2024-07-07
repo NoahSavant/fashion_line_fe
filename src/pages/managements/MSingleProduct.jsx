@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { getConstantData } from '@/helpers/constantHelpers';
 import PaginationDefault from '@/constants/PaginationDefault';
-import { Input, Modal, Button, InputNumber, TagInput, CheckPicker } from "rsuite";
+import { Input, Modal, Button, InputNumber, TagInput, CheckPicker, SelectPicker } from "rsuite";
 import { BasePagination, TableVariant } from './components';
 import { productEndpoints, variantEndpoints } from '@/apis'
 import { useApi } from '@/hooks';
@@ -13,6 +13,8 @@ import { Loading } from '@/components';
 import { useSearchParams } from "react-router-dom";
 import { getIds } from '@/helpers/dataHelpers';
 import { convertStringToArray, convertArrayToString } from '@/helpers/dataHelpers';
+import MColor from './MColor';
+import MSize from './MSize';
 
 const MSingleProduct = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -31,6 +33,8 @@ const MSingleProduct = () => {
         price: 0,
     };
     const [product, setProduct] = useState(baseProduct);
+    const [colors, setColors] = useState([]);
+    const [sizes, setSizes] = useState([]);
 
     const { openConfirmation } = useContext(PopupConfirmContext);
 
@@ -53,14 +57,13 @@ const MSingleProduct = () => {
 
     const sampleVariant = {
         id: -1,
-        size: [],
-        color: '',
+        product_size_id: null,
+        product_color_id: null,
         status: ProductStatus.OPEN,
         stock_limit: TrueFalseStatus.TRUE,
         original_price: 0,
         price: 0,
         stock: 0,
-        image: null
     }
 
     useEffect(() => {
@@ -70,8 +73,11 @@ const MSingleProduct = () => {
         }
     }, []);
 
+    useEffect(() => {
+        setFetchVariants(true);
+    }, [sizes, colors]);
+
     const [variants, setVariants] = useState([]);
-    const [sizes, setSizes] = useState([])
     const [editData, setEditData] = useState(null);
     const [createData, setCreateData] = useState(null);
 
@@ -94,8 +100,9 @@ const MSingleProduct = () => {
 
     useEffect(() => {
         if (!createProductData) return;
-        setProduct(baseProduct);
+        window.location.href = `/m/single-product?id=${createProductData?.data?.id}`;
     }, [createProductData]);
+
 
     useEffect(() => {
         if (!productData) return;
@@ -108,7 +115,7 @@ const MSingleProduct = () => {
     }, [editProductData]);
 
     useEffect(() => {
-        if (!fetchVariants) return;
+        if (!fetchVariants || !id) return;
         handleGetVariants(variantEndpoints.get + '/' + id, {
             params: {
                 ...pagination,
@@ -116,7 +123,7 @@ const MSingleProduct = () => {
         });
         setFetchVariants(false);
         setCheckedKeys([]);
-    }, [fetchVariants]);
+    }, [fetchVariants, id]);
 
     useEffect(() => {
         setFetchVariants(true);
@@ -125,17 +132,13 @@ const MSingleProduct = () => {
     }, [editVariantData, addVariantData, deleteVariantsData]);
 
     useEffect(() => {
-        if (variants && Array.isArray(variants)) {
-            const uniqueSizes = [...new Set(variants.flatMap(variant => variant.size))];
-            setSizes(uniqueSizes);
-        }
-    }, [variants]);
+        setFetchProduct(true);
+    }, [addVariantData]);
 
     useEffect(() => {
         if (variantsData?.items && variantsData?.items.length > 0) {
             const updatedVariants = variantsData?.items.map(variant => ({
                 ...variant,
-                size: convertStringToArray(variant.size),
             }));
             setVariants(updatedVariants);
         }
@@ -183,15 +186,13 @@ const MSingleProduct = () => {
             }
         } else {
             const formData = new FormData();
-            formData.append('size', convertArrayToString(createData.size));
-            formData.append('color', createData.color);
-            formData.append('status', createData.status);
-            formData.append('original_price', createData.original_price);
-            formData.append('price', createData.price);
-            formData.append('stock', createData.stock);
-            if (createData.image) {
-                formData.append('image', createData.image);
-            }
+            formData.append('product_size_id', createData?.product_size_id);
+            formData.append('product_color_id', createData?.product_color_id);
+            formData.append('status', createData?.status);
+            formData.append('original_price', createData?.original_price);
+            formData.append('price', createData?.price);
+            formData.append('stock', createData?.stock);
+            formData.append('stock_limit', createData?.stock_limit);
             handleAddVariant(variantEndpoints.create + '/' + id, {
                 method: "POST",
                 data: formData,
@@ -216,18 +217,6 @@ const MSingleProduct = () => {
         formData.append('note', product.note);
         product.tags.forEach((tag, index) => {
             formData.append(`tags[${index}]`, tag);
-        });
-
-        variants.forEach((variant, index) => {
-            formData.append(`variants[${index}][size]`, convertArrayToString(variant.size));
-            formData.append(`variants[${index}][color]`, variant.color);
-            formData.append(`variants[${index}][status]`, variant.status);
-            formData.append(`variants[${index}][original_price]`, variant.original_price);
-            formData.append(`variants[${index}][price]`, variant.price);
-            formData.append(`variants[${index}][stock]`, variant.stock);
-            if (variant.image) {
-                formData.append(`variants[${index}][image]`, variant.image);
-            }
         });
 
         if (product.first_image) {
@@ -281,21 +270,20 @@ const MSingleProduct = () => {
     const editVariants = async () => {
         if(!id) {
             const updatedVariants = variants.map(variant =>
-                variant.id === editData.id ? editData : variant
+                variant.id === editData?.id ? editData : variant
             );
             setVariants(updatedVariants);
             setEditData(null);
         }
         const formData = new FormData();
-        formData.append('size', convertArrayToString(editData.size));
-        formData.append('color', editData.color);
-        formData.append('status', editData.status);
-        formData.append('original_price', editData.original_price);
-        formData.append('price', editData.price);
-        formData.append('stock', editData.stock);
-        if (editData.image) {
-            formData.append('image', editData.image);
-        }
+        formData.append('product_size_id', editData?.product_size_id);
+        formData.append('product_color_id', editData?.product_color_id);
+        formData.append('status', editData?.status);
+        formData.append('original_price', editData?.original_price);
+        formData.append('price', editData?.price);
+        formData.append('stock', editData?.stock);
+        formData.append('stock_limit', editData?.stock_limit);
+
         handleEditVariant(variantEndpoints.update + '/' + editData?.id + '?_method=PUT', {
             method: "POST",
             data: formData,
@@ -400,156 +388,168 @@ const MSingleProduct = () => {
                         <div className="text-white text-sm font-normal capitalize leading-normal">{id ? 'Update' : 'Create'}</div>
                     </div>
                 </div>
-               
             </div>
-            <div className='md:h-[420px] md:p-4 p-2 rounded-md shadow-md bg-white'>
-                <Modal size='sm' open={createData} onClose={() => setCreateData(null)} >
-                    <Modal.Header>
-                        <Modal.Title>Add Variant</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body className='px-2 -mx-2'>
-                        <div className='flex flex-col gap-4 items-end'>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Size</label>
-                                <div className='grid grid-cols-3 gap-4'>
-                                    <TagInput
-                                        placeholder="Sizes"
-                                        value={createData?.size}
-                                        onChange={(value) => setCreateData({ ...createData, size: value })}
-                                        className='col-span-2'
-                                    />
-                                    <CheckPicker
+            {
+                (id && sizes.length > 0 && colors.length > 0) && 
+                <div className='md:h-[420px] md:p-4 p-2 rounded-md shadow-md bg-white'>
+                    <Modal size='sm' open={createData} onClose={() => setCreateData(null)} >
+                        <Modal.Header>
+                            <Modal.Title>Add Variant</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body className='px-2 -mx-2'>
+                            <div className='flex flex-col gap-4 items-end'>
+                                <div className='flex flex-col gap-1.5 w-full'>
+                                    <label>Size</label>
+                                    <SelectPicker
                                         data={sizes.map(size => ({
-                                            label: size,
-                                            value: size
+                                            label: size.size,
+                                            value: size.id
                                         }))}
-                                        value={createData?.size}
-                                        onChange={(value) => setCreateData({ ...createData, size: Array.from(new Set([...createData.size, ...value])) })}
+                                        value={createData?.product_size_id}
+                                        onChange={(value) => setCreateData({ ...createData, product_size_id: value })}
+                                    />
+                                </div>
+                                <div className='flex flex-col gap-1.5 w-full'>
+                                    <label>Color Name</label>
+                                    <SelectPicker
+                                        data={colors.map(color => ({
+                                            label: color.color,
+                                            value: color.id
+                                        }))}
+                                        value={createData?.product_color_id}
+                                        onChange={(value) => setCreateData({ ...createData, product_color_id: value })}
+                                    />
+                                </div>
+                                {
+                                    createData?.product_color_id &&
+                                    <div className='flex flex-col gap-1.5 w-full'>
+                                        <label>Image</label>
+                                        <div className='rounded-md border-2 border-gray-400 flex justify-center items-center border-dashed'>
+                                            <img
+                                                src={colors.find(color => color.id == createData?.product_color_id)?.image_url}
+                                                alt=""
+                                                className={`object-contain h-[120px]`}
+                                            />
+                                        </div>
+                                    </div>
+                                }
+                                <div className='flex flex-col gap-1.5 w-full'>
+                                    <label>Status</label>
+                                    <SelectConstant single={true} value={createData?.status} setValue={(value) => setCreateData({ ...createData, status: value })} constant={ProductStatus} />
+                                </div>
+                                <div className='flex flex-col gap-1.5 w-full'>
+                                    <label>Stock Limit</label>
+                                    <SelectConstant single={true} value={createData?.stock_limit} setValue={(value) => setCreateData({ ...createData, stock_limit: value })} constant={TrueFalseStatus} />
+                                </div>
+                                <div className='flex flex-col gap-1.5 w-full'>
+                                    <label>Stock</label>
+                                    <InputNumber min={0} step={1} value={createData?.stock}
+                                        onChange={(value) => setCreateData({ ...createData, stock: value })} />
+                                </div>
+                                <div className='flex flex-col gap-1.5 w-full'>
+                                    <label>Original Price</label>
+                                    <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={createData?.original_price}
+                                        onChange={(value) => setCreateData({ ...createData, original_price: value })} />
+                                </div>
+                                <div className='flex flex-col gap-1.5 w-full'>
+                                    <label>Price</label>
+                                    <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={createData?.price}
+                                        onChange={(value) => setCreateData({ ...createData, price: value })} />
+                                </div>
+
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button onClick={() => setCreateData(null)} appearance="subtle">
+                                Cancel
+                            </Button>
+                            <Button onClick={confirmCreateVariant} appearance="primary">
+                                {addVariantLoading && <Loading size={20} />}
+                                Add
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+                    <Modal size='sm' open={editData} onClose={() => setEditData(null)} >
+                        <Modal.Header>
+                            <Modal.Title>Edit Variant</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body className='px-2 -mx-2'>
+                            <div className='flex flex-col gap-4 items-end'>
+                                <div className='flex flex-col gap-1.5 w-full'>
+                                    <label>Size</label>
+                                    <SelectPicker
+                                        data={sizes.map(size => ({
+                                            label: size.size,
+                                            value: size.id
+                                        }))}
+                                        value={editData?.product_size_id}
+                                        onChange={(value) => setEditData({ ...editData, product_size_id: value })}
+                                    />
+                                </div>
+                                <div className='flex flex-col gap-1.5 w-full'>
+                                    <label>Color Name</label>
+                                    <SelectPicker
+                                        data={colors.map(color => ({
+                                            label: color.color,
+                                            value: color.id
+                                        }))}
+                                        value={editData?.product_color_id}
+                                        onChange={(value) => setEditData({ ...editData, product_color_id: value })}
+                                    />
+                                </div>
+                                <div className='flex flex-col gap-1.5 w-full'>
+                                    <label>Status</label>
+                                    <SelectConstant single={true} value={editData?.status} setValue={(value) => setEditData({ ...editData, status: value })} constant={ProductStatus} />
+                                </div>
+                                <div className='flex flex-col gap-1.5 w-full'>
+                                    <label>Stock Limit</label>
+                                    <SelectConstant single={true} value={editData?.stock_limit} setValue={(value) => setEditData({ ...editData, stock_limit: value })} constant={TrueFalseStatus} />
+                                </div>
+                                <div className='flex flex-col gap-1.5 w-full'>
+                                    <label>Stock</label>
+                                    <InputNumber min={0} step={1} value={editData?.stock}
+                                        onChange={(value) => setEditData({ ...editData, stock: value })} />
+                                </div>
+                                <div className='flex flex-col gap-1.5 w-full'>
+                                    <label>Original Price</label>
+                                    <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={editData?.original_price}
+                                        onChange={(value) => setEditData({ ...editData, original_price: value })} />
+                                </div>
+                                <div className='flex flex-col gap-1.5 w-full'>
+                                    <label>Price</label>
+                                    <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={editData?.price}
+                                        onChange={(value) => setEditData({ ...editData, price: value })} />
+                                </div>
+                                <div className='flex flex-col gap-1.5 w-full'>
+                                    <label>Image</label>
+                                    <img
+                                        src={colors.find(color => color.id == editData?.product_color_id)?.image_url}
+                                        alt=""
+                                        className={`rounded-md shadow-full object-cover`}
                                     />
                                 </div>
                             </div>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Color Name</label>
-                                <Input
-                                    placeholder="Color Name"
-                                    value={createData?.color}
-                                    onChange={(value) => setCreateData({ ...createData, color: value })}
-                                />
-                            </div>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Status</label>
-                                <SelectConstant single={true} value={createData?.status} setValue={(value) => setCreateData({ ...createData, status: value })} constant={ProductStatus} />
-                            </div>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Stock Limit</label>
-                                <SelectConstant single={true} value={createData?.stock_limit} setValue={(value) => setCreateData({ ...createData, stock_limit: value })} constant={TrueFalseStatus} />
-                            </div>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Stock</label>
-                                <InputNumber min={0} step={1} value={createData?.stock}
-                                    onChange={(value) => setCreateData({ ...createData, stock: value })} />
-                            </div>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Original Price</label>
-                                <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={createData?.original_price}
-                                    onChange={(value) => setCreateData({ ...createData, original_price: value })} />
-                            </div>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Price</label>
-                                <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={createData?.price}
-                                    onChange={(value) => setCreateData({ ...createData, price: value })} />
-                            </div>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Image</label>
-                                <UploadFile className='w-[99%] h-[100px]' values={createData?.image} number={1} setValues={(value) => setCreateData({ ...createData, image: value[0], image_url: URL.createObjectURL(value[0]) })} />
-                            </div>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={() => setCreateData(null)} appearance="subtle">
-                            Cancel
-                        </Button>
-                        <Button onClick={confirmCreateVariant} appearance="primary">
-                            {addVariantLoading && <Loading size={20} />}
-                            Add
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-                <Modal size='sm' open={editData} onClose={() => setEditData(null)} >
-                    <Modal.Header>
-                        <Modal.Title>Edit Variant</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body className='px-2 -mx-2'>
-                        <div className='flex flex-col gap-4 items-end'>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Size</label>
-                                <div className='grid grid-cols-3 gap-4'>
-                                    <TagInput
-                                        placeholder="Sizes"
-                                        value={editData?.size}
-                                        onChange={(value) => setEditData({ ...editData, size: value })}
-                                        className='col-span-2'
-                                    />
-                                    <CheckPicker
-                                        data={sizes.map(size => ({
-                                            label: size,
-                                            value: size
-                                        }))}
-                                        value={editData?.size}
-                                        onChange={(value) => setEditData({ ...editData, size: Array.from(new Set([...editData.size, ...value])) })}
-                                    />
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Color Name</label>
-                                <Input
-                                    placeholder="Color Name"
-                                    value={editData?.color}
-                                    onChange={(value) => setEditData({ ...editData, color: value })}
-                                />
-                            </div>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Status</label>
-                                <SelectConstant single={true} value={editData?.status} setValue={(value) => setEditData({ ...editData, status: value })} constant={ProductStatus} />
-                            </div>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Stock Limit</label>
-                                <SelectConstant single={true} value={editData?.stock_limit} setValue={(value) => setEditData({ ...editData, stock_limit: value })} constant={TrueFalseStatus} />
-                            </div>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Stock</label>
-                                <InputNumber min={0} step={1} value={editData?.stock}
-                                    onChange={(value) => setEditData({ ...editData, stock: value })} />
-                            </div>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Original Price</label>
-                                <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={editData?.original_price}
-                                    onChange={(value) => setEditData({ ...editData, original_price: value })} />
-                            </div>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Price</label>
-                                <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={editData?.price}
-                                    onChange={(value) => setEditData({ ...editData, price: value })} />
-                            </div>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <label>Image</label>
-                                <UploadFile className='w-[99%] h-[100px]' values={[editData?.image_url]} number={1} setValues={(value) => setEditData({ ...editData, image: value[0], image_url: URL.createObjectURL(value[0]) })} />
-                            </div>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={() => setEditData(null)} appearance="subtle">
-                            Cancel
-                        </Button>
-                        <Button onClick={confirmEditVariants} appearance="primary">
-                            {editVariantLoading && <Loading size={20} />}
-                            Update
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-                <TableVariant items={variants} dataLoading={(id && (variantsLoading || deleteVariantsLoading || addVariantLoading))} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteVariants} onMultyDelete={() => confirmDeleteVariants(null)} onEdit={setEditData} onCreate={() => setCreateData({ ...sampleVariant, id: new Date().toLocaleTimeString(), original_price: product.original_price, price: product.price, stock_limit: product.stock_limit})} />
-                <BasePagination pagination={variantsData?.pagination} handlePagination={handlePagination} />
-            </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button onClick={() => setEditData(null)} appearance="subtle">
+                                Cancel
+                            </Button>
+                            <Button onClick={confirmEditVariants} appearance="primary">
+                                {editVariantLoading && <Loading size={20} />}
+                                Update
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+                    <TableVariant items={variants} dataLoading={(id && (variantsLoading || deleteVariantsLoading || addVariantLoading))} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteVariants} onMultyDelete={() => confirmDeleteVariants(null)} onEdit={setEditData} onCreate={() => setCreateData({ ...sampleVariant, id: new Date().toLocaleTimeString(), original_price: product.original_price, price: product.price, stock_limit: product.stock_limit })} />
+                    <BasePagination pagination={variantsData?.pagination} handlePagination={handlePagination} />
+                </div>
+            }
+            {
+                id && <MColor productId={id} setColors={setColors} />
+            }
+            {
+                id && <MSize productId={id} setSizes={setSizes} />
+            }
         </div>
     );
 };

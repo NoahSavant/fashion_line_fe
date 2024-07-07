@@ -16,7 +16,7 @@ import { ProductStatus, TrueFalseStatus } from '@/constants';
 
 const { Column, HeaderCell } = Table;
 
-const TableVariant = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys, onEdit, onDelete, onMultyDelete, onCreate }) => {
+const TableColor = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys, onEdit, onDelete, onMultyDelete, onCreate }) => {
     const [sortColumn, setSortColumn] = useState();
     const [sortType, setSortType] = useState();
     const [loading, setLoading] = useState(false);
@@ -69,7 +69,7 @@ const TableVariant = ({ items, dataLoading, handleSort, checkedKeys, setCheckedK
         <div className='flex flex-col gap-2 w-full'>
             <div className='flex justify-between md:items-center items-start'>
                 <div className='flex gap-2 items-center md:flex-row flex-col'>
-                    <div className='text-lg font-semibold px-2'>Variants</div>
+                    <div className='text-lg font-semibold px-2'>Colors</div>
                     <Toolbar checkedKeys={checkedKeys} deleteClick={onMultyDelete} addClick={onCreate} />
                 </div>
                 {/* <InputGroup className='ml-4 max-w-[300px]'>
@@ -104,37 +104,13 @@ const TableVariant = ({ items, dataLoading, handleSort, checkedKeys, setCheckedK
                     </HeaderCell>
                     <CheckCell dataKey="id" checkedKeys={checkedKeys} onChange={handleCheck} />
                 </Column>
-                <Column width={250} fullText sortable>
-                    <HeaderCell>Size</HeaderCell>
-                    <BaseCell dataKey='product_size' attributes={['size']} />
-                </Column>
-                <Column width={120} sortable>
+                <Column width={220} sortable>
                     <HeaderCell>Color Name</HeaderCell>
-                    <BaseCell dataKey='product_color' attributes={['color']} />
+                    <BaseCell dataKey='color' />
                 </Column>
-                <Column width={120}>
-                    <HeaderCell className='text-center'>Status</HeaderCell>
-                    <ConstantCell dataKey="status" constant={ProductStatus} colors={['green', 'red']} />
-                </Column>
-                <Column width={120}>
-                    <HeaderCell className='text-center'>Stock_limit</HeaderCell>
-                    <ConstantCell dataKey="stock_limit" constant={TrueFalseStatus} colors={['red', 'green']} />
-                </Column>
-                <Column width={170} sortable>
-                    <HeaderCell className='text-center'>Original Price</HeaderCell>
-                    <DiscountValueCell dataKey="original_price" condition={false} />
-                </Column>
-                <Column width={170} sortable>
-                    <HeaderCell className='text-center'>Price</HeaderCell>
-                    <DiscountValueCell dataKey="price" condition={false} />
-                </Column>
-                <Column width={90} sortable>
-                    <HeaderCell>Stock</HeaderCell>
-                    <BaseCell dataKey='stock' />
-                </Column>
-                <Column width={170}>
+                <Column width={220}>
                     <HeaderCell className='text-center'>Image</HeaderCell>
-                    <ImageCell dataKey={[['product_color', 'image_url']]} className='h-[36px] w-[48px]' />
+                    <ImageCell dataKey={['image_url']} className='h-[36px] w-[48px]' />
                 </Column>
                 <Column width={90}>
                     <HeaderCell className='text-center'>Action</HeaderCell>
@@ -144,4 +120,4 @@ const TableVariant = ({ items, dataLoading, handleSort, checkedKeys, setCheckedK
         </div>
     );
 }
-export default TableVariant
+export default TableColor

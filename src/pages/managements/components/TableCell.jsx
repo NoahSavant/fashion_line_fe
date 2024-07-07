@@ -53,7 +53,14 @@ export const ImageCell = ({ rowData, dataKey, className = '', ...props }) => {
         <Cell {...props}>
             <div className='flex justify-center w-full h-full items-center space-x-2'>
                 {dataKey.map((key, index) => {
-                    const value = rowData[key];
+                    let value;
+
+                    if (Array.isArray(key)) {
+                        value = key.reduce((acc, k) => (acc ? acc[k] : null), rowData);
+                    } else {
+                        value = rowData[key];
+                    }
+                    
                     return (
                         <div key={index} className='flex justify-center items-center'>
                             {value ? (
