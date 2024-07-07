@@ -9,7 +9,7 @@ const BaseFooter = () => {
                     <div className="flex-col justify-center items-start gap-2 flex">
                         <div className="text-pale_cornflower_blue text-base font-semibold font-['Outfit', Arial, sans-serif] leading-loose uppercase">Contact us </div>
                         <div className="flex flex-col gap-2 text-white text-sm font-normal font-['Outfit', Arial, sans-serif] leading-tight">
-                            <a href="tel:<?php echo get_theme_mod('phone') ?>" className="flex gap-3">
+                            <a href="tel:0123456789" className="flex gap-3">
                                 <div className="w-4 h-4 relative flex justify-center items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
                                         <g clipPath="url(#clip0_429_1976)">
@@ -22,9 +22,9 @@ const BaseFooter = () => {
                                         </defs>
                                     </svg>
                                 </div>
-                                <p>phone</p>
+                                <p>0123456789</p>
                             </a>
-                            <a href="mailto:email" className="flex gap-3">
+                            <a href="mailto:fashionlineunique@gmail.com" className="flex gap-3">
                                 <div className="w-4 h-4 relative flex justify-center items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
                                         <g clipPath="url(#clip0_429_1985)">
@@ -38,9 +38,9 @@ const BaseFooter = () => {
                                         </defs>
                                     </svg>
                                 </div>
-                                <p>Email</p>
+                                <p>fashionlineunique@gmail.com</p>
                             </a>
-                            <a className="flex gap-3" href="<?php echo get_theme_mod('mapurl') ?>" target="_blank">
+                            <a className="flex gap-3" href="https://maps.app.goo.gl/Vf5n6kZQAfbTUcDv9" target="_blank">
                                 <div className="w-4 h-4 relative flex justify-center items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
                                         <g clipPath="url(#clip0_429_1990)">
@@ -53,7 +53,7 @@ const BaseFooter = () => {
                                         </defs>
                                     </svg>
                                 </div>
-                                <p className="leading-tight">Address</p>
+                                <p className="leading-tight">01 Đ. Võ Văn Ngân, Linh Chiểu, Thủ Đức, Hồ Chí Minh, Việt Nam</p>
                             </a>
                         </div>
                     </div>
@@ -110,22 +110,22 @@ const BaseFooter = () => {
 
                 <div className="flex flex-wrap lg:gap-x-[87px] md:gap-x-[40px] gap-y-[40px] justify-between">
                     <div className="flex-col justify-start items-start gap-2 flex">
-                        <a href="/about-us" className="text-pale_cornflower_blue text-base font-semibold font-['Outfit', Arial, sans-serif] leading-loose uppercase">About</a>
+                        <a href="/about-us" className="text-pale_cornflower_blue text-base font-semibold font-['Outfit', Arial, sans-serif] leading-loose uppercase">Page</a>
                         <div className="flex flex-col gap-2 text-white text-sm font-normal font-['Outfit', Arial, sans-serif] leading-tight">
-                            <a href="/">A2B Tax</a>
-                            <a href="/careers">Career</a>
-                            <a href="/legal">Legal</a>
-                            <a href="/blogs">Blogs</a>
-                            <a href="/guides-and-templates">Guides & Templates</a>
+                            <a href="/">Trang chủ</a>
+                            <a href="/shop">Sản phẩm</a>
+                            <a href="/blog">Bài viết</a>
+                            <a href="/contact">Liên hệ</a>
+                            <a href="/about">Giới thiệu</a>
                         </div>
                     </div>
 
                     <div className="flex-col justify-start items-start gap-2 flex">
-                        <a href="/services" className="text-pale_cornflower_blue text-base font-semibold font-['Outfit', Arial, sans-serif] leading-loose uppercase">Services </a>
+                        <a href="/services" className="text-pale_cornflower_blue text-base font-semibold font-['Outfit', Arial, sans-serif] leading-loose uppercase">For customer </a>
                         <div className="flex flex-col gap-2 text-white text-sm font-normal font-['Outfit', Arial, sans-serif] leading-tight">
-                            <a href="/services/?service=accounts-preparation">Accounts preparation</a>
-                            <a href="/services/?service=tax-returns-and-self-assessment">Tax returns & Self assessment</a>
-                            <a href="/services/?service=vat-returns">VAT returns</a>
+                            <a href="/login">Đăng nhập</a>
+                            <a href="/signup">Đăng ký</a>
+                            <a href="/verify-account">Tài khoản</a>
                         </div>
                     </div>
 

@@ -93,10 +93,10 @@ const CustomNavbar = ({ onSelect, ...props }) => {
         return (
             <Popover ref={ref} className={className} style={{ left, top }} full>
                 <Nav onSelect={handleSelect} className="flex flex-col text-base">
-                    <Nav.Item onClick={openSearch} icon={<SearchIcon style={{ fontSize: '1.25em' }} />}>Search</Nav.Item>
-                    <Nav.Item eventKey="/login" active={activeKey('/login')} onClick={() => navigate('/login')} icon={<CgLogIn />}>Login</Nav.Item>
-                    <Nav.Item eventKey="/signup" active={activeKey('/signup')} onClick={() => navigate('/signup')} icon={<IoMdPersonAdd />}>Sign Up</Nav.Item>
-                    <Nav.Item eventKey="/verify-account" active={activeKey('/verify-account')} onClick={() => navigate('/verify-account')} icon={<BsPersonFillCheck />}>Verify Account</Nav.Item>
+                    <Nav.Item onClick={openSearch} icon={<SearchIcon style={{ fontSize: '1.25em' }} />}>Tìm kiếm</Nav.Item>
+                    <Nav.Item eventKey="/login" active={activeKey('/login')} onClick={() => navigate('/login')} icon={<CgLogIn />}>Đăng nhập</Nav.Item>
+                    <Nav.Item eventKey="/signup" active={activeKey('/signup')} onClick={() => navigate('/signup')} icon={<IoMdPersonAdd />}>Đăng ký</Nav.Item>
+                    <Nav.Item eventKey="/verify-account" active={activeKey('/verify-account')} onClick={() => navigate('/verify-account')} icon={<BsPersonFillCheck />}>Tài khoản</Nav.Item>
                 </Nav>
             </Popover>
         );
@@ -111,12 +111,12 @@ const CustomNavbar = ({ onSelect, ...props }) => {
                 }
             }}>
                 <Nav.Item className="px-6" eventKey="/" active={activeKey('/')} icon={<IoIosHome />} onClick={() => navigate('/')}>
-                    Home
+                    Trang chủ
                 </Nav.Item>
-                <Nav.Item className="px-6"  eventKey="/shop" active={activeKey('/shop')} onClick={() => navigate('/shop')} icon={<GiShop />}>Shop</Nav.Item>
-                <Nav.Item className="px-6"  eventKey="/blog" active={activeKey('/blog')} onClick={() => navigate('/blog')} icon={<FaBookBookmark />}>Blog</Nav.Item>
-                <Nav.Item className="px-6"  eventKey="/about" active={activeKey('/about')} onClick={() => navigate('/about')} icon={<InfoRoundIcon />}>About</Nav.Item>
-                <Nav.Item className="px-6"  eventKey="/contact" active={activeKey('/contact')} onClick={() => navigate('/contact')} icon={<IoMdContacts />}>Contact</Nav.Item>
+                <Nav.Item className="px-6"  eventKey="/shop" active={activeKey('/shop')} onClick={() => navigate('/shop')} icon={<GiShop />}>Sản phẩm</Nav.Item>
+                <Nav.Item className="px-6"  eventKey="/blog" active={activeKey('/blog')} onClick={() => navigate('/blog')} icon={<FaBookBookmark />}>Bài viết</Nav.Item>
+                <Nav.Item className="px-6"  eventKey="/about" active={activeKey('/about')} onClick={() => navigate('/about')} icon={<InfoRoundIcon />}>Giới thiệu</Nav.Item>
+                <Nav.Item className="px-6"  eventKey="/contact" active={activeKey('/contact')} onClick={() => navigate('/contact')} icon={<IoMdContacts />}>Liên hệ</Nav.Item>
             </Nav>
         );
     }

@@ -1,5 +1,5 @@
 import { Login, SignUp, VerifyAccount } from '@pages/authentication'
-import { About, Home, Contact, Shop, Blog, ProductDetail, BlogDetail, Cart } from '@/pages/guest'
+import { About, Home, Contact, Shop, Blog, ProductDetail, BlogDetail, Cart, OrderStatus, AdminCommentResponses } from '@/pages/guest'
 import { NotFound } from "@/pages/errors";
 
 const PublicRoutes = [
@@ -50,6 +50,14 @@ const PublicRoutes = [
     {
         path: '/cart',
         element: <Cart />
+    },
+    {
+        path: '/order-status',
+        element: <OrderStatus />
+    },
+    {
+        path: '/admin-comment-responses',
+        element: <AdminCommentResponses />
     }
 ]
 
