@@ -43,7 +43,7 @@ const MProduct = () => {
     const { data: deleteData, callApi: handleDeleteProducts, loading: deleteProductLoading } = useApi();
 
     useEffect(() => {
-        if (!fetchProduct && !deleteData) return;
+        if (!fetchProduct) return;
         handleGetProducts(productEndpoints.get, {
             params: {
                 ...pagination,
@@ -52,7 +52,7 @@ const MProduct = () => {
         })
         setFetchProduct(false);
         setCheckedKeys([]);
-    }, [fetchProduct, deleteData]);
+    }, [fetchProduct]);
 
     useEffect(() => {
         setFetchProduct(true);
