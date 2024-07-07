@@ -14,7 +14,6 @@ import { useSearchParams } from "react-router-dom";
 import { getIds } from '@/helpers/dataHelpers';
 import { convertStringToArray, convertArrayToString } from '@/helpers/dataHelpers';
 
-
 const MSingleProduct = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [id, setId] = useState(null);
@@ -548,7 +547,7 @@ const MSingleProduct = () => {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-                <TableVariant items={variants} dataLoading={(id && (variantsLoading || deleteVariantsLoading || addVariantLoading))} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteVariants} onMultyDelete={() => confirmDeleteVariants(null)} onEdit={setEditData} onCreate={() => setCreateData({ ...sampleVariant, id: new Date().toLocaleTimeString(), original_price: product.original_price, price: product.price})} />
+                <TableVariant items={variants} dataLoading={(id && (variantsLoading || deleteVariantsLoading || addVariantLoading))} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteVariants} onMultyDelete={() => confirmDeleteVariants(null)} onEdit={setEditData} onCreate={() => setCreateData({ ...sampleVariant, id: new Date().toLocaleTimeString(), original_price: product.original_price, price: product.price, stock_limit: product.stock_limit})} />
                 <BasePagination pagination={variantsData?.pagination} handlePagination={handlePagination} />
             </div>
         </div>
