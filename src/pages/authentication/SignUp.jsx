@@ -62,7 +62,7 @@ const SignUp = () => {
 
     useEffect(() => {
         if(data) {
-            navigate('/login');
+            navigate('/verify-account');
         }
     }, [data]);
 

@@ -73,7 +73,9 @@ const BlogDetail = () => {
                     </div>
                 </div>
 
-                <Comments id={id} type={CommentType.BLOG} />
+                {/* {
+                    id && <Comments id={id} type={CommentType.BLOG} />
+                } */}
 
                 <div className="flex flex-col gap-10">
                     {blogsLoading && <Loading size={40} />}

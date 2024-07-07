@@ -18,7 +18,7 @@ const MProduct = () => {
 
     const [pagination, setPagination] = useState({
         page: PaginationDefault.PAGE,
-        limit: 1,
+        limit: PaginationDefault.LIMIT,
         order: PaginationDefault.ORDER,
         column: PaginationDefault.COLUMN,
         search: PaginationDefault.SEARCH

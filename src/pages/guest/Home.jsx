@@ -166,9 +166,8 @@ const Home = () => {
                 </div> */}
             </div>
 
-
             {/* Product */}
-            <Collection limit={3} name='New'/>
+            <Collection limit={3} name='Các sản phẩm bán chạy'/>
 
             <div className="relative">
                 <video ref={videoRef} id="heroVideoBg" autoPlay loop muted className="w-full h-full max-h-[calc(100vh-100px)] object-cover group-hover:scale-125 transform transition-transform duration-500 ease-in-out shadow-full relative">
