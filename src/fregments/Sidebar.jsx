@@ -14,11 +14,14 @@ import {
 } from '@/components/icons.js';
 import { logo_image, icon } from '@/assets/images'
 import { getCurrentPath } from '@/helpers/pathHelper';
+import { getAuthentication } from "@/helpers/authenHelpers";
+import { UserRole } from "@/constants";
 
 const Sidebar = ({ expanded, setExpand }) => {
     const [openKeys, setOpenKeys] = useState(['resources', '4']);
     const navigate = useNavigate();
     const currentPath = getCurrentPath();
+    const user = getAuthentication()?.user ?? null;
 
     const activeKey = (path, same=false) => {
         if(same) {
@@ -47,10 +50,13 @@ const Sidebar = ({ expanded, setExpand }) => {
                         <Nav.Item active={activeKey('/m', true)} icon={<RiDashboardFill className="rs-icon" />} onClick={() => navigate('/m')}>
                             Dashboard
                         </Nav.Item>
-                        <Nav.Menu eventKey="users" title="User" icon={<GroupIcon />} className={`${activeKey('/m/user') ? 'active-nav' : ''}`}>
-                            <Nav.Item active={activeKey('/m/user/staff')} onClick={() => navigate('/m/user/staff')}>Staff</Nav.Item>
-                            <Nav.Item active={activeKey('/m/user/customer')} onClick={() => navigate('/m/user/customer')}>Customer</Nav.Item>
-                        </Nav.Menu>
+                        {
+                            user?.role == UserRole.ADMIN && 
+                            <Nav.Menu eventKey="users" title="User" icon={<GroupIcon />} className={`${activeKey('/m/user') ? 'active-nav' : ''}`}>
+                                <Nav.Item active={activeKey('/m/user/staff')} onClick={() => navigate('/m/user/staff')}>Staff</Nav.Item>
+                                <Nav.Item active={activeKey('/m/user/customer')} onClick={() => navigate('/m/user/customer')}>Customer</Nav.Item>
+                            </Nav.Menu>
+                        }
                         <Nav.Item active={activeKey('/m/product')} icon={<GiClothes className="rs-icon" />} onClick={() => navigate('/m/product')}>
                             Product
                         </Nav.Item>
