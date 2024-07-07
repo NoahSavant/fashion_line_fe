@@ -6,6 +6,7 @@ import { useApi } from '@/hooks';
 import { variantEndpoints } from '@/apis';
 import { IoCartOutline } from '@/components/icons.js';
 import { convertStringToArray } from '@/helpers/dataHelpers';
+import Loading from '@/components/Loading';
 
 const ProductDetail = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -154,6 +155,7 @@ const ProductDetail = () => {
 
     return (
         <div className='custom-padding flex flex-col'>
+            {(variantsLoading || productLoading) && <Loading />}
             <div className='bg-gray-100 p-2 mb-4 -mt-3 flex gap-2 items-center'>
                 <a href='/' className='text-base font-medium text-blue-500 cursor-pointer'>
                     Home
@@ -218,7 +220,7 @@ const ProductDetail = () => {
                             <strong className="">Sizes:</strong>
                             <div className='flex gap-2 py-2'>
                                 {sizes?.map((size, index) => (
-                                    <div key={index} className={`border-2 ${selectedSize?.size === size.size ? 'border-sapphire text-sapphire' : selectedColor?.sizes.includes(size.size) ? 'border-black text-black' : 'border-gray-400 text-gray-400'}  rounded-md py-1 px-2 min-w-8 flex justify-center items-center cursor-pointer`} onClick={() => setSelectedSize(size)}>
+                                    <div key={index} className={`border-2 ${selectedSize?.size === size.size ? 'border-sapphire text-white bg-sapphire' : selectedColor?.sizes.includes(size.size) ? 'border-sapphire text-sapphire bg-white' : 'border-gray-400 text-gray-400'}  rounded-md py-1 px-2 min-w-8 flex justify-center items-center cursor-pointer`} onClick={() => setSelectedSize(size)}>
                                         <div className='text-base font-medium'>
                                             {size.size}
                                         </div>
@@ -233,7 +235,7 @@ const ProductDetail = () => {
                                     color.sizes?.length > 0 ? (
                                         <div
                                             key={index}
-                                            className={`border-2 ${selectedColor?.color === color.color ? 'border-sapphire text-sapphire' : selectedSize?.colors.includes(color.color) ? 'border-black text-black' : 'border-gray-400 text-gray-400'} rounded-md py-1 px-2 min-w-8 flex justify-center items-center cursor-pointer`}
+                                            className={`border-2 ${selectedColor?.color === color.color ? 'border-sapphire text-white bg-sapphire' : selectedSize?.colors.includes(color.color) ? 'border-sapphire text-sapphire bg-white' : 'border-gray-400 text-gray-400'} rounded-md py-1 px-2 min-w-8 flex justify-center items-center cursor-pointer`}
                                             onClick={() => setSelectedColor(color)}
                                         >
                                             <div className='text-base font-medium'>
@@ -259,7 +261,7 @@ const ProductDetail = () => {
                         }
                     </div>
 
-                    <div className='flex gap-4'>
+                    <div className='flex gap-4 pt-5'>
                         <InputNumber
                             postfix={selectedVariant?.stock_limit ? '/' + selectedVariant?.stock : ''}
                             max={selectedVariant?.stock_limit ? selectedVariant.stock : undefined}
