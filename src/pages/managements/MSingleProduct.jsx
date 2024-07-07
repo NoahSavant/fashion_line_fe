@@ -32,6 +32,8 @@ const MSingleProduct = () => {
         original_price: 0,
         price: 0,
     };
+    const [fetchProduct, setFetchProduct] = useState(true);
+    const [fetchVariants, setFetchVariants] = useState(false);
     const [product, setProduct] = useState(baseProduct);
     const [colors, setColors] = useState([]);
     const [sizes, setSizes] = useState([]);
@@ -69,20 +71,18 @@ const MSingleProduct = () => {
     useEffect(() => {
         if (searchParams.has('id')) {
             setId(searchParams.get('id'));
-            setFetchVariants(true);
         }
     }, []);
 
     useEffect(() => {
-        setFetchVariants(true);
+        if(sizes.length > 0 && colors.length > 0) {
+            setFetchVariants(true);
+        }
     }, [sizes, colors]);
 
     const [variants, setVariants] = useState([]);
     const [editData, setEditData] = useState(null);
     const [createData, setCreateData] = useState(null);
-
-    const [fetchProduct, setFetchProduct] = useState(true);
-    const [fetchVariants, setFetchVariants] = useState(false);
 
     const { data: productData, callApi: handleGetProduct, loading: productLoading } = useApi();
     const { data: createProductData, callApi: handleCreateProduct, loading: createProductLoading } = useApi();
@@ -126,6 +126,7 @@ const MSingleProduct = () => {
     }, [fetchVariants, id]);
 
     useEffect(() => {
+        if (editVariantData?.successMessage || addVariantData?.successMessage || deleteVariantsData?.successMessage)
         setFetchVariants(true);
         setEditData(null);
         setCreateData(null);
