@@ -1,11 +1,15 @@
-import { Login, SignUp, VerifyAccount } from '@pages/authentication'
-import { About, Home, Contact, Shop, Blog, ProductDetail, BlogDetail, Cart, OrderStatus, AdminCommentResponses } from '@/pages/guest'
+import { Login, SignUp, VerifyAccount, Logout } from '@pages/authentication'
+import { About, Home, Contact, Shop, Blog, ProductDetail, BlogDetail, Cart, OrderStatus, AdminCommentResponses, Profile } from '@/pages/guest'
 import { NotFound } from "@/pages/errors";
 
 const PublicRoutes = [
     {
         path: "/login",
         element: <Login />,
+    },
+    {
+        path: "/logout",
+        element: <Logout />,
     },
     {
         path: "/",
@@ -58,6 +62,10 @@ const PublicRoutes = [
     {
         path: '/admin-comment-responses',
         element: <AdminCommentResponses />
+    },
+    {
+        path: '/profile',
+        element: <Profile />
     }
 ]
 

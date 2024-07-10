@@ -11,7 +11,8 @@ import {
     MSingleBlog,
     MStaff,
     MCustomer,
-    MSingleUser
+    MSingleUser,
+    MProfile
 } from '@/pages/managements'
 
 const ProtectedRoutes = [
@@ -66,6 +67,10 @@ const ProtectedRoutes = [
     {
         path: "single-user",
         element: <MSingleUser />,
+    },
+    {
+        path: "profile",
+        element: <MProfile />,
     }
 ]
 
