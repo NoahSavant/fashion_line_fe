@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { productEndpoints } from '@/apis';
 import { Carousel, InputNumber } from 'rsuite';
@@ -7,10 +7,18 @@ import { variantEndpoints } from '@/apis';
 import { IoCartOutline } from '@/components/icons.js';
 import { convertStringToArray } from '@/helpers/dataHelpers';
 import Loading from '@/components/Loading';
+import { CartContext } from '@/contexts/CartContext';
+import RecommendProduct from './RecommendProduct';
 
 const ProductDetail = () => {
+    const { addToCart, addToCartLoading } = useContext(CartContext);
+
     const [searchParams, setSearchParams] = useSearchParams();
     const [id, setId] = useState(null);
+
+    const onAddToCart = () => {
+        addToCart(selectedVariant?.id, number);
+    }
 
     useEffect(() => {
         if (searchParams.has('id')) {
@@ -25,7 +33,8 @@ const ProductDetail = () => {
         handleGetProduct(productEndpoints.getSingle + id, {})
         handleGetVariants(variantEndpoints.get + '/' + id, {
             params: {
-                all: true
+                all: true,
+                status: 0
             }
         });
     }, [id]);
@@ -155,7 +164,6 @@ const ProductDetail = () => {
 
     return (
         <div className='custom-padding flex flex-col'>
-            {(variantsLoading || productLoading) && <Loading />}
             <div className='bg-gray-100 p-2 mb-4 -mt-3 flex gap-2 items-center'>
                 <a href='/' className='text-base font-medium text-blue-500 cursor-pointer'>
                     Home
@@ -173,7 +181,8 @@ const ProductDetail = () => {
                     {productData?.name}
                 </div>
             </div>
-            <div className="flex gap-5">
+            <div className="flex md:flex-row flex-col gap-5">
+                {(variantsLoading || productLoading) && <Loading />}
                 <div className="flex-1 flex flex-col gap-2">
                     <Carousel className="custom-slider" shape='bar' activeIndex={colors.indexOf(selectedColor)} onSelect={(index) => setSelectedColor(colors[index])}>
                         {colors.map((color, index) => (
@@ -261,24 +270,29 @@ const ProductDetail = () => {
                         }
                     </div>
 
-                    <div className='flex gap-4 pt-5'>
+                    <div className='flex gap-4 pt-5 md:flex-nowrap flex-wrap pr-2 justify-between'>
                         <InputNumber
                             postfix={selectedVariant?.stock_limit ? '/' + selectedVariant?.stock : ''}
                             max={selectedVariant?.stock_limit ? selectedVariant.stock : undefined}
                             value={number}
                             onChange={(value) => setNumber(Math.ceil(value))}
                             min={1}
-                            disabled={selectedVariant?.index < 2}
+                            disabled={!selectedVariant}
+                            className={`${!selectedVariant ? 'cursor-not-allowed' : ''}`}
                         />
-                        <div className="cursor-pointer px-3 py-2 bg-sapphire rounded-md justify-center items-center flex p-btn gap-2 shadow-full min-w-fit">
+                        <div className={`px-3 py-2 bg-sapphire rounded-md justify-center items-center flex gap-2 shadow-full min-w-fit md:w-fit w-full ${selectedVariant?.index > 1 ? 'cursor-pointer p-btn' : 'cursor-not-allowed'}`} onClick={onAddToCart}>
+                            {addToCartLoading && <Loading size={20} />}
                             <IoCartOutline className="text-white" />
                             <div className="text-white text-sm font-normal capitalize leading-normal whitespace-nowrap">Add to cart</div>
                         </div>
-                        <div onClick={() => navigate(`/product-detail?id=${productData?.id}`)} className="cursor-pointer px-3 py-2 text-sapphire hover:text-white  bg-white hover:bg-sapphire rounded-md justify-center items-center flex gap-2 shadow-full border-2 border-sapphire min-w-fit">
+                        <div onClick={() => navigate(`/product-detail?id=${productData?.id}`)} className="cursor-pointer px-3 py-2 text-sapphire hover:text-white  bg-white hover:bg-sapphire rounded-md justify-center items-center flex gap-2 shadow-full border-2 border-sapphire min-w-fit md:w-fit w-full">
                             <div className="text-sm font-normal capitalize leading-normal whitespace-nowrap">Product Detail</div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="pt-10">
+                <RecommendProduct />
             </div>
         </div>
     );

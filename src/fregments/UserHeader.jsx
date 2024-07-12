@@ -5,12 +5,22 @@ import { NoticeIcon, ArrowDownIcon, MemberIcon, UserChangeIcon, SentToUserIcon, 
 import { signOut } from '@/helpers/authenHelpers';
 import { getAuthentication } from "@/helpers/authenHelpers";
 import { UserRole } from "@/constants";
-import { useState } from "react";
+import { useContext, useState, useEffect } from "react";
+import { CartContext } from "@/contexts/CartContext";
 
 const UserHeader = () => {
-    const user = getAuthentication()?.user ?? null;
+    const [user, setUser] = useState(getAuthentication()?.user ?? null);
+    const { updateUser, setUpdateUser, cartItems } = useContext(CartContext);
+
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (updateUser) {
+            setUser(getAuthentication()?.user ?? null);
+            setUpdateUser(false);
+        }
+    }, [updateUser]);
 
     const userMenu = ({ onClose, left, top, className }, ref) => {
         const handleSelect = eventKey => {
@@ -61,7 +71,7 @@ const UserHeader = () => {
                     </div>
                 </Whisper>
                 {user?.role == UserRole.CUSTOMER &&
-                    <Badge Badge content={3} maxCount={5} >
+                    <Badge Badge content={cartItems?.length} maxCount={5} >
                         <IconButton appearance="primary" onClick={() => navigate('/cart')} icon={<FiShoppingCart style={{ fontSize: '10em' }} />} circle className="bg-sapphire h-10 w-10" />
                     </Badge>
                 }

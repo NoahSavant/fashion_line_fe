@@ -24,7 +24,6 @@ const UploadFile = ({ cropDimensions = null, values, setValues, number = null, c
 
     useEffect(() => {
         if(reset && !values) {
-            console.log(123);
             setFiles([]);
         }
         if(files.length > 0) return;
@@ -129,7 +128,7 @@ const UploadFile = ({ cropDimensions = null, values, setValues, number = null, c
                             />
                         </div>
                     </Modal.Body>
-                    <Modal.Footer>
+                    <Modal.Footer className="pt-2">
                         <Button onClick={() => setShowModal(false)} appearance="subtle">
                             Cancel
                         </Button>

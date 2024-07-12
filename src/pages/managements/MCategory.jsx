@@ -139,7 +139,7 @@ const MCategory = () => {
                         </div>
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer className="pt-2">
                     <Button onClick={() => setEditData(null)} appearance="subtle">
                         Cancel
                     </Button>

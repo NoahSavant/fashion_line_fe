@@ -47,7 +47,8 @@ const MProduct = () => {
         handleGetProducts(productEndpoints.get, {
             params: {
                 ...pagination,
-                ...filter
+                ...filter,
+                withVariant: 0
             }
         })
         setFetchProduct(false);

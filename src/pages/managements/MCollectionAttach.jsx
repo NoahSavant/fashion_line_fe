@@ -214,7 +214,7 @@ const MSingleCollection = () => {
                             </List>
                         </div>
                     </Modal.Body>
-                    <Modal.Footer>
+                    <Modal.Footer className="pt-2">
                         <Button onClick={() => setAddProduct(false)} appearance="subtle">
                             Cancel
                         </Button>

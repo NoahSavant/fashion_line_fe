@@ -8,6 +8,7 @@ import { Loading } from '@/components';
 import PaginationDefault from '@/constants/PaginationDefault';
 import { useApi } from '@/hooks';
 import { BasePagination } from '../managements/components';
+import RecommendProduct from './RecommendProduct';
 
 const Shop = () => {
     const [isOpen, setIsOpen] = useState(true);
@@ -164,6 +165,9 @@ const Shop = () => {
                 )
                     
                 }
+                <div className="pt-10">
+                    <RecommendProduct />
+                </div>
                 
             </div>
         </div>

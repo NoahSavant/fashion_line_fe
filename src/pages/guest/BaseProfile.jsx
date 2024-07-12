@@ -12,8 +12,12 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { SelectDateTime } from '@/components/selects';
 import { InputPassword } from '@/components/inputs';
 import { current } from "@reduxjs/toolkit";
+import { CartContext } from "@/contexts/CartContext";
+import { updateAuthentication } from "@/helpers/authenHelpers";
 
 const BaseProfile = () => {
+    const { updateUser, setUpdateUser } = useContext(CartContext);
+
     const navigate = useNavigate();
     const [user, setUser] = useState({});
     const [id, setId] = useState(null);
@@ -29,7 +33,6 @@ const BaseProfile = () => {
     useEffect(() => {
         const currentUser = getAuthentication()?.user ?? null;
         if(currentUser) {
-            console.log(currentUser);
             setId(currentUser?.id);
         } else {
             navigate('/');
@@ -49,8 +52,10 @@ const BaseProfile = () => {
     }, [fetchUser, id]);
 
     useEffect(() => {
-        if (!editUserData) return;
+        if (!editUserData?.successMessage) return;
         setFetchUser(true);
+        updateAuthentication(editUserData.user);
+        setUpdateUser(true);
     }, [editUserData]);
 
     useEffect(() => {
@@ -74,12 +79,17 @@ const BaseProfile = () => {
     const editUser = () => {
         const formData = new FormData();
         formData.append('username', user.username);
-        formData.append('email', user.email);
-        formData.append('role', user.role);
-        formData.append('phonenumber', user.phonenumber);
+        if (user.phonenumber) {
+            formData.append('phonenumber', user.phonenumber);
+        }
         formData.append('status', user.status);
-        formData.append('gender', user.gender);
-        formData.append('date_of_birth', user.date_of_birth);
+        if(user.gender) {
+            formData.append('gender', user.gender);
+        }
+
+        if (user.date_of_birth) {
+            formData.append('date_of_birth', user.date_of_birth);
+        }
 
         if (user.image) {
             formData.append('image', user.image);
@@ -181,7 +191,6 @@ const BaseProfile = () => {
                                     <Input
                                         placeholder="Email"
                                         value={user?.email}
-                                        onChange={(value) => setUser({ ...user, email: value })}
                                     />
                                 </div>
                             </div>

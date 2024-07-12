@@ -140,7 +140,6 @@ const MDiscount = () => {
     };
 
     const editDiscounts = async () => {
-        console.log(editData);
         const formData = new FormData();
         formData.append('name', editData.name);
         formData.append('type', editData.type);
@@ -227,7 +226,7 @@ const MDiscount = () => {
                         </div>
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer className="pt-2">
                     <Button onClick={() => setEditData(null)} appearance="subtle">
                         Cancel
                     </Button>

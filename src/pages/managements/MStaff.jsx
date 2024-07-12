@@ -206,7 +206,7 @@ const MStaff = () => {
                         </div>
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer className="pt-2">
                     <Button onClick={() => setUser(null)} appearance="subtle">
                         Cancel
                     </Button>

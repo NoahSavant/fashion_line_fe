@@ -83,8 +83,6 @@ const MSingleUser = () => {
         });
     };
 
-    console.log(user);
-
     return (
         <div className='p-5 flex flex-col gap-4'>
             {(userLoading) && <Loading size={40} />}

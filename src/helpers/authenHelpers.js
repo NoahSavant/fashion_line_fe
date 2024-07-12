@@ -24,12 +24,25 @@ export const setAuthentication =  (auth) => {
     Cookies.set("auth", JSON.stringify(auth));
 };
 
+export const updateAuthentication = (user) => {
+    const auth = getAuthentication();
+    if (auth) {
+        const updatedAuth = {
+            ...auth,
+            user: {
+                ...auth.user,
+                ...user
+            }
+        };
+        setAuthentication(updatedAuth);
+    }
+};
+
 export const signOut = () => {
     Cookies.remove("auth");
 }
 
 export const refreshToken = (rememberToken) => {
-    console.log('insiiiii');
     return api.post(authenticationEndpoints.refresh, {
         'remember_token': rememberToken
     });

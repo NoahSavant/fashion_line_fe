@@ -1,4 +1,4 @@
-const baseEndpoint = '/carts'
+const baseEndpoint = '/cart-items'
 
 const cartEndpoints = {
     get: baseEndpoint,

@@ -474,7 +474,7 @@ const MSingleProduct = () => {
 
                             </div>
                         </Modal.Body>
-                        <Modal.Footer>
+                        <Modal.Footer className="pt-2">
                             <Button onClick={() => setCreateData(null)} appearance="subtle">
                                 Cancel
                             </Button>
@@ -512,6 +512,19 @@ const MSingleProduct = () => {
                                         onChange={(value) => setEditData({ ...editData, product_color_id: value })}
                                     />
                                 </div>
+                                {
+                                    editData?.product_color_id &&
+                                    <div className='flex flex-col gap-1.5 w-full'>
+                                        <label>Image</label>
+                                        <div className='rounded-md border-2 border-gray-400 flex justify-center items-center border-dashed'>
+                                            <img
+                                                src={colors.find(color => color.id == editData?.product_color_id)?.image_url}
+                                                alt=""
+                                                className={`object-contain h-[120px]`}
+                                            />
+                                        </div>
+                                    </div>
+                                }
                                 <div className='flex flex-col gap-1.5 w-full'>
                                     <label>Status</label>
                                     <SelectConstant single={true} value={editData?.status} setValue={(value) => setEditData({ ...editData, status: value })} constant={ProductStatus} />
@@ -535,17 +548,9 @@ const MSingleProduct = () => {
                                     <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={editData?.price}
                                         onChange={(value) => setEditData({ ...editData, price: value })} />
                                 </div>
-                                <div className='flex flex-col gap-1.5 w-full'>
-                                    <label>Image</label>
-                                    <img
-                                        src={colors.find(color => color.id == editData?.product_color_id)?.image_url}
-                                        alt=""
-                                        className={`rounded-md shadow-full object-cover`}
-                                    />
-                                </div>
                             </div>
                         </Modal.Body>
-                        <Modal.Footer>
+                        <Modal.Footer className="pt-2">
                             <Button onClick={() => setEditData(null)} appearance="subtle">
                                 Cancel
                             </Button>

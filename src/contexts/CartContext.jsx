@@ -1,12 +1,62 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useApi } from '@/hooks';
+import { cartEndpoints } from '@/apis';
+import { getAuthentication } from '@/helpers/authenHelpers';
+import { PopupConfirmContext } from './PopupConfirmContext';
 
 export const CartContext = createContext();
 
 export const CartContextProvider = ({ children }) => {
-    const [isUpdateCart, setIsUpdateCart] = useState(false);
+    const user = getAuthentication()?.user ?? null;
+    const [fetchCart, setFetchCart] = useState(true);
+    const [updateUser, setUpdateUser] = useState(false);
+    const [cartItems, setCartItems] = useState([]);
+    const { data: addToCartData, callApi: handleAddToCart, loading: addToCartLoading } = useApi();
+    const { data: cartItemData, callApi: handleGetCartItem, loading: getCartItemLoading } = useApi();
+    const { openConfirmation } = useContext(PopupConfirmContext);
+
+    const unAuthen = () => {
+        openConfirmation(() => {
+            window.location.href = `/login`;
+        }, [], "Bạn cần đăng nhập để dùng giỏ hàng");
+    };
+
+    const addToCart = (variant_id, amount) => {
+        if(!user) {
+            unAuthen();
+            return;
+        }
+        handleAddToCart(cartEndpoints.create, {
+            method: "POST",
+            data: {
+                variant_id,
+                amount
+            }
+        })
+    };
+
+    useEffect(() => {
+        if (!fetchCart || !user) return;
+        handleGetCartItem(cartEndpoints.get, {
+            params: {
+                all: 1
+            }
+        });
+        setFetchCart(false);
+    }, [fetchCart]);
+
+    useEffect(() => {
+        if (!cartItemData || !Array.isArray(cartItemData)) return;
+        setCartItems(cartItemData);
+    }, [cartItemData]);
+
+    useEffect(() => {
+        if (!addToCartData?.successMessage) return;
+        setFetchCart(true);
+    }, [addToCartData]);
 
     return (
-        <CartContext.Provider value={{ isUpdateCart, setIsUpdateCart }}>
+        <CartContext.Provider value={{ setFetchCart, cartItems, addToCart, addToCartLoading, getCartItemLoading, updateUser, setUpdateUser }}>
             {children}
         </CartContext.Provider>
     );

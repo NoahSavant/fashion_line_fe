@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Modal, Carousel, InputNumber } from 'rsuite';
 import { useApi } from '@/hooks';
 import { variantEndpoints } from '@/apis';
 import { IoCartOutline } from '@/components/icons.js';
 import { useNavigate } from 'react-router-dom';
 import Loading from '@/components/Loading';
-import { convertStringToArray } from '../../../helpers/dataHelpers';
+import { CartContext } from '@/contexts/CartContext';
 
 const ProductModal = ({ show, onClose, product }) => {
+    const { addToCart, addToCartLoading } = useContext(CartContext);
+
     const { data: variantsData, callApi: handleGetVariants, loading: variantsLoading } = useApi();
     const [sizes, setSizes] = useState([]);
     const [colors, setColors] = useState([]);
@@ -18,11 +20,16 @@ const ProductModal = ({ show, onClose, product }) => {
     const navigate = useNavigate();
     const [number, setNumber] = useState(1)
 
+    const onAddToCart = () => {
+        addToCart(selectedVariant?.id, number);
+    }
+
     useEffect(() => {
         if (show) {
             handleGetVariants(variantEndpoints.get + '/' + product.id, {
                 params: {
-                    all: true
+                    all: true,
+                    status: 0
                 }
             });
         }
@@ -147,7 +154,7 @@ const ProductModal = ({ show, onClose, product }) => {
             </Modal.Header>
             <Modal.Body>
                 { variantsLoading && <Loading/>}
-                <div className="flex gap-5">
+                <div className="flex gap-5 md:flex-row flex-col">
                     <div className="flex-1 flex flex-col gap-2">
                         <Carousel className="custom-slider" shape='bar' activeIndex={colors.indexOf(selectedColor)} onSelect={(index) => setSelectedColor(colors[index])}>
                             {colors.map((color, index) => (
@@ -224,31 +231,47 @@ const ProductModal = ({ show, onClose, product }) => {
                             {
                                 selectedVariant?.index > 1 &&
                                 <div>
-                                    <strong className="">Price:</strong>
-                                    <div className="text-lg text-boston_blue font-bold line-clamp-1">
-                                        <span className="line-through text-gray-400 font-normal text-xs">
-                                            {selectedVariant?.original_price > 0 ? selectedVariant?.original_price?.toLocaleString('de-DE') + 'đ̲ ' : ''}
-                                        </span>
-                                        {selectedVariant?.price?.toLocaleString('de-DE')}đ̲
+                                    <div className='flex flex-col gap-5 justify-between'>
+                                        <div>
+                                            <strong className="">Giá</strong>
+                                            <div className="text-lg text-boston_blue font-bold line-clamp-1">
+                                                <span className="line-through text-gray-400 font-normal text-xs">
+                                                    {selectedVariant?.original_price > 0 ? selectedVariant?.original_price?.toLocaleString('de-DE') + 'đ̲ ' : ''}
+                                                </span>
+                                                {selectedVariant?.price?.toLocaleString('de-DE')}đ̲
+                                            </div>
+                                        </div>
+                                        {
+                                            selectedVariant?.amount > 0 && 
+                                            <div className=''>
+                                                <strong className="">Trong giỏ hàng:</strong>
+                                                <div className="text-lg text-boston_blue font-bold line-clamp-1">
+                                                    {selectedVariant?.amount}
+                                                </div>
+                                            </div>
+                                        }
+                                        
                                     </div>
                                 </div>
                             }
                         </div>
                         
-                        <div className='flex gap-4 pt-5'>
+                        <div className='flex gap-4 pt-5 md:flex-nowrap flex-wrap pr-2 justify-between'>
                             <InputNumber
                                 postfix={selectedVariant?.stock_limit ? '/' + selectedVariant?.stock : ''}
                                 max={selectedVariant?.stock_limit ? selectedVariant.stock : undefined}
                                 value={number}
                                 onChange={(value) => setNumber(Math.ceil(value))}
                                 min={1}
-                                disabled={selectedVariant?.index < 2}
+                                disabled={!selectedVariant}
+                                className={`${!selectedVariant ? 'cursor-not-allowed' : ''}`}
                             />
-                            <div className="cursor-pointer px-3 py-2 bg-sapphire rounded-md justify-center items-center flex p-btn gap-2 shadow-full min-w-fit">
+                            <div className={`px-3 py-2 bg-sapphire rounded-md justify-center items-center flex gap-2 shadow-full min-w-fit md:w-fit w-full ${selectedVariant?.index > 1 ? 'cursor-pointer p-btn' : 'cursor-not-allowed'}`} onClick={onAddToCart}>
+                                {addToCartLoading && <Loading size={20} />}
                                 <IoCartOutline className="text-white" />
                                 <div className="text-white text-sm font-normal capitalize leading-normal whitespace-nowrap">Add to cart</div>
                             </div>
-                            <div onClick={() => navigate(`/product-detail?id=${product.id}`)}  className="cursor-pointer px-3 py-2 text-sapphire hover:text-white  bg-white hover:bg-sapphire rounded-md justify-center items-center flex gap-2 shadow-full border-2 border-sapphire min-w-fit">
+                            <div onClick={() => navigate(`/product-detail?id=${product?.id}`)} className="cursor-pointer px-3 py-2 text-sapphire hover:text-white  bg-white hover:bg-sapphire rounded-md justify-center items-center flex gap-2 shadow-full border-2 border-sapphire min-w-fit md:w-fit w-full">
                                 <div className="text-sm font-normal capitalize leading-normal whitespace-nowrap">Product Detail</div>
                             </div>
                         </div>

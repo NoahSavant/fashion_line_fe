@@ -34,7 +34,7 @@ const PopupConfirm = ({ handleConfirm, handleCancel, message, open, setValue, da
                 <Modal.Body className='flex justify-center'>
                     {body()}
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer className="pt-2">
                     <Button onClick={handleConfirm} appearance="primary" className='bg-blue-500'>
                         Ok
                     </Button>
