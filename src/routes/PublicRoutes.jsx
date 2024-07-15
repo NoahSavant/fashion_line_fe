@@ -1,5 +1,5 @@
 import { Login, SignUp, VerifyAccount, Logout } from '@pages/authentication'
-import { About, Home, Contact, Shop, Blog, ProductDetail, BlogDetail, Cart, OrderStatus, AdminCommentResponses, Profile } from '@/pages/guest'
+import { About, Home, Policies, Shop, Blog, ProductDetail, BlogDetail, Cart, OrderStatus, AdminCommentResponses, Profile, SizeMap, OrderDetail } from '@/pages/guest'
 import { NotFound } from "@/pages/errors";
 
 const PublicRoutes = [
@@ -28,8 +28,8 @@ const PublicRoutes = [
         element: <About/>
     },
     {
-        path: '/contact',
-        element: <Contact />
+        path: '/Policies',
+        element: <Policies />
     },
     {
         path: '/shop',
@@ -66,6 +66,14 @@ const PublicRoutes = [
     {
         path: '/profile',
         element: <Profile />
+    },
+    {
+        path: '/size-map',
+        element: <SizeMap />
+    },
+    {
+        path: '/order-detail',
+        element: <OrderDetail />
     }
 ]
 

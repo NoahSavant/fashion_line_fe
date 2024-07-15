@@ -13,6 +13,8 @@ export const CartContextProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState([]);
     const { data: addToCartData, callApi: handleAddToCart, loading: addToCartLoading } = useApi();
     const { data: cartItemData, callApi: handleGetCartItem, loading: getCartItemLoading } = useApi();
+    const { data: deleteCartItemData, callApi: handleDeleteCartItem, loading: deleteCartItemLoading } = useApi();
+
     const { openConfirmation } = useContext(PopupConfirmContext);
 
     const unAuthen = () => {
@@ -51,12 +53,31 @@ export const CartContextProvider = ({ children }) => {
     }, [cartItemData]);
 
     useEffect(() => {
+        if (!deleteCartItemData?.successMessage) return;
+        setFetchCart(true);
+    }, [deleteCartItemData]);
+
+    useEffect(() => {
         if (!addToCartData?.successMessage) return;
         setFetchCart(true);
     }, [addToCartData]);
 
+    const confirmDeleteCartItems = (ids) => {
+        openConfirmation(deleteCartItems, [ids], "Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng ?");
+    };
+
+    const deleteCartItems = async (ids) => {
+        await handleDeleteCartItem(
+            cartEndpoints.delete,
+            {
+                method: 'DELETE',
+                data: { ids }
+            }
+        );
+    };
+
     return (
-        <CartContext.Provider value={{ setFetchCart, cartItems, addToCart, addToCartLoading, getCartItemLoading, updateUser, setUpdateUser }}>
+        <CartContext.Provider value={{ setFetchCart, cartItems, addToCart, addToCartLoading, getCartItemLoading, updateUser, setUpdateUser, confirmDeleteCartItems, deleteCartItemLoading }}>
             {children}
         </CartContext.Provider>
     );

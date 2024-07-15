@@ -183,11 +183,11 @@ const ProductModal = ({ show, onClose, product }) => {
                         <div className='flex flex-col gap-2'>
                             <h3 className="text-xl font-bold text-sapphire">{product.name}</h3>
                             <div>
-                                <strong className="">Description:</strong>
+                                <strong className="">Mô tả:</strong>
                                 <div className="text-base text-black font-medium line-clamp-4">{product.description}</div>
                             </div>
                             <div>
-                                <strong className="">Tags:</strong>
+                                <strong className="">Thẻ:</strong>
                                 <div className="flex items-center gap-2 py-2">
                                     {product.tags.map((tag, index) => (
                                         <a href={`/shop?tags[]=${tag.id}`} key={index} className="px-2 py-1 min-w-[50px] rounded-md w-fit p-btn" style={{ backgroundColor: tag.color }}>
@@ -198,7 +198,10 @@ const ProductModal = ({ show, onClose, product }) => {
                             </div>
                             
                             <div className="">
-                                <strong className="">Sizes:</strong>
+                                <div className='flex justify-between items-center'>
+                                    <strong className="">Kích cỡ: </strong>
+                                    <p className='underline font-semibold cursor-pointer hover:text-sapphire' onClick={() => { window.open('/size-map', '_blank'); }}>Hướng dẫn</p>
+                                </div>
                                 <div className='flex gap-2 py-2'>
                                     {sizes?.map((size, index) => (
                                         <div key={index} className={`border-2 ${selectedSize?.size === size.size ? 'border-sapphire text-white bg-sapphire' : selectedColor?.sizes.includes(size.size) ? 'border-sapphire text-sapphire bg-white' : 'border-gray-400 text-gray-400 '}  rounded-md py-1 px-2 min-w-8 flex justify-center items-center cursor-pointer`} onClick={() => setSelectedSize(size)}>
@@ -210,7 +213,7 @@ const ProductModal = ({ show, onClose, product }) => {
                                 </div>
                             </div>
                             <div>
-                                <strong className="">Colors:</strong>
+                                <strong className="">Màu sắc:</strong>
                                 <div className='flex gap-2 py-2'>
                                     {colors?.map((color, index) => (
                                         color.sizes?.length > 0 ? (
@@ -269,10 +272,10 @@ const ProductModal = ({ show, onClose, product }) => {
                             <div className={`px-3 py-2 bg-sapphire rounded-md justify-center items-center flex gap-2 shadow-full min-w-fit md:w-fit w-full ${selectedVariant?.index > 1 ? 'cursor-pointer p-btn' : 'cursor-not-allowed'}`} onClick={onAddToCart}>
                                 {addToCartLoading && <Loading size={20} />}
                                 <IoCartOutline className="text-white" />
-                                <div className="text-white text-sm font-normal capitalize leading-normal whitespace-nowrap">Add to cart</div>
+                                <div className="text-white text-sm font-normal capitalize leading-normal whitespace-nowrap">Thêm vào giỏ</div>
                             </div>
                             <div onClick={() => navigate(`/product-detail?id=${product?.id}`)} className="cursor-pointer px-3 py-2 text-sapphire hover:text-white  bg-white hover:bg-sapphire rounded-md justify-center items-center flex gap-2 shadow-full border-2 border-sapphire min-w-fit md:w-fit w-full">
-                                <div className="text-sm font-normal capitalize leading-normal whitespace-nowrap">Product Detail</div>
+                                <div className="text-sm font-normal capitalize leading-normal whitespace-nowrap">Xem chi tiết</div>
                             </div>
                         </div>
                     </div>

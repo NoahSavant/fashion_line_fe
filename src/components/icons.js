@@ -63,6 +63,7 @@ import { HiCollection } from "react-icons/hi";
 import { TbHandClick } from "react-icons/tb";
 import { IoCartOutline } from "react-icons/io5";
 import { IoCloseOutline } from "react-icons/io5";
+import { RiBillFill } from "react-icons/ri";
 
 export {
     CogIcon,
@@ -133,5 +134,6 @@ export {
     HiCollection,
     TbHandClick,
     IoCartOutline,
-    IoCloseOutline
+    IoCloseOutline,
+    RiBillFill
 };

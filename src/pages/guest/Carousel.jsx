@@ -64,11 +64,7 @@ const RightScrollIcon = () => {
     );
 }
 
-const RecommendProduct = ({ productId = 0 }) => {
-    const [fetchProduct, setFetchProduct] = useState(true);
-    const { data: productsData, callApi: handleGetProducts, loading: productsLoading } = useApi();
-
-    // Refs for scroll container
+const Carousel = ({ data, dataMap, loading, title }) => {
     const listScrollRef = useRef(null);
 
     const handleRightScroll = () => {
@@ -114,40 +110,20 @@ const RecommendProduct = ({ productId = 0 }) => {
         return () => clearInterval(autoScrollInterval);
     }, []);
 
-    // Fetch products on mount or when productId changes
-    useEffect(() => {
-        if (fetchProduct) {
-            handleGetProducts(productEndpoints.get, {
-                params: {
-                    recommend: 1,
-                    productId,
-                },
-            });
-            setFetchProduct(false);
-        }
-    }, [fetchProduct, productId]);
-
     return (
         <div className='flex flex-col gap-10'>
-            {
-                productsData?.length > 0 &&
-                <div className="flex flex-col gap-2 items-center">
-                    <div className="text-sapphire lg:text-4xl md:text-3xl text-2xl font-semibold  leading-[1] text-center">Sản phẩm gợi ý</div>
-                </div>
-            }
+            <div className="flex flex-col gap-2 items-center">
+                <div className="text-sapphire lg:text-5xl md:text-4xl text-3xl font-semibold  leading-[1] text-center">{title}</div>
+            </div>
             <div className="md:px-7 px-5 md:py-7 py-5 flex">
-                {productsLoading && <Loading size={40} />}
-                {productsData?.length > 0 ? (
+                {loading && <Loading size={40} />}
+                {data?.length > 0 ? (
                     <div className="flex justify-center items-center gap-4 container-scroll relative md:px-0 px-1 w-full">
                         <div className="shadow-right-only absolute top-[calc(50%-32px)] md:-left-6 -left-5 cursor-pointer left-scroll bg-white rounded-full z-10" onClick={handleLeftScroll}>
                             <LeftScrollIcon/>
                         </div>
                         <div className="flex gap-5 w-full overflow-auto hidden-scroll-bar list-scroll" ref={listScrollRef}>
-                            {productsData.map((product, index) => (
-                                <div key={index} className='flex-none  lg:w-[calc(25%-15px)] md:w-[calc(33.33%-13.33px)] w-full'>
-                                    <SingleProduct product={product} />
-                                </div>
-                            ))}
+                            {dataMap}
                         </div>
                         <div className="shadow-left-only cursor-pointer right-scroll absolute top-[calc(50%-32px)] md:-right-6 -right-5 bg-white rounded-full z-10" onClick={handleRightScroll}>
                             <RightScrollIcon/>
@@ -163,4 +139,4 @@ const RecommendProduct = ({ productId = 0 }) => {
     );
 };
 
-export default RecommendProduct;
+export default Carousel;

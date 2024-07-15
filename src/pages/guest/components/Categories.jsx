@@ -27,7 +27,7 @@ const Categories = () => {
                 {categories?.map((category, index) => (
                     <div key={index} className="flex flex-col w-full justify-center items-center group cursor-pointer animation-iv fade-in lg:max-w-72 lg:w-[calc(25%-36px)] md:w-[calc(33.33%-16px)]">
                         <div className="h-[300px] w-full overflow-hidden rounded-b-3xl relative">
-                            <img className="w-full h-full object-contain group-hover:scale-125 transform transition-transform duration-500 ease-in-out shadow-full" src={category.image_url} />
+                            <img className="w-full h-full object-cover group-hover:scale-125 transform transition-transform duration-500 ease-in-out shadow-full" src={category.image_url} />
                         </div>
                         <div className="capitalize w-full text-base font-medium text-center bg-white group-hover:bg-sapphire text-sapphire group-hover:text-white px-4 py-2 border-2 border-sapphire rounded-t-3xl transform transition-all duration-500 ease-in-out shadow-full">
                             {category.name}

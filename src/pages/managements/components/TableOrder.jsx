@@ -1,22 +1,23 @@
 import { Table, Checkbox, Input, InputGroup } from 'rsuite';
 import React, { useState } from 'react';
 
+import { UserStatus, OrderPaymentMethod, OrderStatus } from '@/constants';
 import {
     BaseCell,
-    ActionCell,
-    ImageCell,
-    CheckCell,
     ConstantCell,
+    ActionCell,
+    CheckCell,
+    ImageCell,
     DateTimeCell,
+    UserCell,
     DiscountValueCell
 } from './TableCell';
 import { SearchIcon } from '@/components/icons';
 import Toolbar from './Toolbar';
-import { DiscountStatus, DiscountCondition, DiscountSubject } from '@/constants';
 
 const { Column, HeaderCell } = Table;
 
-const TableDiscount = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys, onEdit, onDelete, onMultyDelete }) => {
+const TableOrder = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys, onEdit, onDelete, onCreate, onMultyDelete, onSelect, height = 400 }) => {
     const [sortColumn, setSortColumn] = useState();
     const [sortType, setSortType] = useState();
     const [loading, setLoading] = useState(false);
@@ -69,8 +70,8 @@ const TableDiscount = ({ items, dataLoading, handleSort, checkedKeys, setChecked
         <div className='flex flex-col gap-2 w-full'>
             <div className='flex justify-between md:items-center items-start'>
                 <div className='flex gap-2 items-center md:flex-row flex-col'>
-                    <div className='text-lg font-semibold px-2'>Discounts</div>
-                    <Toolbar checkedKeys={checkedKeys} deleteClick={onMultyDelete} />
+                    <div className='text-lg font-semibold px-2'>Orders</div>
+                    <Toolbar checkedKeys={checkedKeys} deleteClick={onMultyDelete} addClick={onCreate} />
                 </div>
                 <InputGroup className='ml-4 max-w-[300px]'>
                     <Input value={search} onChange={setSearch} />
@@ -88,8 +89,7 @@ const TableDiscount = ({ items, dataLoading, handleSort, checkedKeys, setChecked
                 sortType={sortType}
                 onSortColumn={handleSortColumn}
                 onRowClick={rowClick}
-                height={300}
-                maxButtons={3}
+                height={height}
             >
                 <Column width={40} align="center">
                     <HeaderCell style={{ padding: 0 }}>
@@ -104,48 +104,40 @@ const TableDiscount = ({ items, dataLoading, handleSort, checkedKeys, setChecked
                     </HeaderCell>
                     <CheckCell dataKey="id" checkedKeys={checkedKeys} onChange={handleCheck} />
                 </Column>
-                <Column width={320} fullText sortable>
-                    <HeaderCell>Name</HeaderCell>
-                    <BaseCell dataKey='name' />
+                <Column width={280} fullText sortable>
+                    <HeaderCell>User</HeaderCell>
+                    <UserCell dataKeys={['user', 'username']} images={['user','image_url']}/>
+                </Column>
+                <Column width={140} fullText sortable>
+                    <HeaderCell>Code</HeaderCell>
+                    <BaseCell dataKey='code' />
                 </Column>
                 <Column width={180}>
-                    <HeaderCell className='text-center'>Min</HeaderCell>
-                    <DiscountValueCell dataKey="min_price" condition={false} />
+                    <HeaderCell className='text-center'>Total Price</HeaderCell>
+                    <DiscountValueCell dataKey="total_price" condition={false} />
                 </Column>
                 <Column width={180}>
-                    <HeaderCell className='text-center'>Max</HeaderCell>
-                    <DiscountValueCell dataKey="max_price" condition={false} />
+                    <HeaderCell className='text-center'>Paid</HeaderCell>
+                    <DiscountValueCell dataKey="paid" condition={false} />
                 </Column>
-                <Column width={150}>
-                    <HeaderCell className='text-center'>Image</HeaderCell>
-                    <ImageCell dataKey={["image_url"]} className='h-[36px] w-[48px]' />
-                </Column>
-                <Column width={120}>
+                <Column width={150} sortable>
                     <HeaderCell className='text-center'>Status</HeaderCell>
-                    <ConstantCell dataKey="status" constant={DiscountStatus} colors={['green', 'red']} />
+                    <ConstantCell dataKey="status" constant={OrderStatus} colors={['yellow', 'green', 'red']} />
                 </Column>
-                <Column width={120}>
-                    <HeaderCell className='text-center'>Condition</HeaderCell>
-                    <ConstantCell dataKey="condition" constant={DiscountCondition} colors={['gray', 'yellow']} />
+                <Column width={150} sortable>
+                    <HeaderCell className='text-center'>Payment Method</HeaderCell>
+                    <ConstantCell dataKey="payment_method" constant={OrderPaymentMethod} colors={['blue', 'pink']} />
                 </Column>
-                <Column width={120}>
-                    <HeaderCell className='text-center'>Subject</HeaderCell>
-                    <ConstantCell dataKey="subject" constant={DiscountSubject} colors={['gray', 'blue']} />
+                <Column width={250} fullText sortable>
+                    <HeaderCell>Ended At</HeaderCell>
+                    <DateTimeCell dataKey='ended_at' />
                 </Column>
-                <Column width={180}>
-                    <HeaderCell className='text-center'>Value</HeaderCell>
-                    <DiscountValueCell dataKey="value" condition='condition' />
-                </Column>
-                <Column width={150}>
-                    <HeaderCell className='text-center'>Ended at</HeaderCell>
-                    <DateTimeCell dataKey="ended_at" />
-                </Column>
-                <Column width={90}>
-                    <HeaderCell className='text-center'>Action</HeaderCell>
-                    <ActionCell onEdit={onEdit} onDelete={onDelete} />
+                <Column width={90} fixed="right">
+                    <HeaderCell>Action</HeaderCell>
+                    <ActionCell onEdit={onEdit} onDelete={onDelete} onSelect={onSelect} />
                 </Column>
             </Table>
         </div>
     );
 }
-export default TableDiscount
+export default TableOrder;

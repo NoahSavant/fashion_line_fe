@@ -59,7 +59,7 @@ const Shop = () => {
     useEffect(() => {
         const category = searchParams.get('category') || null;
         const tags = searchParams.getAll('tags[]').map(tag => parseInt(tag, 10)) || [];
-        const collections = searchParams.getAll('collections[]').map(collection => parseInt(collection, 10)) || [];
+        const collections = searchParams.getAll('collection[]').map(collection => parseInt(collection, 10)) || [];
         const search = searchParams.get('search') || PaginationDefault.SEARCH;
         const column = searchParams.get('column') || PaginationDefault.COLUMN;
         const order = searchParams.get('order') || PaginationDefault.ORDER;
@@ -146,25 +146,29 @@ const Shop = () => {
                         </>
                     }
                 </div>
-                {productsLoading && <Loading size={40} />}
-                {(productsData?.items?.length > 0 || productsLoading)  ? (
-                    <>
-                        <div className='grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5'>
-                            {
-                                productsData?.items?.map((item, index) => (
-                                    <SingleProduct product={item} key={index} />
-                                ))
-                            }
+                <div>
+                    {productsLoading && <Loading size={40} />}
+                    {(productsData?.items?.length > 0 || productsLoading) ? (
+                        <>
+                            <div className='grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-5'>
+
+                                {
+                                    productsData?.items?.map((item, index) => (
+                                        <SingleProduct product={item} key={index} />
+                                    ))
+                                }
+                            </div>
+                            <BasePagination pagination={productsData?.pagination} handlePagination={handlePagination} className='px-5 shadow-lg py-2 rounded-md' />
+                        </>
+                    ) : (
+                        <div className='w-full h-[calc(100vh-150px)] flex justify-center items-center'>
+                            <div className="text-center text-xl text-sapphire font-semibold line-clamp-2">Not found</div>
                         </div>
-                        <BasePagination pagination={productsData?.pagination} handlePagination={handlePagination} className='px-5 shadow-lg py-2 rounded-md' />
-                    </>
-                ) : (
-                    <div className='w-full h-[calc(100vh-150px)] flex justify-center items-center'>
-                        <div className="text-center text-xl text-sapphire font-semibold line-clamp-2">Not found</div>
-                    </div>
-                )
-                    
-                }
+                    )
+
+                    }
+                </div>
+                
                 <div className="pt-10">
                     <RecommendProduct />
                 </div>

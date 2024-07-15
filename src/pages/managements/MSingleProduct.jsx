@@ -15,6 +15,8 @@ import { getIds } from '@/helpers/dataHelpers';
 import { convertStringToArray, convertArrayToString } from '@/helpers/dataHelpers';
 import MColor from './MColor';
 import MSize from './MSize';
+import { Comments } from '../guest/components';
+import CommentType from '@/constants/CommentType';
 
 const MSingleProduct = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -569,6 +571,12 @@ const MSingleProduct = () => {
             }
             {
                 id && <MSize productId={id} setSizes={setSizes} />
+            }
+            {
+                id && 
+                <div className="py-10">
+                    <Comments id={id} type={CommentType.PRODUCT} />
+                </div> 
             }
         </div>
     );

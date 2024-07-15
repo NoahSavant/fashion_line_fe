@@ -2,7 +2,7 @@ import { getAuthentication } from "@/helpers/authenHelpers";
 import React, { useState, useEffect, useContext } from 'react';
 import { getConstantData, getConstantTitle } from '@/helpers/constantHelpers';
 import { Input, Modal, Button, DatePicker, InputNumber, MaskedInput, SelectPicker } from "rsuite";
-import { userEndpoints } from '@/apis';
+import { userEndpoints, orderEndpoints } from '@/apis';
 import { useApi } from '@/hooks';
 import { UserStatus, Gender, UserRole } from '@/constants';
 import { UploadFile } from '@/components/inputs';
@@ -14,6 +14,9 @@ import { InputPassword } from '@/components/inputs';
 import { current } from "@reduxjs/toolkit";
 import { CartContext } from "@/contexts/CartContext";
 import { updateAuthentication } from "@/helpers/authenHelpers";
+import { MAddress } from "../managements";
+import PaginationDefault from '@/constants/PaginationDefault';
+import { BasePagination, TableOrder } from "../managements/components";
 
 const BaseProfile = () => {
     const { updateUser, setUpdateUser } = useContext(CartContext);
@@ -118,6 +121,42 @@ const BaseProfile = () => {
             }
         });
     };
+
+    const [pagination, setPagination] = useState({
+        page: PaginationDefault.PAGE,
+        limit: PaginationDefault.LIMIT,
+        order: PaginationDefault.ORDER,
+        column: PaginationDefault.COLUMN,
+        search: PaginationDefault.SEARCH
+    });
+    const [checkedKeys, setCheckedKeys] = useState([]);
+    const handlePagination = (data) => {
+        setPagination({
+            ...pagination,
+            ...data
+        });
+        setFetchOrder(true);
+    };
+
+    const [fetchOrder, setFetchOrder] = useState(true);
+    const { data: orderData, callApi: handleGetOrder, loading: orderLoading } = useApi();
+    const { data: editOrderData, callApi: handleEditOrder, loading: editOrderLoading } = useApi();
+
+    useEffect(() => {
+        if (!fetchOrder || !user.id) return;
+        handleGetOrder(orderEndpoints.get, {
+            params: {
+                ...pagination,
+                user_id: user?.id
+            }
+        });
+        setFetchOrder(false);
+        setCheckedKeys([]);
+    }, [fetchOrder, user]);
+
+    const onSelect = (rowData) => {
+        window.open(`/order-detail?id=${rowData.id}`, '_blank');
+    }
 
     return (
         <div className='lg:p-10 p-5 flex flex-col gap-4'>
@@ -230,6 +269,22 @@ const BaseProfile = () => {
                     </div>
                 </div>
             </div>
+            <MAddress />
+
+            {
+                user.role == UserRole.CUSTOMER &&
+                <div className='p-5 flex flex-col gap-4'>
+                    <div className='rounded-md shadow-md bg-white py-2'>
+                        <div className='text-lg font-semibold px-2 text-sapphire'>Orders</div>
+                    </div>
+                    <div className='flex gap-5 lg:flex-row flex-col'>
+                        <div className='w-full md:h-[420px] md:p-4 p-2 rounded-md shadow-md bg-white'>
+                            <TableOrder items={orderData?.items} dataLoading={orderLoading} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onSelect={onSelect} />
+                            <BasePagination pagination={orderData?.pagination} handlePagination={handlePagination} className='flex md:flex-row flex-col md:gap-0 gap-3' />
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     );
 };

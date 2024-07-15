@@ -1,22 +1,18 @@
-import { Table, Checkbox, Input, InputGroup } from 'rsuite';
 import React, { useState } from 'react';
-
+import { Table, Checkbox, Input, InputGroup } from 'rsuite';
+import { SearchIcon } from '@/components/icons';
+import Toolbar from './Toolbar';
 import {
     BaseCell,
     ActionCell,
-    ImageCell,
     CheckCell,
-    ConstantCell,
-    DateTimeCell,
-    DiscountValueCell
+    ConstantCell
 } from './TableCell';
-import { SearchIcon } from '@/components/icons';
-import Toolbar from './Toolbar';
-import { DiscountStatus, DiscountCondition, DiscountSubject } from '@/constants';
+import TrueFalseStatus from '@/constants/TrueFalseStatus';
 
 const { Column, HeaderCell } = Table;
 
-const TableDiscount = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys, onEdit, onDelete, onMultyDelete }) => {
+const TableAddress = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKeys, onEdit, onDelete, onMultyDelete }) => {
     const [sortColumn, setSortColumn] = useState();
     const [sortType, setSortType] = useState();
     const [loading, setLoading] = useState(false);
@@ -37,7 +33,7 @@ const TableDiscount = ({ items, dataLoading, handleSort, checkedKeys, setChecked
 
     const handleSearch = () => {
         handleSort({ search: search });
-    }
+    };
 
     if (checkedKeys?.length === items?.length) {
         checked = true;
@@ -48,7 +44,7 @@ const TableDiscount = ({ items, dataLoading, handleSort, checkedKeys, setChecked
     }
 
     const handleCheckAll = (value, checked) => {
-        const keys = checked ? items.map(item => item) : [];
+        const keys = checked ? items.map(item => item.id) : [];
         setCheckedKeys(keys);
     };
 
@@ -58,18 +54,18 @@ const TableDiscount = ({ items, dataLoading, handleSort, checkedKeys, setChecked
     };
 
     const rowClick = (rowData) => {
-        if (checkedKeys.length == 1 && checkedKeys.includes(rowData)) {
+        if (checkedKeys.length === 1 && checkedKeys.includes(rowData.id)) {
             setCheckedKeys([]);
-            return;
+        } else {
+            setCheckedKeys([rowData.id]);
         }
-        setCheckedKeys([rowData]);
-    }
+    };
 
     return (
         <div className='flex flex-col gap-2 w-full'>
             <div className='flex justify-between md:items-center items-start'>
                 <div className='flex gap-2 items-center md:flex-row flex-col'>
-                    <div className='text-lg font-semibold px-2'>Discounts</div>
+                    <div className='text-lg font-semibold px-2'>Addresses</div>
                     <Toolbar checkedKeys={checkedKeys} deleteClick={onMultyDelete} />
                 </div>
                 <InputGroup className='ml-4 max-w-[300px]'>
@@ -104,42 +100,26 @@ const TableDiscount = ({ items, dataLoading, handleSort, checkedKeys, setChecked
                     </HeaderCell>
                     <CheckCell dataKey="id" checkedKeys={checkedKeys} onChange={handleCheck} />
                 </Column>
-                <Column width={320} fullText sortable>
+                <Column width={150}>
                     <HeaderCell>Name</HeaderCell>
                     <BaseCell dataKey='name' />
                 </Column>
-                <Column width={180}>
-                    <HeaderCell className='text-center'>Min</HeaderCell>
-                    <DiscountValueCell dataKey="min_price" condition={false} />
-                </Column>
-                <Column width={180}>
-                    <HeaderCell className='text-center'>Max</HeaderCell>
-                    <DiscountValueCell dataKey="max_price" condition={false} />
-                </Column>
-                <Column width={150}>
-                    <HeaderCell className='text-center'>Image</HeaderCell>
-                    <ImageCell dataKey={["image_url"]} className='h-[36px] w-[48px]' />
+                <Column width={200}>
+                    <HeaderCell>Content</HeaderCell>
+                    <BaseCell dataKey='content' />
                 </Column>
                 <Column width={120}>
-                    <HeaderCell className='text-center'>Status</HeaderCell>
-                    <ConstantCell dataKey="status" constant={DiscountStatus} colors={['green', 'red']} />
+                    <HeaderCell className='text-center'>Default</HeaderCell>
+                    <ConstantCell dataKey="default" constant={TrueFalseStatus} colors={['red', 'green']} />
                 </Column>
-                <Column width={120}>
-                    <HeaderCell className='text-center'>Condition</HeaderCell>
-                    <ConstantCell dataKey="condition" constant={DiscountCondition} colors={['gray', 'yellow']} />
+                <Column width={200}>
+                    <HeaderCell>Detail</HeaderCell>
+                    <BaseCell dataKey='detail' />
                 </Column>
-                <Column width={120}>
-                    <HeaderCell className='text-center'>Subject</HeaderCell>
-                    <ConstantCell dataKey="subject" constant={DiscountSubject} colors={['gray', 'blue']} />
-                </Column>
-                <Column width={180}>
-                    <HeaderCell className='text-center'>Value</HeaderCell>
-                    <DiscountValueCell dataKey="value" condition='condition' />
-                </Column>
-                <Column width={150}>
-                    <HeaderCell className='text-center'>Ended at</HeaderCell>
-                    <DateTimeCell dataKey="ended_at" />
-                </Column>
+                {/* <Column width={200}>
+                    <HeaderCell>URL</HeaderCell>
+                    <BaseCell dataKey='url' />
+                </Column> */}
                 <Column width={90}>
                     <HeaderCell className='text-center'>Action</HeaderCell>
                     <ActionCell onEdit={onEdit} onDelete={onDelete} />
@@ -147,5 +127,6 @@ const TableDiscount = ({ items, dataLoading, handleSort, checkedKeys, setChecked
             </Table>
         </div>
     );
-}
-export default TableDiscount
+};
+
+export default TableAddress;

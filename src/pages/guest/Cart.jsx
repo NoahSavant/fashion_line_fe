@@ -1,133 +1,151 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
-import { InputNumber, Button, Divider, IconButton, SelectPicker, RadioGroup, Radio, Input } from 'rsuite';
+import { InputNumber, Button, Divider, IconButton, SelectPicker, RadioGroup, Radio, Input, Checkbox, MaskedInput } from 'rsuite';
 import { IoCloseOutline } from '@/components/icons.js';
 import { Loading } from '@/components';
-
-const fakeCartData = {
-    items: [
-        {
-            id: 1,
-            name: "Áo Thun Nam Họa Tiết Thêu Nổi Awesome Bear",
-            price: 150000,
-            quantity: 2,
-            image_url: "https://res.cloudinary.com/dvcdmxgyk/image/upload/v1720271150/files/os5ijvjlp7wivwxcfllt.jpg"
-        },
-        {
-            id: 2,
-            name: "Áo Polo AIRism (Kẻ Sọc)",
-            price: 20000,
-            quantity: 1,
-            image_url: "https://res.cloudinary.com/dvcdmxgyk/image/upload/v1720322783/files/odpnn2glluuaplouqkzy.jpg"
-        },
-        {
-            id: 3,
-            name: "Quần Jeans Nam Slimfit Coolmax All Season",
-            price: 250000,
-            quantity: 3,
-            image_url: "https://res.cloudinary.com/dvcdmxgyk/image/upload/v1720354216/files/mz7fjtg03xzw2vgknneq.jpg"
-        }
-    ],
-};
-
-const fakeAddresses = [
-    { label: 'Vận chuyển 7 ngày', value: 'address1', shippingCost: 30000 },
-    { label: 'Vận chuyển nhanh 3 ngày', value: 'address2', shippingCost: 50000 },
-];
-
-const fakeDiscountCodes = [
-    { label: 'Giảm giá 10%', value: 0.1 },
-    { label: 'Giảm giá 20%', value: 0.2 },
-];
-
-const fakeShippingDiscountCodes = [
-    { label: 'Giảm giá vận chuyển 5%', value: 0.05 },
-    { label: 'Giảm giá vận chuyển 10%', value: 0.1 },
-];
+import { CartContext } from "@/contexts/CartContext";
+import SelectedAddress from '@/components/selects/SelectAddress';
+import SelectedDiscount from '@/components/selects/SelectDiscount';
+import { useApi } from '@/hooks';
+import { orderEndpoints } from '@/apis';
 
 const Cart = () => {
     const navigate = useNavigate();
-    const [cartData, setCartData] = useState(null);
-    const [cartLoading, setCartLoading] = useState(true);
-    const [selectedAddress, setSelectedAddress] = useState(null);
-    const [paymentMethod, setPaymentMethod] = useState('cash');
-    const [orderDiscountCode, setOrderDiscountCode] = useState(0);
-    const [shippingDiscountCode, setShippingDiscountCode] = useState(0);
-    const [orderNotes, setOrderNotes] = useState('');
-    const [totalPrice, setTotalPrice] = useState(0);
-    const [shippingCost, setShippingCost] = useState(0);
-    const [orderDiscount, setOrderDiscount] = useState(0);
-    const [shippingDiscount, setShippingDiscount] = useState(0);
-    const [deliveryTime, setDeliveryTime] = useState('');
+    const [cartData, setCartData] = useState([]);
+    const [order, setOrder] = useState({
+        transportation_method: 0,
+        product_price: 0,
+        transport_price: 30000,
+        product_discount: '',
+        transport_discount: null,
+        payment_method: 0,
+        status: '',
+        phonenumber: '',
+        address: '',
+        note: '',
+        address_link: ''
+    });
+
+    const { cartItems, confirmDeleteCartItems, deleteCartItemLoading, setFetchCart } = useContext(CartContext);
+    const { data: createOrderData, callApi: handleCreateOrder, loading: createOrderLoading } = useApi();
 
     useEffect(() => {
-        // Simulate an API call
-        setTimeout(() => {
-            setCartData(fakeCartData);
-            setTotalPrice(fakeCartData.total);
-            setCartLoading(false);
-        }, 1000);
-    }, []);
+        const updatedCartData = cartItems.map(item => ({
+            ...item,
+            checked: false
+        }));
+        setCartData(updatedCartData);
+    }, [cartItems]);
 
-    const updateQuantity = (itemId, quantity) => {
-        const updatedItems = cartData.items.map(item =>
-            item.id === itemId ? { ...item, quantity } : item
-        );
-        const updatedTotal = updatedItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-        setCartData({ items: updatedItems, total: updatedTotal });
-        calculateTotal(updatedTotal, shippingCost, orderDiscount, shippingDiscount);
+    useEffect(() => {
+        if (!createOrderData?.successMessage) return;
+        setFetchCart(true);
+        window.open(`/order-detail?id=${createOrderData?.data?.id}`);
+    }, [createOrderData]);
+
+    const handleCheck = (index, value) => {
+        console.log(value);
+        setCartData(prevCartData => {
+            const newCartData = [...prevCartData];
+            newCartData[index].checked = !value;
+            return newCartData;
+        })
     };
 
-    const removeItem = (itemId) => {
-        const updatedItems = cartData.items.filter(item => item.id !== itemId);
-        const updatedTotal = updatedItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-        setCartData({ items: updatedItems, total: updatedTotal });
-        calculateTotal(updatedTotal, shippingCost, orderDiscount, shippingDiscount);
+    const getItemPrice = (id) => {
+        const item = cartData.find(item => item.id == id);
+        return item ? item.variant.price * item.amount : 0;
     };
 
-    const applyDiscount = () => {
-        const orderDiscountCodeObj = fakeDiscountCodes.find(code => code.value === orderDiscountCode);
-        const shippingDiscountCodeObj = fakeShippingDiscountCodes.find(code => code.value === shippingDiscountCode);
+    const getAllItemPrice = () => {
+        let totalPrice = 0;
+        cartData.forEach(item => {
+            if(item.checked) {
+                totalPrice += item.variant.price * item.amount;
+            }   
+        });
+        return totalPrice;
+    }
 
-        const orderDiscountAmount = orderDiscountCodeObj ? orderDiscountCodeObj.discount * cartData.total : 0;
-        const shippingDiscountAmount = shippingDiscountCodeObj ? shippingDiscountCodeObj.discount * shippingCost : 0;
+    const getProductPrice = () => {
+        return getAllItemPrice() - calculateDiscountedPrice(getAllItemPrice(), getAllItemPrice(), order.product_discount);
+    }
 
-        setOrderDiscount(orderDiscountAmount);
-        setShippingDiscount(shippingDiscountAmount);
+    const totalTransportFee = () => {
+        return order.transport_price - calculateDiscountedPrice(getAllItemPrice(), order.transport_price, order.transport_discount);
+    }
 
-        calculateTotal(cartData.total, shippingCost, orderDiscountAmount, shippingDiscountAmount);
-    };
-
-    const calculateTotal = (cartTotal, shippingCost, orderDiscount, shippingDiscount) => {
-        const discountedShippingCost = shippingCost - shippingDiscount;
-        const discountedOrderTotal = cartTotal - orderDiscount;
-        const finalTotal = discountedOrderTotal + discountedShippingCost;
-        setTotalPrice(finalTotal);
-    };
-
-    const handleAddressChange = (value) => {
-        const selected = fakeAddresses.find(address => address.value === value);
-        setSelectedAddress(value);
-        setShippingCost(selected ? selected.shippingCost : 0);
-        calculateTotal(cartData.total, selected ? selected.shippingCost : 0, orderDiscount, shippingDiscount);
-    };
-
-    const handleDeliveryTypeChange = (value) => {
-        // Assume delivery time based on selected value
-        if (value === 'express') {
-            setDeliveryTime('3 ngày giao hàng nhanh');
-        } else if (value === 'standard') {
-            setDeliveryTime('7 ngày giao hàng thường');
-        }
-    };
+    const total = () => {
+        return getProductPrice() + totalTransportFee();
+    }
 
     const toThousands = (value) => {
         return value ? `${value}`.replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&.') : value;
     }
 
-    if (cartLoading) {
-        return <Loading />;
+    const handleOrder = () => {
+        handleCreateOrder(orderEndpoints.create, {
+            method: "POST",
+            data: {
+                total_price: total(),
+                transportation_method: order.transportation_method,
+                product_price: getProductPrice(),
+                transport_price: totalTransportFee(),
+                product_discount: calculateDiscountedPrice(getAllItemPrice(), getAllItemPrice(), order.product_discount),
+                transport_discount: calculateDiscountedPrice(getAllItemPrice(), order.transport_price, order.transport_discount),
+                payment_method: order.payment_method,
+                phonenumber: order.phonenumber,
+                address: order.address
+                    ? order.address.content
+                        ? order.address.detail
+                            ? `${order.address.content} (${order.address.detail})`
+                            : order.address.content
+                        : ''
+                    : '',
+                note: order.note,
+                address_link: order.address?.url,
+                orderItems: cartData
+                    .filter(item => item.checked)
+                    .map(item => {
+                        return { id: item.id, amount: item.amount };
+                    })
+            }
+        })
     }
+
+    const calculateDiscountedPrice = (order_price, price, discount) => {
+        if(!discount) return 0;
+        const { min_price, value, condition, max_price } = discount;
+
+        if (order_price < min_price) {
+            return 0;
+        }
+
+        let discountedPrice = price;
+        let discountAmount = 0;
+
+        if (condition === 0) {
+            discountAmount = value;
+        } else if (condition === 1) {
+            discountAmount = (value / 100) * price;
+        } else {
+            return 0;
+        }
+
+        if (max_price > 0 && discountAmount > max_price) {
+            discountAmount = max_price;
+        }
+
+        if (discountAmount > discountedPrice) {
+            discountAmount = discountedPrice;
+        }
+
+        if (discountAmount < 0) {
+            discountAmount = 0;
+        }
+
+        return discountAmount;
+    };
 
     return (
         <div className='custom-padding flex flex-col'>
@@ -141,112 +159,204 @@ const Cart = () => {
                 </div>
             </div>
 
-            {cartData && cartData.items.length > 0 ? (
-                <div>
-                    {cartData.items.map(item => (
-                        <div key={item.id} className='flex justify-between items-center p-4 border-b gap-5'>
-                            <img src={item.image_url} alt={item.name} className='w-20 h-20 object-cover' />
-                            <div className='flex-1 ml-4'>
-                                <div className='text-lg font-medium whitespace-nowrap'>{item.name}</div>
-                                <div className='text-gray-500'>{toThousands(item.price)}đ̲</div>
-                            </div>
-                            <InputNumber
-                                min={1}
-                                value={item.quantity}
-                                onChange={(value) => updateQuantity(item.id, value)}
-                            />
-                            <div className='text-lg font-medium ml-4'>{toThousands(item.price * item.quantity)}đ̲</div>
-                            <IconButton
-                                icon={<IoCloseOutline />}
-                                appearance="subtle"
-                                onClick={() => removeItem(item.id)}
-                            />
+            {cartData.length > 0 ? (
+                <div className='flex flex-col gap-5'>
+                    <div className='flex flex-col gap-10'>
+                        <div className='flex flex-col gap-5'>
+                            {cartData.map((item, index) => (
+                                <div key={item.id} className='flex md:flex-row flex-col justify-between items-center p-4 border-b gap-5'>
+                                    <div className='flex gap-5'>
+                                        <img src={item.variant.product_color.image_url} alt={item.variant.product.name} className='w-36 h-36 object-cover' />
+                                        <div className='flex-1 ml-4'>
+                                            <h3 className="text-lg font-bold text-sapphire">{item.variant.product.name}</h3>
+                                            <div className="text-base text-boston_blue font-bold line-clamp-1">
+                                                <span className="line-through text-gray-400 font-normal text-xs">
+                                                    {item.variant.original_price > 0 ? item.variant.original_price.toLocaleString('de-DE') + 'đ̲ ' : ''}
+                                                </span>
+                                                {item.variant.price.toLocaleString('de-DE')}đ̲
+                                            </div>
+                                            <div className='flex flex-col'>
+                                                <div className='text-sm font-medium'>Kích cỡ: {item.variant.product_size.size}</div>
+                                                <div className='text-sm font-medium'>Màu sắc: {item.variant.product_color.color}</div>
+                                            </div>
+                                            <div className='flex md:flex-row flex-col gap-2 md:items-center'>
+                                                <div className='text-sm font-medium'>Số lượng</div>
+                                                <InputNumber
+                                                    postfix={item.variant.stock_limit ? '/' + item.variant.stock : ''}
+                                                    max={item.variant.stock_limit ? item.variant.stock : undefined}
+                                                    value={item.amount}
+                                                    onChange={(value) => setCartData(prevCartData => {
+                                                        const newCartData = [...prevCartData];
+                                                        newCartData[index].amount = Math.ceil(value);
+                                                        return newCartData;
+                                                    })}
+                                                    min={1}
+                                                    className='w-36'
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className='flex gap-5 items-center'>
+                                        <div className='flex gap-3'>
+                                            <div className='text-lg font-medium md:hidden'>Tổng: </div>
+                                            <div className='text-lg font-medium'>{toThousands(getItemPrice(item.id))}đ̲</div>
+                                        </div>
+                                        <div className="cursor-pointer px-2 py-1 bg-red-600 rounded-md justify-center items-center flex p-btn gap-2 shadow-full w-fit" onClick={() => confirmDeleteCartItems([item.id])}>
+                                            {deleteCartItemLoading && <Loading size={15} />}
+                                            <div className="text-white text-sm font-normal capitalize leading-normal">Xóa</div>
+                                        </div>
+                                        <Checkbox value={item.checked} onChange={(value) => handleCheck(index, value)}></Checkbox>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                    <Divider />
-                    <div className='mb-4'>
-                        <Input
-                            as="textarea"
-                            rows={3}
-                            placeholder="Ghi chú đơn hàng"
-                            value={orderNotes}
-                            onChange={value => setOrderNotes(value)}
-                            block
-                        />
+                        <div className='flex flex-col gap-5'>
+                            <div className='flex flex-col gap-1.5'>
+                                <div className='flex justify-between'>
+                                    <div className='text-lg font-medium'>Tổng giá sản phẩm:</div>
+                                    <div className='text-lg font-medium'>{getAllItemPrice().toLocaleString('de-DE')}đ̲</div>
+                                </div>
+                            </div>
+                            <div className='flex flex-col gap-1.5'>
+                                <label>Mã giảm giá đơn hàng</label>
+                                <div className='flex flex-col gap-3'>
+                                    <div className='grid grid-cols-2 gap-5 items-center'>
+                                        <SelectedDiscount onChange={(value) => setOrder({ ...order, product_discount: value })} subject={0} />
+                                        <div className='flex justify-end'>
+                                            <div className='text-lg font-medium'>-{toThousands(calculateDiscountedPrice(getAllItemPrice(), getAllItemPrice(), order.product_discount))}đ̲</div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='flex flex-col gap-1.5'>
+                                <div className='flex justify-between'>
+                                    <div className='text-lg font-medium'>Tổng:</div>
+                                    <div className='text-lg font-medium'>{toThousands(getProductPrice())}đ̲</div>
+                                </div>
+                            </div>
+
+                            <Divider />
+                            <div className='flex flex-col gap-1.5'>
+                                <label>Địa chỉ giao hàng</label>
+                                <SelectedAddress onChange={(value) => setOrder({ ...order, address: value })}/>
+                            </div>
+                            <Divider />
+                            
+                            <div className='flex flex-col gap-5'>
+                                <div className='flex flex-col gap-1.5'>
+                                    <label>Phương thức giao hàng</label>
+                                    <div className='flex flex-col gap-3'>
+                                        <div className='grid grid-cols-2 gap-5 items-center'>
+                                            <SelectPicker
+                                                className={`w-full h-full`}
+                                                data={[
+                                                    {
+                                                        label: "Giao hàng 5 ngày",
+                                                        value: 0
+                                                    },
+                                                    {
+                                                        label: "Giao hàng nhanh 3 ngày",
+                                                        value: 1
+                                                    }
+                                                ]}
+                                                value={order.transportation_method}
+                                                onChange={(value) => setOrder({ ...order, transportation_method: value, transport_price: 30000 + value * 20000 })}
+                                                defaultValue={0}
+                                                onClean={() => setOrder({ ...order, transportation_method: 0, transport_price: 30000 })}
+                                            />
+                                            <div className='flex justify-end'>
+                                                <div className='text-lg font-medium'>{toThousands(order.transport_price)}đ̲</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='flex flex-col gap-1.5'>
+                                    <label>Mã giảm giá giao hàng</label>
+                                    <div className='flex flex-col gap-3'>
+                                        <div className='grid grid-cols-2 gap-5 items-center'>
+                                            <SelectedDiscount onChange={(value) => setOrder({ ...order, transport_discount: value })} subject={1} />
+                                            <div className='flex justify-end'>
+                                                <div className='text-lg font-medium'>-{toThousands(calculateDiscountedPrice(getAllItemPrice(), order.transport_price, order.transport_discount))}đ̲</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='flex flex-col gap-1.5'>
+                                    <div className='flex justify-between'>
+                                        <div className='text-lg font-medium'>Tổng:</div>
+                                        <div className='text-lg font-medium'>{toThousands(totalTransportFee())}đ̲</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <Divider />
+                            <div className='flex flex-col gap-1.5'>
+                                <div className='flex justify-between'>
+                                    <div className="text-lg text-boston_blue font-bold line-clamp-1">
+                                        Tổng:
+                                    </div>
+                                    <div className="text-lg text-boston_blue font-bold line-clamp-1">
+                                        {toThousands(total())}đ̲
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='flex flex-col gap-1.5'>
+                                <label>Ghi chú đơn hàng</label>
+                                <Input
+                                    as="textarea"
+                                    rows={3}
+                                    placeholder="Ghi chú đơn hàng"
+                                    value={order.note}
+                                    onChange={(value) => setOrder({ ...order, note: value })}
+                                    block
+                                />
+                            </div>
+                            <div className='grid md:grid-cols-2 grid-cols-1 gap-5'>
+                                <div className='flex flex-col gap-1.5'>
+                                    <label>Số điện thoại</label>
+                                    <MaskedInput
+                                        value={order?.phonenumber}
+                                        onChange={(value) => setOrder({ ...order, phonenumber: value })}
+                                        mask={[/\d/, /\d/, /\d/, /\d/, ' ', /\d/, /\d/, /\d/, ' ', /\d/, /\d/, /\d/]}
+                                        guide={true}
+                                        showMask={false}
+                                        keepCharPositions={true}
+                                        placeholder="Số điện thoại"
+                                    />
+                                </div>
+                                <div className='flex flex-col gap-1.5'>
+                                    <label>Phương thức thanh toán</label>
+                                    <SelectPicker
+                                        className={`w-full h-full`}
+                                        data={[
+                                            {
+                                                label: "Thanh toán khi nhận hàng",
+                                                value: 0
+                                            },
+                                            {
+                                                label: "Thanh toán qua ngân hàng",
+                                                value: 1
+                                            }
+                                        ]}
+                                        value={order.payment_method}
+                                        onChange={(value) => setOrder({ ...order, payment_method: value })}
+                                        defaultValue={0}
+                                        onClean={() => setOrder({ ...order, payment_method: 0 })}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    
                     <Divider />
-                    <div className='p-4'>
-                        <div className='flex justify-between items-center mb-2'>
-                            <SelectPicker
-                                data={fakeAddresses}
-                                placeholder="Chọn địa chỉ"
-                                onChange={handleAddressChange}
-                                block
-                            />
-                            <div className='text-base font-medium flex justify-between w-[190px]'>
-                                <div>Phí vận chuyển:</div>
-                                <div>{toThousands(shippingCost)}đ̲</div>
-                            </div>
+                    <div className='flex justify-end'>
+                        <div className="cursor-pointer px-4 py-2 bg-sapphire rounded-md justify-center items-center flex p-btn gap-2 shadow-full w-fit" onClick={handleOrder}>
+                            {createOrderLoading && <Loading size={20} />}
+                            <div className="text-white text-sm font-normal capitalize leading-normal">Đặt hàng ngay</div>
                         </div>
-                        <div className='flex justify-between items-center mb-2'>
-                            <SelectPicker
-                                data={fakeShippingDiscountCodes}
-                                placeholder="Chọn mã giảm giá vận chuyển"
-                                onChange={value => setShippingDiscountCode(value)}
-                                block
-                            />
-                            <div className='text-base font-medium flex justify-between w-[190px]'>
-                                <div>Giảm giá:</div>
-                                <div>-{toThousands(shippingDiscountCode * shippingCost)}đ̲</div>
-                            </div>
-                        </div>
-                        <div className='flex justify-between items-center mb-2'>
-                            <div className='text-base font-medium'>Tổng:</div>
-                            <div className='text-base font-medium'>
-                                <div>{toThousands(shippingCost - shippingDiscountCode * shippingCost)}đ̲</div>
-                            </div>
-                        </div>
-                        <Divider />
-                        <div className='flex justify-between items-center mb-2'>
-                            <div className='text-base font-medium'>Đơn hàng:</div>
-                            <div className='text-base font-medium'>
-                                <div>{toThousands(cartData.items.reduce((acc, item) => {
-                                    return acc + (item.price * item.quantity);
-                                }, 0))}đ̲</div>
-                            </div>
-                        </div>
-                        <div className='flex justify-between items-center mb-2'>
-                            <SelectPicker
-                                data={fakeDiscountCodes}
-                                placeholder="Chọn mã giảm giá đơn hàng"
-                                onChange={value => setOrderDiscountCode(value)}
-                                block
-                            />
-                            <div className='text-base font-medium flex justify-between w-[190px]'>
-                                <div>Giảm giá:</div>
-                                <div>-{toThousands(orderDiscountCode * cartData.items.reduce((acc, item) => {
-                                    return acc + (item.price * item.quantity);
-                                }, 0))}đ̲</div>
-                            </div>
-                        </div>
-                        <div className='flex justify-between items-center mb-2'>
-                            <div className='text-base font-medium'>Tổng:</div>
-                            <div className='text-base font-medium'>
-                                <div>{toThousands((1 - orderDiscountCode) * cartData.items.reduce((acc, item) => {
-                                    return acc + (item.price * item.quantity);
-                                }, 0))}đ̲</div>
-                            </div>
-                        </div>
-                        <Divider />
-                        <div className='flex justify-between items-center mt-2'>
-                            <div className='text-lg font-bold'>Tổng tiền:</div>
-                            <div className='text-lg font-bold'>{toThousands((1 - orderDiscountCode) * cartData.items.reduce((acc, item) => {
-                                return acc + (item.price * item.quantity);
-                            }, 0) + shippingCost - shippingDiscountCode * shippingCost)}đ̲</div>
-                        </div>
-                        <Divider />
-                        <Button appearance="primary">Hoàn tất đơn hàng</Button>
                     </div>
+                    
                 </div>
             ) : (
                 <div className='flex items-center justify-center h-48'>

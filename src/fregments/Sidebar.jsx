@@ -10,7 +10,8 @@ import {
     FaBookBookmark,
     RiPagesLine,
     RiDashboardFill,
-    HiCollection
+    HiCollection,
+    RiBillFill
 } from '@/components/icons.js';
 import { logo_image, icon } from '@/assets/images'
 import { getCurrentPath } from '@/helpers/pathHelper';
@@ -66,19 +67,22 @@ const Sidebar = ({ expanded, setExpand }) => {
                         <Nav.Item active={activeKey('/m/blog')} icon={<FaBookBookmark className="rs-icon" />} onClick={() => navigate('/m/blog')}>
                             Blog
                         </Nav.Item>
-                        <Nav.Item active={activeKey('/m/contact')} icon={<IoMdContacts className="rs-icon" />} onClick={() => navigate('/m/contact')}>
-                            Contact
+                        <Nav.Item active={activeKey('/m/order')} icon={<RiBillFill className="rs-icon" />} onClick={() => navigate('/m/order')}>
+                            Order
                         </Nav.Item>
+                        {/* <Nav.Item active={activeKey('/m/contact')} icon={<IoMdContacts className="rs-icon" />} onClick={() => navigate('/m/contact')}>
+                            Contact
+                        </Nav.Item> */}
                         <Nav.Menu eventKey="resources" title="Resource" icon={<GrResources className="rs-icon" />} className={`${activeKey('/m/resource') ? 'active-nav': ''}`}>
                             <Nav.Item active={activeKey('/m/resource/tag')} onClick={() => navigate('/m/resource/tag')}>Tag</Nav.Item>
                             <Nav.Item active={activeKey('/m/resource/category')} onClick={() => navigate('/m/resource/category')}>Category</Nav.Item>
                             <Nav.Item active={activeKey('/m/resource/discount')} onClick={() => navigate('/m/resource/discount')}>Discount</Nav.Item>
                         </Nav.Menu>
-                        <Nav.Menu title="Page content" icon={<RiPagesLine className="rs-icon" />} className={`${activeKey('/m/page') ? 'active-nav' : ''}`}>
+                        {/* <Nav.Menu title="Page content" icon={<RiPagesLine className="rs-icon" />} className={`${activeKey('/m/page') ? 'active-nav' : ''}`}>
                             <Nav.Item active={activeKey('/m/resource/tag')} onClick={() => navigate('/m/resource/tag')}>Tag</Nav.Item>
                             <Nav.Item active={activeKey('/m/resource/category')} onClick={() => navigate('/m/resource/category')}>Category</Nav.Item>
                             <Nav.Item active={activeKey('/m/resource/brand')} onClick={() => navigate('/m/resource/brand')}>Brand</Nav.Item>
-                        </Nav.Menu>
+                        </Nav.Menu> */}
                     </Nav>
                 </Sidenav.Body>
                 <Sidenav.Toggle onToggle={setExpand} />

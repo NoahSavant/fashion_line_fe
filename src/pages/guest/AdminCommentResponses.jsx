@@ -37,7 +37,7 @@ const AdminCommentResponses = () => {
     }
 
     return (
-        <div className='flex flex-col'>
+        <div className='flex flex-col custom-padding'>
             {comments.length > 0 ? (
                 <div>
                     {comments.map(comment => (

@@ -54,10 +54,11 @@ const MDiscount = () => {
         condition: DiscountCondition.AMOUNT,
         value: 0,
         max_price: 0,
+        min_price: 0,
         status: DiscountStatus.OPEN,
         started_at: newDate,
         ended_at: getFinishTime(newDate),
-        image_url: ''
+        image_url: null
     }
 
     const [discount, setDiscount] = useState(defaultDiscount);
@@ -71,6 +72,7 @@ const MDiscount = () => {
     useEffect(() => {
         if (deleteDiscountsData?.successMessage || editDiscountData?.successMessage)
         setFetchDiscount(true);
+        setEditData(null);
     }, [deleteDiscountsData, editDiscountData]);
 
     useEffect(() => {
@@ -98,6 +100,7 @@ const MDiscount = () => {
         formData.append('condition', discount.condition);
         formData.append('value', discount.value);
         formData.append('max_price', discount.max_price);
+        formData.append('min_price', discount.min_price);
         formData.append('status', discount.status);
         formData.append('started_at', discount.started_at.toISOString()); 
         formData.append('ended_at', discount.ended_at.toISOString());
@@ -147,6 +150,7 @@ const MDiscount = () => {
         formData.append('condition', editData.condition);
         formData.append('value', editData.value);
         formData.append('max_price', editData.max_price);
+        formData.append('min_price', editData.min_price);
         formData.append('status', editData.status);
         formData.append('started_at', editData.started_at);
         formData.append('ended_at', editData.ended_at);
@@ -206,6 +210,11 @@ const MDiscount = () => {
                                 onChange={(value) => setEditData({ ...editData, max_price: value })} />
                         </div>
                         <div className='flex flex-col gap-1.5 w-full'>
+                            <label>Min Price</label>
+                            <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={editData?.min_price}
+                                onChange={(value) => setEditData({ ...editData, min_price: value })} />
+                        </div>
+                        <div className='flex flex-col gap-1.5 w-full'>
                             <label>Start Date</label>
                             <SelectDateTime
                                 value={new Date(editData?.started_at)}
@@ -222,7 +231,7 @@ const MDiscount = () => {
                         </div>
                         <div className='flex flex-col gap-1.5 w-full'>
                             <label>Image</label>
-                            <UploadFile className='w-[80px] h-[px]' values={[editData?.image_url]} number={1} setValues={(value) => setEditData({ ...editData, image: value[0] })} />
+                            <UploadFile className='w-[80px] h-[px]' values={editData?.image_url} number={1} setValues={(value) => setEditData({ ...editData, image: value[0] })} />
                         </div>
                     </div>
                 </Modal.Body>
@@ -283,6 +292,11 @@ const MDiscount = () => {
                                 onChange={(value) => setDiscount({ ...discount, max_price: value })} />
                         </div>
                         <div className='flex flex-col gap-1.5 w-full'>
+                            <label>Min Price</label>
+                            <InputNumber postfix='đ̲' min={0} formatter={toThousands} value={discount.min_price}
+                                onChange={(value) => setDiscount({ ...discount, min_price: value })} />
+                        </div>
+                        <div className='flex flex-col gap-1.5 w-full'>
                             <label>Start Date</label>
                             <SelectDateTime
                                 value={discount.started_at}
@@ -299,7 +313,7 @@ const MDiscount = () => {
                         </div>
                         <div className='flex flex-col gap-1.5 w-full'>
                             <label>Image</label>
-                            <UploadFile className='w-[80px] h-[px]' values={[]} number={1} setValues={(value) => setDiscount({ ...discount, image: value[0] })} />
+                            <UploadFile reset={true} className='w-[80px] h-[px]' values={discount.image_url} number={1} setValues={(value) => setDiscount({ ...discount, image: value[0] })} />
                         </div>
                     </div>
                     <div className='w-full flex justify-end'>

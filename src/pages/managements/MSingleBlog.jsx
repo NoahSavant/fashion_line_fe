@@ -13,7 +13,8 @@ import { Loading } from '@/components';
 import { useSearchParams } from "react-router-dom";
 import { getIds } from '@/helpers/dataHelpers';
 import { ClassicEditor } from "@/components/inputs";
-
+import { Comments } from '../guest/components';
+import CommentType from '@/constants/CommentType';
 
 const MSingleBlog = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -173,6 +174,12 @@ const MSingleBlog = () => {
                     </div>
                 </div>
             </div>
+            {
+                id &&
+                <div className="py-10">
+                    <Comments id={id} type={CommentType.BLOG} />
+                </div>
+            }
         </div>
     );
 };

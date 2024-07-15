@@ -22,7 +22,7 @@ const Filter = ({filter, setFilter, filterClick}) => {
         <div className='p-3 bg-white flex flex-col gap-4'>
             <div className="text-white cursor-pointer px-3 py-2 bg-sapphire rounded-md justify-center items-center flex p-btn gap-2 w-full" onClick={filterClick}>
                 <FunnelIcon />
-                <div className="text-sm font-normal capitalize leading-normal">Filter now</div>
+                <div className="text-sm font-normal capitalize leading-normal">Tìm ngay</div>
             </div>
             <Input className='max-w-[700px] shadow-full' placeholder='Search...' value={filter.search} onChange={(value) => setFilter({ ...filter, search: value})}/>
             <div className='flex gap-2'>
@@ -57,7 +57,7 @@ const Filter = ({filter, setFilter, filterClick}) => {
                         </svg>
                     </div>
                     <div className='w-full h-0.5 bg-slate-300'></div>
-                    <div className='px-2 bg-white font-medium text-base'>Categories</div>
+                    <div className='px-2 bg-white font-medium text-base text-nowrap'>Danh mục</div>
                     <div className='w-full h-0.5 bg-slate-300'></div>
                 </div>
                 <SelectCategory value={filter.category} setValue={(value) => setFilter({ ...filter, category: value })} single={true} select={false} className={`grid grid-cols-2 px-2 ${setting.categoriesIsOpen ? '' : 'hidden'}`} />
@@ -90,7 +90,7 @@ const Filter = ({filter, setFilter, filterClick}) => {
                         </svg>
                     </div>
                     <div className='w-full h-0.5 bg-slate-300'></div>
-                    <div className='px-2 bg-white font-medium text-base'>Tags</div>
+                    <div className='px-2 bg-white font-medium text-base text-nowrap'>Thẻ</div>
                     <div className='w-full h-0.5 bg-slate-300'></div>
                 </div>
                 <SelectTag value={filter.tags}
@@ -125,7 +125,7 @@ const Filter = ({filter, setFilter, filterClick}) => {
                         </svg>
                     </div>
                     <div className='w-full h-0.5 bg-slate-300'></div>
-                    <div className='px-2 bg-white font-medium text-base'>Collections</div>
+                    <div className='px-2 bg-white font-medium text-base text-nowrap'>Bộ sưu tập</div>
                     <div className='w-full h-0.5 bg-slate-300'></div>
                 </div>
                 <SelectCollection value={filter.collections}
@@ -161,19 +161,19 @@ const Filter = ({filter, setFilter, filterClick}) => {
                         </svg>
                     </div>
                     <div className='w-full h-0.5 bg-slate-300'></div>
-                    <div className='px-2 bg-white font-medium text-base text-nowrap'>Sort</div>
+                    <div className='px-2 bg-white font-medium text-base text-nowrap'>Sắp xếp</div>
                     <div className='w-full h-0.5 bg-slate-300'></div>
                 </div>
                 <div className={`flex flex-col px-2 ${setting.sortIsOpen ? '' : 'hidden'}`}>
                     <RadioGroup name="radio-group-controlled" value={filter.column} onChange={(value) => setFilter({ ...filter, column: value })} className={`grid grid-cols-2 px-2`}>
-                        <Radio value="id">Datetime</Radio>
-                        <Radio value="price">Price</Radio>
-                        <Radio value="name">Name</Radio>
-                        <Radio value="rate">Rate</Radio>
+                        <Radio value="id">Thời gian</Radio>
+                        <Radio value="price">Giá</Radio>
+                        <Radio value="name">Tên</Radio>
+                        <Radio value="average_rate">Đánh giá</Radio>
                     </RadioGroup>
                     <div className='w-full flex gap-2 justify-center items-center'>
                         <div className='w-full h-0.5 bg-slate-300'></div>
-                        <div className='px-2 bg-white font-medium text-base text-nowrap'>Sort Type</div>
+                        <div className='px-2 bg-white font-medium text-base text-nowrap'>Theo</div>
                         <div className='w-full h-0.5 bg-slate-300'></div>
                     </div>
                     <RadioGroup name="radio-group-controlled" value={filter.order} onChange={(value) => setFilter({ ...filter, order: value })} className={`grid grid-cols-2 px-2`}>

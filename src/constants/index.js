@@ -18,3 +18,6 @@ export { default as DiscountType } from './DiscountType'
 export { default as TrueFalseStatus } from './TrueFalseStatus'
 export { default as BlogStatus } from './BlogStatus'
 export { default as UserStatus } from './UserStatus'
+export { default as OrderPaymentMethod } from './OrderPaymentMethod'
+export { default as OrderStatus } from './OrderStatus'
+

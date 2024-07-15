@@ -12,7 +12,8 @@ import {
     MStaff,
     MCustomer,
     MSingleUser,
-    MProfile
+    MProfile, 
+    MOrder
 } from '@/pages/managements'
 
 const ProtectedRoutes = [
@@ -71,6 +72,10 @@ const ProtectedRoutes = [
     {
         path: "profile",
         element: <MProfile />,
+    },
+    {
+        path: "order",
+        element: <MOrder />,
     }
 ]
 

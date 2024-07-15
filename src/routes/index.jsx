@@ -17,9 +17,13 @@ const publicLoader = () => {
 };
 
 const protectedLoader = () => {
-  // if (!getAuthentication()) {
-  //   return redirect("/login");
-  // }
+  if (!getAuthentication()) {
+    return redirect("/login");
+  }
+
+  if (getAuthentication()?.user.role == 2) {
+    return redirect("/");
+  }
   return null;
 };
 
