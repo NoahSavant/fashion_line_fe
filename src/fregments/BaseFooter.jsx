@@ -76,6 +76,7 @@ const BaseFooter = () => {
                                 <a href="/login">Đăng nhập</a>
                                 <a href="/signup">Đăng ký</a>
                                 <a href="/verify-account">Tài khoản</a>
+                                <a href="/size-map">Bảng thông số quần áo</a>
                             </div>
                         </div>
                     </div>
