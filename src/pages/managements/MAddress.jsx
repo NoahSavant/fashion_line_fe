@@ -8,7 +8,7 @@ import { UploadFile } from '@/components/inputs';
 import { Loading } from '@/components';
 import { PopupConfirmContext } from '@/contexts/PopupConfirmContext';
 import { getIds } from '@/helpers/dataHelpers';
-import { MapPicker, SelectCategory, SingleSelect, SelectConstant, MultiSelect } from '@/components/selects'
+import { SelectCategory, SingleSelect, SelectConstant, MultiSelect } from '@/components/selects'
 import { ProductStatus, TrueFalseStatus } from '@/constants';
 
 const MAddress = () => {
