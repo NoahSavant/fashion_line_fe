@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Container,
     Form,
@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { setAuthentication } from '@/helpers/authenHelpers';
 import { InputPassword } from '@/components/inputs';
 import { UserRole } from '@/constants';
+import { CartContext } from '@/contexts/CartContext';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -25,15 +26,19 @@ const Login = () => {
     const [remember, setRemember] = useState(false);
     const navigate = useNavigate();
     const { data, loading, error, callApi: handleLogin } = useApi();
+    const { setFetchCartFirst } = useContext(CartContext);
 
     useEffect(() => {
         if (data) {
             setAuthentication(data);
             if(data.user.role == UserRole.CUSTOMER) {
-                navigate('/');
+                const previousUrl = localStorage.getItem('previousUrl') || '/';
+                navigate(previousUrl);
             } else {
-                navigate('/m');
+                const previousUrl = localStorage.getItem('previousUrl') || '/m';
+                navigate(previousUrl);
             }
+            setFetchCartFirst(true);
         }
     }, [data]);
 

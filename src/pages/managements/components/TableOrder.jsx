@@ -122,7 +122,7 @@ const TableOrder = ({ items, dataLoading, handleSort, checkedKeys, setCheckedKey
                 </Column>
                 <Column width={150} sortable>
                     <HeaderCell className='text-center'>Status</HeaderCell>
-                    <ConstantCell dataKey="status" constant={OrderStatus} colors={['yellow', 'green', 'red']} />
+                    <ConstantCell dataKey="status" constant={OrderStatus} colors={['orange', 'yellow', 'cyan', 'blue', 'green', 'red']} />
                 </Column>
                 <Column width={150} sortable>
                     <HeaderCell className='text-center'>Payment Method</HeaderCell>

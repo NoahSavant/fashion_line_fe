@@ -2,11 +2,11 @@
 import { Outlet } from "react-router-dom";
 import React, { useState } from 'react';
 import { Sidebar, UserHeader } from "@/fregments";
-
+import { useSavePreviousUrl } from "../hooks";
 
 const PublicLayout = () => {
     const [expanded, setExpand] = useState(true);
-
+    useSavePreviousUrl();
     return (
         <div className="flex h-full lg:min-h-[100vh] md:min-h-[1024px] min-h-[935px] relative">
             <div className={`${expanded ? 'lg:w-72' : 'lg:w-14'} w-14 transform transition-all duration-200 ease-in-out`}></div>

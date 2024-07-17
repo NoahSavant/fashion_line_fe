@@ -11,7 +11,6 @@ import React, { useEffect } from 'react';
 import { CartContextProvider } from '@/contexts/CartContext';
 import { PopupConfirmContextProvider } from '@/contexts/PopupConfirmContext';
 
-
 const App = () => {
   useEffect(() => {
     function getTranslateValues(el) {
@@ -128,7 +127,6 @@ const App = () => {
   }, []);
   
   return (
-    <>
       <PopupConfirmContextProvider>
         <CartContextProvider>
           <RouterProvider router={router} />
@@ -139,8 +137,7 @@ const App = () => {
             pauseOnHover
           />
         </CartContextProvider>
-      </PopupConfirmContextProvider> 
-    </>
+      </PopupConfirmContextProvider>
   );
 }
 

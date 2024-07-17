@@ -4,7 +4,7 @@ import { getConstantData, getConstantTitle } from '@/helpers/constantHelpers';
 import { Input, Modal, Button, DatePicker, InputNumber, MaskedInput, SelectPicker } from "rsuite";
 import { userEndpoints, orderEndpoints } from '@/apis';
 import { useApi } from '@/hooks';
-import { UserStatus, Gender, UserRole } from '@/constants';
+import { UserStatus, Gender, UserRole, OrderStatus } from '@/constants';
 import { UploadFile } from '@/components/inputs';
 import { PopupConfirmContext } from '@/contexts/PopupConfirmContext';
 import { Loading } from '@/components';
@@ -141,6 +141,11 @@ const BaseProfile = () => {
     const [fetchOrder, setFetchOrder] = useState(true);
     const { data: orderData, callApi: handleGetOrder, loading: orderLoading } = useApi();
     const { data: editOrderData, callApi: handleEditOrder, loading: editOrderLoading } = useApi();
+    
+    useEffect(() => {
+        if (!editOrderData?.successMessage) return;
+        setFetchOrder(true);
+    }, [editOrderData]);
 
     useEffect(() => {
         if (!fetchOrder || !user.id) return;
@@ -157,6 +162,37 @@ const BaseProfile = () => {
     const onSelect = (rowData) => {
         window.open(`/order-detail?id=${rowData.id}`, '_blank');
     }
+
+    const onEditOrder = (rowData) => {
+        if(rowData.status != OrderStatus.SHIPPED) {
+            openConfirmation(()=> {}, [], 'Bạn không thể xác nhận đơn hàng chưa được giao tới');
+        } else {
+            openConfirmation(editOrder, [rowData.id, OrderStatus.SUCCESS, rowData.paid], 'Bạn đã nhận được hàng và muốn xác nhận ?');
+        }
+    }
+
+    const editOrder = (orderId ,status, paid) => {
+        handleEditOrder(
+            orderEndpoints.update + orderId,
+            {
+                method: 'PUT',
+                data: {
+                    status: status,
+                    paid
+                }
+            }
+        );
+    };
+
+    const onDeleteOrder = (rowData) => {
+        if (rowData.status == OrderStatus.SUCCESS) {
+            openConfirmation(() => { }, [], 'Đơn hàng đã hoàn thành không thể hủy');
+        } else if (rowData.status == OrderStatus.CANCEL) {
+            openConfirmation(() => { }, [], 'Đơn hàng đã bị hủy');
+        } else {
+            openConfirmation(editOrder, [rowData.id, OrderStatus.CANCEL, rowData.paid], 'Bạn có chắc muốn hủy đơn hàng này,\n số tiền bạn đã chuyển (nếu có) bị không được hoàn lại ?');
+        }
+    } 
 
     return (
         <div className='lg:p-10 p-5 flex flex-col gap-4'>
@@ -274,12 +310,13 @@ const BaseProfile = () => {
             {
                 user.role == UserRole.CUSTOMER &&
                 <div className='p-5 flex flex-col gap-4'>
+                    {editOrderLoading && <Loading/>}
                     <div className='rounded-md shadow-md bg-white py-2'>
                         <div className='text-lg font-semibold px-2 text-sapphire'>Orders</div>
                     </div>
                     <div className='flex gap-5 lg:flex-row flex-col'>
                         <div className='w-full md:h-[420px] md:p-4 p-2 rounded-md shadow-md bg-white'>
-                            <TableOrder items={orderData?.items} dataLoading={orderLoading} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onSelect={onSelect} />
+                            <TableOrder items={orderData?.items} dataLoading={orderLoading} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onSelect={onSelect} onEdit={onEditOrder} onDelete={onDeleteOrder} />
                             <BasePagination pagination={orderData?.pagination} handlePagination={handlePagination} className='flex md:flex-row flex-col md:gap-0 gap-3' />
                         </div>
                     </div>

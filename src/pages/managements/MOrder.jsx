@@ -64,7 +64,7 @@ const MOrder = ({user_id=0}) => {
     }
 
     const confirmEditOrder = () => {
-        if(order.status < order.old_status) {
+        if(order.status < order.old_status && order.old_status != OrderStatus.PAYING) {
             setOrder({...order, status: order.old_status});
             openConfirmation(() => { }, [], 'Bạn không thể cập nhật trạng thái ngược lại');
         } else {

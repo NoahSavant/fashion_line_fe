@@ -8,6 +8,8 @@ import SelectedAddress from '@/components/selects/SelectAddress';
 import SelectedDiscount from '@/components/selects/SelectDiscount';
 import { useApi } from '@/hooks';
 import { orderEndpoints } from '@/apis';
+import { getAuthentication } from '@/helpers/authenHelpers';
+import { UserRole } from '@/constants';
 
 const Cart = () => {
     const navigate = useNavigate();
@@ -25,6 +27,12 @@ const Cart = () => {
         note: '',
         address_link: ''
     });
+
+    useEffect(() => {
+        if(!getAuthentication() || getAuthentication()?.user?.role !== UserRole.CUSTOMER) {
+            navigate('/m');
+        }
+    }, []);
 
     const { cartItems, confirmDeleteCartItems, deleteCartItemLoading, setFetchCart } = useContext(CartContext);
     const { data: createOrderData, callApi: handleCreateOrder, loading: createOrderLoading } = useApi();

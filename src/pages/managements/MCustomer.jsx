@@ -79,9 +79,9 @@ const MCustomer = () => {
 
     return (
         <div className='p-5 flex flex-col'>
-            <Toolbar deleteClick={() => confirmDeleteUsers(null)} checkedKeys={checkedKeys} />
+            <Toolbar checkedKeys={checkedKeys} />
             <div className='bg-white rounded-md p-1 shadow-md'>
-                <TableUser items={userData?.items} dataLoading={(userLoading || deleteUserLoading)} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onDelete={confirmDeleteUsers} onEdit={onEdit} />
+                <TableUser items={userData?.items} dataLoading={(userLoading || deleteUserLoading)} handleSort={handlePagination} checkedKeys={checkedKeys} setCheckedKeys={setCheckedKeys} onEdit={onEdit} />
                 <BasePagination pagination={userData?.pagination} handlePagination={handlePagination} />
             </div>
         </div>

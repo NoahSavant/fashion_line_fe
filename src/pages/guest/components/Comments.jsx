@@ -141,7 +141,7 @@ const Comments = ({ id, type }) => {
                 <div className="text-sapphire lg:text-4xl md:text-3xl text-2xl font-semibold  leading-[1] text-center">Bình luận</div>
             </div>
             {
-                (user?.role == UserRole.CUSTOMER && !comment.id) &&
+                (user?.role == UserRole.CUSTOMER && !comment.id && commentsData?.comment_right) &&
                 <div className='flex flex-col gap-4'>
                         <h3>Bình luận ngay</h3>
                         <Rate
@@ -169,22 +169,55 @@ const Comments = ({ id, type }) => {
                 (user?.role == UserRole.CUSTOMER && comment.id) &&
                 <div className='flex flex-col gap-4'>
                     <h3>Bình luận của bạn</h3>
-                    <Rate
-                        value={comment.rate}
-                        onChange={(value) => setComment({ ...comment, rate: Math.max(1, value) })}
-                        color="yellow"
-                        allowHalf
-                    />
-                    <Input
-                        as="textarea"
-                        rows={3}
-                        placeholder="Bình luận..."
-                        value={comment.content}
-                        onChange={(value) => setComment({ ...comment, content: value })}
-                    />
+                    {
+                        comment?.replies[0] ? 
+                        <>
+                            <Rate
+                                value={comment.rate}
+                                color="yellow"
+                                allowHalf
+                                readOnly
+                            />
+                            <div className='flex flex-col gap-5'>
+                                <Input
+                                    as="textarea"
+                                    rows={3}
+                                    placeholder="Bình luận..."
+                                    value={comment.content}
+                                    readOnly
+                                />
+                                <div className='flex-1 flex flex-col gap-3 pl-10'>
+                                    <div className='flex md:flex-row flex-col md:items-center gap-3'>
+                                        <div className='flex gap-3 md:justify-center items-center'>
+                                                    <Avatar src={comment.replies[0].user.image_url} circle />
+                                                    <div className='text-lg font-medium'>{comment.replies[0].user.username}</div>
+                                        </div>
+                                    </div>
+                                            <div className='text-gray-500'>{comment.replies[0].content}</div>
+                                </div>
+                            </div>
+                            
+                        </>:
+                        <>
+                            <Rate
+                                value={comment.rate}
+                                onChange={(value) => setComment({ ...comment, rate: Math.max(1, value) })}
+                                color="yellow"
+                                allowHalf
+                            />
+                            <Input
+                                as="textarea"
+                                rows={3}
+                                placeholder="Bình luận..."
+                                value={comment.content}
+                                onChange={(value) => setComment({ ...comment, content: value })}
+                            />
+                        </>
+                    }
+                    
                     <div className='w-full flex justify-end gap-5'>
                         {
-                            !comment.replies[0] &&
+                            !comment.replies[0] ?
                             <>
                                     <div className="cursor-pointer px-3 py-2 bg-sapphire rounded-md justify-center items-center flex p-btn gap-2 shadow-full w-fit" onClick={confirmUpdateComment}>
                                         {updateCommentLoading && <Loading size={20} />}
@@ -194,7 +227,10 @@ const Comments = ({ id, type }) => {
                                         {deleteCommentLoading && <Loading size={20} />}
                                         <div className="text-white text-sm font-normal capitalize leading-normal">Xóa bình luận</div>
                                     </div>
-                            </>
+                            </> : 
+                            <div className='w-full flex justify-center items-center'>
+                                <div className="text-center text-xl text-sapphire font-semibold line-clamp-2">Bạn không thể chỉnh sửa hay xóa bình luận đã được phản hồi.</div>
+                            </div>
                         }
                             
                     </div>
