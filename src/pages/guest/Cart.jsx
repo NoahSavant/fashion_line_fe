@@ -47,8 +47,8 @@ const Cart = () => {
 
     useEffect(() => {
         if (!createOrderData?.successMessage) return;
+        navigate(`/order-detail?id=${createOrderData?.data?.id}`);
         setFetchCart(true);
-        window.open(`/order-detail?id=${createOrderData?.data?.id}`);
     }, [createOrderData]);
 
     const handleCheck = (index, value) => {

@@ -91,7 +91,6 @@ const MAddress = () => {
         formData.append('name', address.name);
         formData.append('content', address.content);
         formData.append('detail', address.detail);
-        formData.append('url', address.url);
 
         handleCreateAddress(addressEndpoints.create, {
             method: "POST",

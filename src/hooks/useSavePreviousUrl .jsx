@@ -6,7 +6,8 @@ const useSavePreviousUrl = () => {
     const paths = [
         '/login',
         '/signup',
-        '/verify-account'
+        '/verify-account',
+        '/logout'
     ];
 
     useEffect(() => {
