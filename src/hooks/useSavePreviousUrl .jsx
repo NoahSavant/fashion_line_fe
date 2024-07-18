@@ -3,11 +3,16 @@ import { useLocation } from 'react-router-dom';
 
 const useSavePreviousUrl = () => {
     const location = useLocation();
+    const paths = [
+        '/login',
+        '/signup',
+        '/verify-account'
+    ];
 
     useEffect(() => {
-        if (location.pathname !== '/login') {
+        if (!paths.includes(location.pathname)) {
             localStorage.setItem('previousUrl', location.pathname + location.search);
-        } 
+        }
     }, [location]);
 };
 

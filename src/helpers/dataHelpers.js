@@ -58,7 +58,6 @@ export const calculateReadingTime = (content) => {
 
 export const formatReadingTime = (minutes) => {
     if (minutes < 1) {
-        const seconds = Math.ceil(minutes * 60);
         return `1 phút`;
     }
 
@@ -70,13 +69,13 @@ export const formatReadingTime = (minutes) => {
     let formattedTime = '';
 
     if (days > 0) {
-        formattedTime += `${days} giờ `;
+        formattedTime += `${days} ngày `;
     }
     if (remainingHours > 0) {
-        formattedTime += `${remainingHours} phút `;
+        formattedTime += `${remainingHours} giờ `;
     }
     if (remainingMinutes > 0) {
-        formattedTime += `${remainingMinutes} giây`;
+        formattedTime += `${remainingMinutes} phút`;
     }
 
     return formattedTime.trim();

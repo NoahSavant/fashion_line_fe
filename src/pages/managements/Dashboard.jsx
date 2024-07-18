@@ -188,7 +188,7 @@ const Dashboard = () => {
 
     const handleYearChange = (e) => {
         setSelectedYear(parseInt(e.target.value));
-        setSelectedMonth(null); // Reset selected month when changing year
+        setSelectedMonth(0);
     };
 
     const handleMonthClick = (monthIndex) => {
